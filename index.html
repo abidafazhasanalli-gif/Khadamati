@@ -1135,10 +1135,10 @@ body.saud-open .saud-fab{display:none}
         </div>
         <div class="card sc-card" id="acalCard">
           <h2>التقويم الأكاديمي السنوي</h2>
-          <p class="muted">ارفع التقويم الأكاديمي للعام (PDF أو ملف نصي) ليقرأه سعود ويجيبك بدقة عن العطل والإجازات ومواعيد الأعمال والاختبارات والاعتذار عن الفصل (من وإلى).</p>
+          <p class="muted">ارفع التقويم الأكاديمي للعام (PDF أو صورة أو ملف نصي، ويُقرأ حتى لو كان صورة) ليقرأه سعود ويجيبك بدقة عن العطل والإجازات ومواعيد الأعمال والاختبارات والاعتذار عن الفصل (من وإلى).</p>
           <div id="acalInfo"></div>
           <button class="btn block" id="acalPick" type="button">رفع التقويم الأكاديمي السنوي</button>
-          <input type="file" id="acalFile" accept="application/pdf,.pdf,text/plain,.txt" hidden>
+          <input type="file" id="acalFile" accept="application/pdf,.pdf,image/*,text/plain,.txt" hidden>
           <p class="sc-err" id="acalErr" hidden role="alert"></p>
         </div>
         <div class="card lec-set">
@@ -1278,7 +1278,6 @@ body.saud-open .saud-fab{display:none}
         <div><b class="notranslate" translate="no">سعود</b><span id="saudNetTxt">متصل</span></div>
       </div>
       <div class="sp-acts">
-        <button class="icon-btn" id="btnMcpDrawer" type="button" aria-label="بحث في كتب الجامع" title="بحث في كتب الجامع"><svg viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M8 7h8M8 11h8"/></svg></button>
         <button class="icon-btn" id="btnMcpCfg" type="button" aria-label="إضافة أدوات MCP" title="أدوات MCP"><svg viewBox="0 0 24 24"><path d="M9 2v6M15 2v6M7 8h10v4a5 5 0 0 1-10 0V8ZM12 17v5"/></svg></button>
         <button class="icon-btn" id="btnTtsToggle" type="button" aria-label="القراءة الصوتية" title="القراءة الصوتية"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14"/></svg></button>
         <button class="icon-btn" id="btnVoicePick" type="button" aria-label="اختيار صوت سعود" title="اختيار صوت سعود"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg></button>
@@ -1321,30 +1320,6 @@ body.saud-open .saud-fab{display:none}
 <button class="inst-fab" id="instFab" type="button" hidden></button>
 <div class="adk notranslate" id="adk" translate="no" role="status" aria-live="polite"></div>
 <div class="adk lecn" id="lecn" role="alertdialog" aria-live="assertive"></div>
-
-<!-- نافذة البحث المباشر في كتب الجامع (aljam3.com) -->
-<div class="mcp-modal" id="mcpModal" role="dialog" aria-modal="true" hidden>
-  <div class="mcp-modal-card">
-    <div class="mcp-modal-head">
-      <div class="mcp-modal-title">
-        <svg viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10M6 14h6"/></svg>
-        <div>
-          <b>البحث في كتب الجامع</b>
-          <small>aljam3.com • نصوص موثقة باسم الكتاب والصفحة</small>
-        </div>
-      </div>
-      <button class="icon-btn" id="btnCloseMcpModal" aria-label="إغلاق"></button>
-    </div>
-    <div class="mcp-modal-body">
-      <div class="search" style="margin:0">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-        <input type="search" id="mcpTestInput" placeholder="اكتب عبارة للبحث (مثال: الأعمال بالنيات، أركان الصلاة)…">
-      </div>
-      <button class="btn block" id="btnRunMcpTest" type="button">ابحث في الكتب</button>
-      <div class="mcp-results" id="mcpResultsList"></div>
-    </div>
-  </div>
-</div>
 
 <script>
 (() => {
@@ -2228,30 +2203,92 @@ $('#calFile').onchange = async (e) => {
   };
   const clean = (s) => calNorm(s).replace(/[ \t\u00A0]+/g, ' ').replace(/\n\s*\n+/g, '\n').trim();
   $('#acalPick').onclick = () => $('#acalFile').click();
+  // ---- قراءة الصور والـ PDF الممسوح (OCR عربي مجاني داخل المتصفح) ----
+  const loadOcr = () => window.Tesseract ? Promise.resolve(window.Tesseract) : new Promise((ok, no) => {
+    const urls = ['https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.1/tesseract.min.js', 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js'];
+    let i = 0;
+    const next = () => {
+      if (i >= urls.length) return no(new Error('ocr-load'));
+      const sc = document.createElement('script'); sc.src = urls[i++];
+      sc.onload = () => window.Tesseract ? ok(window.Tesseract) : next(); sc.onerror = next; document.head.append(sc);
+    };
+    next();
+  });
+  const prep = (c, inv) => {   // تدرّج رمادي (وعكس الألوان للنصوص البيضاء على خلفيات داكنة)
+    const o = document.createElement('canvas'); o.width = c.width; o.height = c.height;
+    const x = o.getContext('2d'); x.drawImage(c, 0, 0);
+    const d = x.getImageData(0, 0, o.width, o.height), a = d.data;
+    for (let i = 0; i < a.length; i += 4) { let g = 0.299 * a[i] + 0.587 * a[i + 1] + 0.114 * a[i + 2]; if (inv) g = 255 - g; a[i] = a[i + 1] = a[i + 2] = g; }
+    x.putImageData(d, 0, 0); return o;
+  };
+  const ocrCanvases = async (cvs, onProg) => {
+    const T = await loadOcr(), total = cvs.length * 2; let done = 0, out = '';
+    for (const c of cvs) for (const inv of [false, true]) {
+      const r = await T.recognize(prep(c, inv), 'ara', { logger: (m) => { if (m && m.status === 'recognizing text') onProg(Math.min(99, Math.round(((done + (m.progress || 0)) / total) * 100))); } });
+      out += '\n' + ((r && r.data && r.data.text) || ''); done++;
+    }
+    return out;
+  };
+  const imgToCanvas = async (f) => {
+    const bmp = await createImageBitmap(f), k = Math.min(1, 2400 / bmp.width);
+    const c = document.createElement('canvas'); c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+    c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height); if (bmp.close) bmp.close(); return c;
+  };
+  const pageToCanvas = async (page) => {
+    const v1 = page.getViewport({scale: 1}), sc = Math.min(3, 2400 / v1.width), vp = page.getViewport({scale: sc});
+    const c = document.createElement('canvas'); c.width = Math.round(vp.width); c.height = Math.round(vp.height);
+    await page.render({canvasContext: c.getContext('2d'), viewport: vp}).promise; return c;
+  };
+  const reviewText = (text) => new Promise((done) => {   // يراجع الطالب النص المقروء ويصحّحه قبل الحفظ
+    const ov = document.createElement('div');
+    ov.style.cssText = 'position:fixed;inset:0;z-index:70;background:rgba(6,20,22,.6);display:flex;align-items:center;justify-content:center;padding:14px';
+    const card = document.createElement('div');
+    card.style.cssText = 'width:100%;max-width:560px;max-height:92vh;display:flex;flex-direction:column;gap:10px;background:var(--surface);color:var(--ink);border-radius:20px;padding:16px;box-shadow:var(--shadow-lg);direction:rtl';
+    const t = document.createElement('h3'); t.textContent = 'راجع نص التقويم المقروء'; t.style.margin = '0';
+    const hint = document.createElement('p'); hint.className = 'muted'; hint.style.margin = '0';
+    hint.textContent = 'قُرئ النص من الصورة تلقائيًا وقد تكون فيه أخطاء في الأرقام أو الكلمات. صحّحه إن لزم ثم احفظ.';
+    const ta = document.createElement('textarea'); ta.value = text; ta.style.cssText = 'width:100%;min-height:42vh;flex:1;font-size:14px;line-height:1.7;direction:rtl';
+    const row = document.createElement('div'); row.style.cssText = 'display:flex;gap:8px';
+    const ok = document.createElement('button'); ok.type = 'button'; ok.className = 'btn grow'; ok.style.flex = '1'; ok.textContent = 'حفظ التقويم';
+    const no = document.createElement('button'); no.type = 'button'; no.className = 'btn ghost'; no.textContent = 'إلغاء';
+    ok.onclick = () => { ov.remove(); done(ta.value); }; no.onclick = () => { ov.remove(); done(null); };
+    row.append(ok, no); card.append(t, hint, ta, row); ov.append(card); document.body.append(ov);
+  });
   $('#acalFile').onchange = async (e) => {
     const f = e.target.files && e.target.files[0]; e.target.value = ''; if (!f) return;
-    const btn = $('#acalPick'), old = btn.textContent; err('');
-    const isPdf = /\.pdf$/i.test(f.name) || /pdf/i.test(f.type), isTxt = /\.txt$/i.test(f.name) || /^text\//.test(f.type);
-    if (!isPdf && !isTxt) { err('اختر ملف التقويم بصيغة PDF أو ملفًا نصيًا.'); return; }
+    const btn = $('#acalPick'); err('');
+    const isPdf = /\.pdf$/i.test(f.name) || /pdf/i.test(f.type), isTxt = /\.txt$/i.test(f.name) || /^text\//.test(f.type), isImg = /^image\//.test(f.type) || /\.(png|jpe?g|webp)$/i.test(f.name);
+    if (!isPdf && !isTxt && !isImg) { err('اختر ملف التقويم بصيغة PDF أو صورة أو ملفًا نصيًا.'); return; }
     btn.disabled = true; btn.textContent = 'جارٍ قراءة التقويم…';
     try {
-      let raw = '';
+      let raw = '', pdf = null;
       if (isTxt) raw = await f.text();
-      else {
+      else if (isPdf) {
         let lib; try { lib = await loadPdf(); } catch (er) { err('تعذّر تحميل قارئ الملفات. اتصل بالإنترنت ثم أعد المحاولة.'); return; }
-        const pdf = await lib.getDocument({data:new Uint8Array(await f.arrayBuffer())}).promise;
+        pdf = await lib.getDocument({data:new Uint8Array(await f.arrayBuffer())}).promise;
         for (let i = 1; i <= Math.min(pdf.numPages, 12); i++) {
           const tc = await (await pdf.getPage(i)).getTextContent();
           raw += tc.items.map(x => x.str + (x.hasEOL ? '\n' : ' ')).join('') + '\n';
         }
       }
-      const text = clean(raw);
-      if (text.length < 80) { err('لم أستطع قراءة نص من الملف (قد يكون صورة ممسوحة). جرّب نسخة PDF نصية من الجامعة.'); return; }
+      let text = clean(raw), ocrUsed = false;
+      if (text.length < 80 && !isTxt) {   // ملف صور / ممسوح: نقرؤه بالتعرّف الضوئي
+        if (navigator.onLine === false) { err('قراءة الصور تحتاج اتصالًا بالإنترنت.'); return; }
+        const cvs = [];
+        if (isImg) cvs.push(await imgToCanvas(f));
+        else for (let i = 1; i <= Math.min(pdf.numPages, 3); i++) cvs.push(await pageToCanvas(await pdf.getPage(i)));
+        btn.textContent = 'جارٍ قراءة الصورة… 0%';
+        try { text = clean(await ocrCanvases(cvs, (p) => { btn.textContent = 'جارٍ قراءة الصورة… ' + p + '%'; })); }
+        catch (er) { err('تعذّر تشغيل قارئ الصور. تأكد من الإنترنت وأعد المحاولة.'); return; }
+        ocrUsed = true;
+      }
+      if (text.length < 30) { err('لم أستطع قراءة نص من الملف. جرّب صورة أوضح.'); return; }
+      if (ocrUsed) { const r = await reviewText(text); if (r == null) return; text = clean(r); if (text.length < 30) return; }
       const lines = [...new Set(text.split('\n').map(x => x.trim()).filter(x => x.length > 6 && x.length < 220 && KEY.test(x) && /[0-9\u0660-\u0669]/.test(x)))];
       S.acal = {name: f.name.replace(/\.[^.]+$/, '').slice(0, 60), text: text.slice(0, 20000), lines, at: Date.now()};
       save(); render(); toast('تم رفع التقويم الأكاديمي، وسعود يقرؤه الآن');
     } catch (er) { err('تعذّرت قراءة الملف. جرّب ملفًا آخر.'); }
-    finally { btn.disabled = false; if (!S.acal) btn.textContent = old; }
+    finally { btn.disabled = false; render(); }
   };
   render();
 }
@@ -3512,7 +3549,7 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
     if (!('Notification' in window)) { sysBtn.hidden = true; return; }
     sysBtn.hidden = !(c.on || c.abs || c.due);
     const ok = Notification.permission === 'granted' && c.sys;
-    sysBtn.textContent = Notification.permission === 'denied' ? 'إشعارات الجهاز محظورة من إعدادات المتصفح' : ok ? 'إشعارات الجهاز مفعّلة ✓' : 'السماح بإشعارات الجهاز (تصلك والتطبيق مغلق)';
+    sysBtn.textContent = Notification.permission === 'denied' ? 'إشعارات الجهاز محظورة من إعدادات المتصفح' : ok ? 'إشعارات الجهاز مفعّلة ✓' : 'السماح بإشعارات الجهاز';
     sysBtn.disabled = Notification.permission === 'denied' || ok;
   };
   sw.onchange = () => { cfg().on = sw.checked; save(); sync(); if (sw.checked) setTimeout(tick, 400); };
@@ -3523,7 +3560,7 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
       const r = await Notification.requestPermission(); cfg().sys = r === 'granted'; save();
       if (r !== 'granted') { if (!quiet) toast('لم يتم السماح بالإشعارات'); }
       else if (!pushConfigured()) { if (!quiet) toast('تم السماح بإشعارات الجهاز'); }
-      else { const ok = await subscribePush(); toast(ok ? 'تم تفعيل التنبيهات، ستصلك حتى والتطبيق مغلق' : 'تم السماح، لكن تعذّر تفعيل التنبيهات في الخلفية'); if (ok) pushSync(true); }
+      else { const ok = await subscribePush(); toast(ok ? 'تم تفعيل التنبيهات' : 'تم السماح، لكن تعذّر تفعيل التنبيهات في الخلفية'); if (ok) pushSync(true); }
     } catch (e) {}
     sync();
   };
@@ -3615,7 +3652,6 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
   const btnSend = $('#btnSendChat');
   const btnVoice = $('#btnVoiceInput');
   const btnTts = $('#btnTtsToggle');
-  const btnMcpDrawer = $('#btnMcpDrawer');
   const btnClear = $('#btnClearChat');
   const saudBody = $('#saudBody');
   if (!msgList || !chatInput || !btnSend) return;
@@ -3686,13 +3722,14 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
     else { let done = false; const go = () => { if (!done) { done = true; show(); } }; ss.onvoiceschanged = go; setTimeout(go, 900); }
   };
   try { if ('speechSynthesis' in window) { window.speechSynthesis.getVoices(); window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices(); } } catch (e) {}
-  const speakText = (text) => {
+  const speakText = (text, onend) => {
     if (!('speechSynthesis' in window)) return;
     try {
       window.speechSynthesis.cancel();
       const clean = String(text).replace(/<[^>]+>/g, '').replace(/[#*`_\[\]]/g, '').slice(0, 450);
       const ut = new SpeechSynthesisUtterance(clean);
       ut.lang = 'ar-SA';
+      if (onend) { ut.onend = onend; ut.onerror = onend; }
       // صوت رجل: نفضّل أصوات الرجال العربية المعروفة، وإن لم توجد نخفض النبرة
       const vs = (window.speechSynthesis.getVoices() || []).filter(v => /^ar/i.test(v.lang));
       const FEM = /(hoda|zariyah|salma|laila|layla|amina|fatima|hanan|female|zira|نساء|امرأة)/i;
@@ -3800,8 +3837,13 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
       const cites = Array.isArray(msg.citations) ? msg.citations : [];
       bubble.innerHTML = formatReplyHtml(msg.content, cites.length > 0);
       citeButtons(cites).forEach(b => bubble.append(b));
-      const speakBtn = h('button', { type: 'button', class: 'msg-act-btn' }, svg('volume'), 'استماع');
-      speakBtn.onclick = () => speakText(msg.content);
+      const spLbl = h('span', {}, 'استماع'); let spOn = false;
+      const speakBtn = h('button', { type: 'button', class: 'msg-act-btn' }, svg('volume'), spLbl);
+      const spReset = () => { spOn = false; spLbl.textContent = 'استماع'; };
+      speakBtn.onclick = () => {
+        if (spOn) { try { window.speechSynthesis.cancel(); } catch (e) {} spReset(); return; }
+        spOn = true; spLbl.textContent = 'إيقاف'; speakText(msg.content, spReset);
+      };
       const copyBtn = h('button', { type: 'button', class: 'msg-act-btn' }, svg('copy'), 'نسخ');
       copyBtn.onclick = () => {
         const tx = String(msg.content).replace(/<[^>]+>/g, '').replace(/^\s{0,3}#{1,6}\s*/gm, '');
@@ -3938,55 +3980,6 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
   };
   chatInput.placeholder = PH[S.lang || 'ar'] || PH.ar;
 
-  // ---- البحث المباشر في كتب الجامع ----
-  const mcpModal = $('#mcpModal');
-  const btnCloseMcp = $('#btnCloseMcpModal');
-  const btnRunMcp = $('#btnRunMcpTest');
-  const mcpInput = $('#mcpTestInput');
-  const mcpList = $('#mcpResultsList');
-  if (btnCloseMcp) btnCloseMcp.replaceChildren(svg('close'));
-  const openMcpModal = () => { mcpModal.hidden = false; setTimeout(() => mcpInput && mcpInput.focus(), 50); };
-  const closeMcpModal = () => { mcpModal.hidden = true; };
-  if (btnMcpDrawer) btnMcpDrawer.onclick = openMcpModal;
-  if (btnCloseMcp) btnCloseMcp.onclick = closeMcpModal;
-  if (mcpModal) mcpModal.onclick = (e) => { if (e.target === mcpModal) closeMcpModal(); };
-
-  const runBookSearch = async () => {
-    const q = (mcpInput.value || '').trim();
-    if (!q) { toast('اكتب عبارة للبحث أولاً'); return; }
-    if (navigator.onLine === false) { toast('لا يوجد اتصال بالإنترنت'); return; }
-    btnRunMcp.disabled = true; btnRunMcp.textContent = 'جارٍ البحث في الكتب…';
-    mcpList.replaceChildren(h('div', { class: 'empty' }, 'جارٍ البحث في نصوص الكتب…'));
-    try {
-      const r = await fetch(API_BASE + '/api/books/search', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ q })
-      });
-      const data = await r.json();
-      if (data.limited) { mcpList.replaceChildren(h('div', { class: 'empty' }, data.error)); return; }
-      const results = data.results || [];
-      if (!results.length) { mcpList.replaceChildren(h('div', { class: 'empty' }, 'لم يتم العثور على نص مطابق. جرّب كلمات أخرى.')); return; }
-      mcpList.replaceChildren();
-      results.forEach(res => {
-        const item = h('div', { class: 'mcp-res-item' });
-        item.append(h('div', { class: 'mcp-res-head' }, h('span', {}, res.bookTitle || 'كتاب'), h('span', {}, res.page ? `ص ${res.page}` : '')));
-        if (res.author) item.append(h('small', { class: 'muted' }, `المؤلف: ${res.author}${res.deathYear ? ` (ت ${res.deathYear})` : ''}`));
-        if (res.verbatimQuote) item.append(h('div', { class: 'mcp-res-quote' }, `«${res.verbatimQuote}»`));
-        const copyBtn = h('button', { class: 'mini', type: 'button', style: 'margin-top:6px;width:fit-content' }, 'نسخ النص مع التوثيق');
-        copyBtn.onclick = () => { (navigator.clipboard ? navigator.clipboard.writeText(`«${res.verbatimQuote}»\n${res.citation || ''}`) : Promise.reject()).then(() => toast('تم النسخ')).catch(() => toast('تعذر النسخ')); };
-        item.append(copyBtn);
-        if (/^https?:\/\//.test(res.readingUrl || '')) {
-          item.append(h('a', { href: res.readingUrl, target: '_blank', rel: 'noopener noreferrer', class: 'mcp-read-btn', style: 'margin-top:8px' }, svg('book'), h('span', {}, 'اقرأ الكتاب مباشرة')));
-        }
-        mcpList.append(item);
-      });
-    } catch (err) {
-      mcpList.replaceChildren(h('div', { class: 'empty', style: 'color:var(--danger)' }, 'تعذر الاتصال بالخادم. حاول لاحقًا.'));
-    } finally {
-      btnRunMcp.disabled = false; btnRunMcp.textContent = 'ابحث في الكتب';
-    }
-  };
-  if (btnRunMcp) btnRunMcp.onclick = runBookSearch;
-  if (mcpInput) mcpInput.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); runBookSearch(); } };
 
   // ---- شريط اللغات في الرئيسية للطلبة الدوليين ----
   $$('.intl-pill[data-set-lang]').forEach(btn => { btn.onclick = () => setLang(btn.dataset.setLang); });
@@ -4075,7 +4068,7 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
   $('#btnMcpCfg').onclick = openMcpCfg;
   panel.addEventListener('click', (e) => { if (e.target === panel) closeSaud(false); });
   window.addEventListener('popstate', () => closeSaud(true));
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panel.hidden && (!mcpModal || mcpModal.hidden)) closeSaud(false); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panel.hidden) closeSaud(false); });
   window.openSaud = openSaud;
 })();
 })();
