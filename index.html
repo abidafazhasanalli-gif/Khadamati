@@ -6,6 +6,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0B6E5B">
 <meta name="description" content="خدمات جامعة الإمام محمد بن سعود الإسلامية في مكان واحد">
+<meta property="og:title" content="خدماتي">
+<meta property="og:description" content="خدمات جامعة الإمام محمد بن سعود الإسلامية في مكان واحد">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="خدماتي">
@@ -18,16 +22,20 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Aref+Ruqaa:wght@700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#F3F5F2;--surface:#fff;--ink:#10282B;--muted:#5E7274;--line:#DCE3E0;
-  --warn:#E0A200;--warn-ink:#8A6100;--brand:#0B6E5B;--brand-ink:#fff;--brand-soft:#E1F1EC;--gold:#B98A2C;--danger:#B3382C;
-  --shadow:0 1px 2px rgba(16,40,43,.06),0 6px 18px rgba(16,40,43,.06);
-  --tab-h:64px;
+  --bg:#F4F7F5;--surface:#FFFFFF;--surface-alt:#FAFCFB;--ink:#0B2520;--muted:#536B64;--line:#DFECE7;--line-strong:#C4D9D2;
+  --warn:#D9822B;--warn-ink:#8A4B00;--brand:#0A523F;--brand-deep:#06382B;--brand-ink:#FFFFFF;--brand-soft:#E5F3EE;--brand-glow:rgba(10,82,63,0.18);
+  --gold:#C5982D;--gold-soft:#FAF4E5;--gold-ink:#7F5E08;--gold-border:#E7D4A5;--danger:#B83A30;--danger-soft:#FDEEED;
+  --shadow:0 2px 4px rgba(11,37,32,.04), 0 8px 24px rgba(11,37,32,.08);
+  --shadow-lg:0 14px 34px -4px rgba(11,37,32,.14), 0 4px 12px rgba(11,37,32,.06);
+  --tab-h:68px;
   color-scheme:light;
 }
 :root[data-theme="dark"]{
-  --bg:#0C1A1C;--surface:#14272A;--ink:#E8F0EE;--muted:#93A9A8;--line:#24393C;
-  --warn:#F2C14E;--warn-ink:#F2C14E;--brand:#35B596;--brand-ink:#04251E;--brand-soft:#16352F;--gold:#E0B65A;--danger:#E8806F;
-  --shadow:0 1px 2px rgba(0,0,0,.3);
+  --bg:#071513;--surface:#0E221E;--surface-alt:#122B26;--ink:#ECF5F2;--muted:#8AA49E;--line:#1B3933;--line-strong:#274D45;
+  --warn:#F0A34A;--warn-ink:#F0A34A;--brand:#1FAF86;--brand-deep:#0C6B52;--brand-ink:#04241B;--brand-soft:#12372F;--brand-glow:rgba(31,175,134,0.25);
+  --gold:#E5B84D;--gold-soft:#2B2616;--gold-ink:#F5D380;--gold-border:#5B4A22;--danger:#EF6D63;--danger-soft:#381B18;
+  --shadow:0 4px 20px rgba(0,0,0,.45);
+  --shadow-lg:0 14px 36px rgba(0,0,0,.6);
   color-scheme:dark;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -45,38 +53,45 @@ svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 
 /* ---------- header ---------- */
 .top{
-  background:var(--brand);color:var(--brand-ink);
-  padding:calc(env(safe-area-inset-top,0px) + 14px) 18px 22px;
-  border-radius:0 0 28px 28px;position:relative;z-index:2;
+  background:linear-gradient(135deg, var(--brand) 0%, var(--brand-deep) 100%);
+  color:var(--brand-ink);
+  padding:calc(env(safe-area-inset-top,0px) + 16px) 20px 24px;
+  border-radius:0 0 30px 30px;position:relative;z-index:2;
+  box-shadow:0 8px 24px rgba(6,56,43,0.18);
+  border-bottom:1.5px solid rgba(197,152,45,0.3);
 }
-:root[data-theme="dark"] .top{background:#0F3A33;color:#E8F0EE}
-.top-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.brand{display:flex;align-items:center;gap:10px}
-.brand img{width:40px;height:40px;border-radius:11px}
-.brand b{font-size:26px;font-weight:700;letter-spacing:0}
+:root[data-theme="dark"] .top{
+  background:linear-gradient(135deg, #0A241F 0%, #061714 100%);
+  color:#ECF5F2;border-bottom-color:rgba(229,184,77,0.25);
+  box-shadow:0 8px 30px rgba(0,0,0,0.5);
+}
+.top-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{width:42px;height:42px;border-radius:13px;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
+.brand b{font-size:26px;font-weight:700;letter-spacing:-0.2px}
 .top-actions{display:flex;gap:8px}
-.icon-btn{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:rgba(255,255,255,.16)}
-.icon-btn:active{background:rgba(255,255,255,.28)}
-.top p{margin:12px 0 0;font-size:14px;opacity:.9}
+.icon-btn{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(8px);transition:all .18s ease}
+.icon-btn:active{background:rgba(255,255,255,.26);transform:scale(.94)}
+.top p{margin:10px 0 0;font-size:14px;opacity:.92;line-height:1.55}
 
 /* ---------- layout ---------- */
 main{
   height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;
-  padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom,0px) + 24px);
+  padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom,0px) + 26px);
 }
 .view{display:none}
 .view.on{display:block}
-.pad{padding:0 16px}
-h2{font-size:18px;margin:26px 16px 10px;font-weight:700}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+.pad{padding:0 18px}
+h2{font-size:18px;margin:26px 18px 12px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:8px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);transition:border-color .2s,box-shadow .2s}
 .muted{color:var(--muted);font-size:14px}
-.empty{padding:26px 18px;text-align:center;color:var(--muted);font-size:15px}
+.empty{padding:28px 20px;text-align:center;color:var(--muted);font-size:15px;line-height:1.6}
 
 /* stats */
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:-14px 16px 0;position:relative;z-index:3}
-.stat{padding:14px 16px}
-.stat b{display:block;font-size:22px;line-height:1.3}
-.stat span{font-size:13px;color:var(--muted)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:-14px 16px 0;position:relative;z-index:3}
+.stat{padding:14px 18px;background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow-lg)}
+.stat b{display:block;font-size:22px;line-height:1.3;color:var(--ink);font-weight:700}
+.stat span{font-size:13px;color:var(--muted);font-weight:500}
 
 /* search */
 .search{margin:16px 16px 0;position:relative}
@@ -105,7 +120,8 @@ textarea{min-height:240px;resize:vertical;line-height:1.8}
 .svc-add{margin:0 16px 10px;display:flex;gap:8px}
 .svc-add .btn{flex:1;padding:0 10px;font-size:14.5px}
 .svc.nolink .svc-text>span span{color:var(--gold);font-weight:600}
-.svc{display:flex;align-items:center;gap:12px;padding:12px;margin:0 16px 10px}
+.svc{display:flex;align-items:center;gap:12px;padding:14px;margin:0 16px 10px;background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);transition:all .2s ease}
+.svc:hover{border-color:var(--brand);box-shadow:var(--shadow-lg);transform:translateY(-1px)}
 .svc-main{flex:1;display:flex;align-items:center;gap:14px;text-align:start;min-width:0}
 .svc-ico{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;flex:none;color:#fff}
 .svc-ico svg{width:26px;height:26px}
@@ -117,18 +133,23 @@ textarea{min-height:240px;resize:vertical;line-height:1.8}
 .svc-in.cp small{font-size:11px;font-weight:600;line-height:1}
 .svc-in{
   min-width:44px;min-height:44px;border-radius:14px;display:grid;place-items:center;
-  background:var(--brand-soft);color:var(--brand);
+  background:var(--brand-soft);color:var(--brand);border:1px solid var(--line);transition:all .18s ease;
 }
+.svc-in:hover{background:var(--brand);color:#fff}
 
 /* link box */
 .row{display:flex;gap:8px}
 .btn{
-  min-height:48px;padding:0 18px;border-radius:14px;font-weight:600;
-  background:var(--brand);color:var(--brand-ink);display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:50px;padding:0 20px;border-radius:16px;font-weight:700;
+  background:linear-gradient(135deg, var(--brand) 0%, var(--brand-deep) 100%);
+  color:var(--brand-ink);display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 4px 14px var(--brand-glow);border:1px solid rgba(255,255,255,0.15);
+  transition:all .18s ease;
 }
-.btn.alt{background:var(--brand-soft);color:var(--brand)}
-.btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink)}
-.btn.danger{background:transparent;color:var(--danger)}
+.btn:hover{box-shadow:0 6px 20px var(--brand-glow);transform:translateY(-1px)}
+.btn.alt{background:var(--brand-soft);color:var(--brand);border:1px solid var(--line-strong);box-shadow:none}
+.btn.ghost{background:transparent;border:1.5px solid var(--line-strong);color:var(--ink);box-shadow:none}
+.btn.danger{background:transparent;color:var(--danger);box-shadow:none}
 .btn.block{width:100%}
 .btn:active{transform:scale(.98)}
 .btn svg{width:20px;height:20px}
@@ -136,9 +157,10 @@ textarea{min-height:240px;resize:vertical;line-height:1.8}
 
 footer{padding:26px 24px 8px;text-align:center;color:var(--muted);font-size:12.5px;line-height:1.8}
 footer b{color:var(--ink)}
-.tg-grid{display:grid;grid-template-columns:1fr;gap:10px;margin:0 16px}
+.tg-grid{display:grid;grid-template-columns:1fr;gap:12px;margin:0 16px}
 .tg-grid.two{grid-template-columns:1fr 1fr}
-.tg{display:flex;align-items:center;min-width:0}
+.tg{display:flex;align-items:center;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);transition:all .2s ease}
+.tg:hover{border-color:var(--brand);box-shadow:var(--shadow-lg);transform:translateY(-1px)}
 .tg-grid>*{min-width:0}
 .tg-main{flex:1;min-width:0;display:flex;align-items:center;gap:12px;padding:12px;text-decoration:none;color:inherit}
 .tg-t small[dir=ltr]{display:block;text-align:right;font-size:12px;opacity:.85;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -254,9 +276,12 @@ footer b{color:var(--ink)}
 .custom select{min-height:44px;max-width:190px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);padding:0 10px;font:inherit;font-size:14px}
 .custom .chip{min-height:44px;padding:0 14px;font-size:14px}
 /* ---------- prayer ---------- */
-.pray{margin:14px 16px 0;position:relative;z-index:3;padding:18px 16px 14px;border:0;color:#fff;overflow:hidden;
-  background:linear-gradient(150deg,#0B6E5B 0%,#0C4F46 55%,#0F3A33 100%);box-shadow:0 10px 28px rgba(11,110,91,.28)}
-:root[data-theme="dark"] .pray{background:linear-gradient(150deg,#14574B 0%,#0F3F37 55%,#0B2B27 100%)}
+.pray{margin:14px 16px 0;position:relative;z-index:3;padding:20px 18px 16px;border-radius:26px;color:#fff;overflow:hidden;
+  background:linear-gradient(150deg,#0A523F 0%,#083F32 55%,#052820 100%);
+  box-shadow:0 14px 34px rgba(10,82,63,.28);border:1.5px solid rgba(197,152,45,0.35)}
+:root[data-theme="dark"] .pray{
+  background:linear-gradient(150deg,#0E2E27 0%,#091E1A 55%,#051210 100%);
+  border-color:rgba(229,184,77,0.25);box-shadow:0 14px 36px rgba(0,0,0,.5)}
 .pray::before,.pray::after{content:"";position:absolute;border-radius:50%;background:#fff;opacity:.07;pointer-events:none}
 .pray::before{width:190px;height:190px;inset-inline-end:-60px;top:-70px}
 .pray::after{width:120px;height:120px;inset-inline-start:-40px;bottom:-50px}
@@ -533,16 +558,19 @@ footer b{color:var(--ink)}
 .custom input{width:88px;text-align:center}
 
 /* ---------- tab bar ---------- */
+/* ---------- tab bar ---------- */
 .tabs{
-  position:fixed;inset:auto 0 0 0;z-index:10;display:grid;grid-template-columns:repeat(5,1fr);
+  position:fixed;inset:auto 0 0 0;z-index:25;display:grid;grid-template-columns:repeat(6,1fr);
   background:var(--surface);border-top:1px solid var(--line);
-  padding:6px 8px calc(env(safe-area-inset-bottom,0px) + 6px);
+  padding:6px 4px calc(env(safe-area-inset-bottom,0px) + 6px);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
 }
-.tabs button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:52px;border-radius:14px;color:var(--muted);font-size:12px;font-weight:600}
+.tabs button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:52px;border-radius:14px;color:var(--muted);font-size:11.5px;font-weight:600;padding:2px}
 .tabs button.on{color:var(--brand)}
-.tabs button.on .pill{background:var(--brand-soft)}
-.pill{width:56px;height:30px;border-radius:99px;display:grid;place-items:center;transition:background .2s}
-.pill svg{width:22px;height:22px}
+.tabs button.on .pill{background:var(--brand-soft);color:var(--brand);box-shadow:0 0 12px var(--brand-glow)}
+.pill{width:46px;height:28px;border-radius:99px;display:grid;place-items:center;transition:all .22s ease}
+.pill svg{width:20px;height:20px}
+.tab-badge{position:absolute;top:2px;inset-inline-end:6px;font-size:9.5px;font-weight:800;padding:1px 5px;border-radius:99px;background:linear-gradient(135deg,var(--gold),#996F15);color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.2)}
 
 /* ---------- sheet ---------- */
 .scrim{position:fixed;inset:0;background:rgba(6,20,22,.5);z-index:30;display:none}
@@ -663,6 +691,283 @@ button.pr-d{border:0;color:inherit;font:inherit;font-size:12.5px;cursor:pointer}
 .cal-hol-r{display:flex;justify-content:space-between;gap:8px;padding:7px 12px;font-size:13.5px;border-top:1px solid var(--line)}
 .cal-hol-r em{font-style:normal;color:var(--muted);text-align:end}.cal-hol-r.past{opacity:.5}
 .cw-d em small{display:block;font-size:11.5px;color:var(--warn-ink)}
+
+/* ===== الهوية الفاخرة وبطاقة المساعد الذكي سعود ===== */
+.saud-hero-card{
+  margin:14px 16px 0;padding:18px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg, rgba(10,82,63,0.06) 0%, rgba(197,152,45,0.08) 100%), var(--surface);
+  border:1.5px solid var(--gold-border);border-radius:24px;box-shadow:var(--shadow-lg);
+  cursor:pointer;transition:transform .2s ease,box-shadow .2s ease;
+}
+.saud-hero-card:active{transform:scale(.985)}
+.saud-hero-badge{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--brand);margin-bottom:12px}
+.saud-mcp-tag{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:99px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid var(--gold-border);font-size:11px}
+.saud-hero-body{display:flex;align-items:center;gap:14px}
+.saud-avatar-ring{
+  position:relative;width:84px;height:84px;border-radius:50%;padding:2px;
+  background:#FFFFFF!important;border:2px solid var(--gold);flex:none;
+  box-shadow:0 4px 14px rgba(10,82,63,0.14);overflow:hidden;
+}
+.saud-hero-img{
+  width:100%;height:100%;border-radius:50%;object-fit:cover;object-position:center;
+  display:block;background:#FFFFFF!important;
+}
+.saud-ai-sparkle{position:absolute;bottom:2px;inset-inline-start:2px;width:20px;height:20px;border-radius:50%;background:var(--gold);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:800;border:2px solid #FFFFFF;z-index:2}
+.saud-hero-info{flex:1;min-width:0}
+.saud-hero-title{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.saud-hero-title b{font-size:17.5px;color:var(--ink);font-weight:700}
+.saud-role-pill{font-size:11.5px;padding:2px 8px;border-radius:99px;background:var(--brand-soft);color:var(--brand);font-weight:600}
+.saud-hero-desc{margin:4px 0 0;font-size:13px;line-height:1.55;color:var(--muted)}
+.saud-hero-chips{display:flex;gap:6px;overflow-x:auto;padding-top:12px;margin-top:12px;border-top:1px dashed var(--line);scrollbar-width:none}
+.saud-hero-chips::-webkit-scrollbar{display:none}
+.saud-chip-btn{flex:none;font-size:12px;font-weight:600;padding:6px 14px;border-radius:99px;background:var(--surface);border:1px solid var(--line-strong);color:var(--ink);transition:all .18s ease;display:inline-flex;align-items:center;gap:6px}
+.saud-chip-btn:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-soft)}
+.saud-hero-cta{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;font-size:13px;font-weight:700;color:var(--brand)}
+.saud-hero-cta svg{width:18px;height:18px;transform:rotate(180deg)}
+
+.saud-mini-tip{
+  margin:14px 16px;padding:12px 14px;display:flex;align-items:center;gap:12px;
+  background:linear-gradient(135deg, rgba(10,82,63,0.06), rgba(197,152,45,0.08)), var(--surface);
+  border:1.5px solid var(--gold-border);border-radius:18px;cursor:pointer;transition:transform .18s,border-color .18s;
+}
+.saud-mini-tip:hover{transform:translateY(-1px);border-color:var(--brand)}
+.saud-mini-avatar{
+  width:54px;height:54px;border-radius:50%;object-fit:cover;object-position:center;
+  background:#FFFFFF!important;border:1.5px solid var(--gold);flex:none;box-shadow:0 2px 8px rgba(0,0,0,0.12);
+}
+.saud-mini-text{flex:1;min-width:0;display:grid;gap:2px}
+.saud-mini-text b{font-size:14.5px;color:var(--ink);font-weight:700}
+.saud-mini-text span{font-size:12.5px;color:var(--muted);line-height:1.4}
+
+/* شريط الترجمة الفورية للطلبة الدوليين */
+.intl-lang-bar{
+  margin:12px 16px 0;padding:10px 14px;border-radius:18px;
+  background:var(--surface);border:1px solid var(--line);
+  box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px;
+}
+.intl-bar-title{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--brand)}
+.intl-bar-title svg{width:18px;height:18px}
+.intl-chips-scroll{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.intl-chips-scroll::-webkit-scrollbar{display:none}
+.intl-pill{
+  flex:none;font-size:12px;font-weight:600;padding:6px 14px;border-radius:99px;
+  background:var(--surface-alt);border:1px solid var(--line-strong);color:var(--ink);
+  transition:all .15s ease;cursor:pointer;
+}
+.intl-pill:hover{border-color:var(--brand);color:var(--brand)}
+.intl-pill.on{background:var(--brand);color:#fff;border-color:var(--brand);box-shadow:0 2px 8px var(--brand-glow)}
+.intl-pill.more{background:var(--gold-soft);color:var(--gold-ink);border-color:var(--gold-border)}
+
+/* ===== شاشة المستشار الذكي سعود الكاملة (#v-assistant) ===== */
+#v-assistant{display:none;height:100%;flex-direction:column}
+#v-assistant.on{display:flex}
+.saud-top{padding-bottom:14px}
+.saud-top-avatar{
+  position:relative;width:54px;height:54px;border-radius:50%;padding:2px;
+  background:#FFFFFF!important;border:2px solid var(--gold);flex:none;
+  box-shadow:0 2px 8px rgba(0,0,0,0.15);overflow:hidden;
+}
+.saud-avatar-sm{
+  width:100%;height:100%;border-radius:50%;object-fit:cover;object-position:center;
+  display:block;background:#FFFFFF!important;
+}
+.saud-live-dot{position:absolute;bottom:1px;inset-inline-start:1px;border:2px solid var(--brand);z-index:2}
+.saud-top-titles{display:flex;flex-direction:column;text-align:start}
+.saud-top-titles b{font-size:19px;line-height:1.2}
+.saud-subline{display:flex;align-items:center;gap:6px;font-size:12px;opacity:.9}
+.saud-dot-sep{opacity:.6}
+.saud-mcp-status{color:#F4D58D;font-weight:600}
+.saud-lang-pill{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:4px 12px;border-radius:99px;background:rgba(255,255,255,0.14);font-size:12px}
+
+.saud-chat-container{flex:1;display:flex;flex-direction:column;min-height:0;position:relative}
+.saud-quick-chips{display:flex;gap:6px;overflow-x:auto;padding:10px 16px 6px;flex:none;scrollbar-width:none}
+.saud-quick-chips::-webkit-scrollbar{display:none}
+.saud-qchip{font-size:12.5px;padding:6px 14px;border-radius:99px;white-space:nowrap;border:1px solid var(--line);background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.saud-qchip:active{transform:scale(.95)}
+
+.saud-messages{flex:1;overflow-y:auto;padding:12px 16px 80px;display:flex;flex-direction:column;gap:14px;-webkit-overflow-scrolling:touch}
+.msg{display:flex;gap:10px;max-width:88%;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.msg.user{align-self:flex-end;flex-direction:row-reverse}
+.msg.saud{align-self:flex-start}
+.msg-avatar{
+  width:42px;height:42px;border-radius:50%;object-fit:cover;object-position:center;
+  flex:none;border:1.5px solid var(--gold);box-shadow:var(--shadow);background:#FFFFFF!important;
+}
+.msg-user-avatar{width:36px;height:36px;border-radius:50%;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;flex:none;font-weight:700;font-size:14px}
+.msg-bubble{padding:12px 16px;border-radius:20px;font-size:15px;line-height:1.7;box-shadow:var(--shadow);overflow-wrap:anywhere}
+.msg.user .msg-bubble{background:var(--brand);color:var(--brand-ink);border-bottom-left-radius:6px;text-align:start}
+.msg.saud .msg-bubble{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-bottom-right-radius:6px;text-align:start}
+.msg-time{display:block;font-size:11px;opacity:.7;margin-top:6px;text-align:end}
+.msg-actions{display:flex;align-items:center;gap:6px;margin-top:8px;padding-top:6px;border-top:1px solid var(--line)}
+.msg-act-btn{font-size:12px;display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:8px;background:var(--brand-soft);color:var(--brand);cursor:pointer}
+.msg-act-btn svg{width:14px;height:14px}
+
+/* نصوص التوثيق والمراجع داخل الرسائل */
+.quote-box{
+  background:linear-gradient(135deg, rgba(250,248,242,0.98), rgba(245,240,230,0.98));
+  border:1.5px solid #D8C8A3;border-radius:14px;padding:12px 14px;margin:10px 0;
+  box-shadow:0 2px 8px rgba(0,0,0,0.03);position:relative;
+}
+:root[data-theme="dark"] .quote-box{
+  background:linear-gradient(135deg, #18221D, #121A16);border-color:#52462A;
+}
+.quote-tag{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--gold-ink);margin-bottom:6px}
+:root[data-theme="dark"] .quote-tag{color:var(--gold)}
+.quote-tag svg{width:15px;height:15px}
+.quote-text{font-size:15px;line-height:1.85;font-weight:500;color:var(--ink)}
+.quote-cite{display:block;margin-top:8px;padding-top:6px;border-top:1px dashed var(--line);font-size:12px;font-weight:600;color:var(--muted)}
+.quote-explain{margin-top:10px;padding:8px 10px;border-radius:10px;background:var(--brand-soft);color:var(--brand-deep);font-size:14px;line-height:1.6}
+:root[data-theme="dark"] .quote-explain{color:#7FE1C4}
+
+/* زر القراءة المباشرة في خوادم الكتب والمصادر المعتمدة MCP */
+.mcp-read-btn, .shamela-read-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  margin:10px 0 4px;padding:12px 18px;border-radius:14px;
+  background:linear-gradient(135deg, var(--brand) 0%, var(--brand-deep) 100%);
+  color:#FFFFFF!important;font-size:14px;font-weight:700;text-decoration:none;
+  box-shadow:0 3px 12px var(--brand-glow);border:1px solid rgba(255,255,255,0.2);
+  transition:all .18s ease;width:100%;text-align:center;
+}
+.mcp-read-btn:hover, .shamela-read-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.mcp-read-btn svg, .shamela-read-btn svg{width:18px;height:18px;stroke:currentColor;fill:none}
+
+.mcp-fed-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.mcp-fed-item{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 10px;display:flex;flex-direction:column;gap:2px}
+.mcp-fed-item b{font-size:12.5px;color:var(--ink);font-weight:700}
+.mcp-fed-item span{font-size:11px;color:var(--muted)}
+
+.saud-typing{display:flex;align-items:center;gap:10px;padding:8px 18px;margin:0 16px 8px;border-radius:16px;background:var(--surface);border:1px solid var(--line);width:fit-content;box-shadow:var(--shadow)}
+.saud-typing-dots{display:flex;gap:4px}
+.saud-typing-dots span{width:7px;height:7px;border-radius:50%;background:var(--brand);animation:typing 1.2s infinite ease-in-out}
+.saud-typing-dots span:nth-child(2){animation-delay:.2s}
+.saud-typing-dots span:nth-child(3){animation-delay:.4s}
+@keyframes typing{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-5px);opacity:1}}
+.saud-typing-txt{font-size:12.5px;color:var(--muted);font-weight:600}
+
+/* شريط الإدخال المحدث */
+.saud-input-box{
+  position:absolute;inset:auto 12px calc(var(--tab-h) + env(safe-area-inset-bottom,0px) + 8px) 12px;
+  display:flex;align-items:center;gap:8px;padding:6px 10px;
+  background:var(--surface);border:1.5px solid var(--line-strong);border-radius:24px;
+  box-shadow:var(--shadow-lg);backdrop-filter:blur(16px);z-index:20;
+}
+.saud-input-box textarea{
+  flex:1;min-height:44px;max-height:110px;padding:10px 12px;border:0;background:transparent;
+  font-size:15px;line-height:1.45;resize:none;outline:none;
+}
+.saud-mic-btn{
+  width:42px;height:42px;border-radius:50%;display:grid;place-items:center;
+  background:var(--surface-alt);border:1px solid var(--line);color:var(--muted);flex:none;transition:all .2s;
+}
+.saud-mic-btn.listening{background:var(--danger);color:#fff;animation:micpulse 1s infinite}
+@keyframes micpulse{0%,100%{box-shadow:0 0 0 0 rgba(184,58,48,0.6)}50%{box-shadow:0 0 0 8px rgba(184,58,48,0)}}
+.saud-send-btn{
+  width:42px;height:42px;border-radius:50%;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--brand),var(--brand-deep));color:#fff;flex:none;
+  box-shadow:0 4px 12px var(--brand-glow);transition:transform .15s;
+}
+.saud-send-btn:active{transform:scale(.92)}
+.saud-send-btn svg{width:20px;height:20px}
+
+/* شريط الترجمة الفورية المدمج في المحادثة */
+.saud-intl-strip{
+  display:flex;align-items:center;gap:8px;overflow-x:auto;padding:8px 16px 6px;
+  scrollbar-width:none;background:var(--surface);border-bottom:1px solid var(--line);
+}
+.saud-intl-strip::-webkit-scrollbar{display:none}
+.saud-intl-label{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--brand);flex:none}
+.saud-intl-label svg{width:16px;height:16px}
+.saud-intl-chips{display:flex;gap:6px;flex:1}
+.saud-lang-chip{
+  flex:none;font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:99px;
+  background:var(--surface-alt);border:1px solid var(--line);color:var(--ink);cursor:pointer;
+  transition:all .15s ease;
+}
+.saud-lang-chip:hover{border-color:var(--brand);color:var(--brand)}
+.saud-lang-chip.on{background:var(--brand);color:#fff;border-color:var(--brand);box-shadow:0 2px 6px var(--brand-glow)}
+
+/* بطاقة الترحيب الفخمة لمجلس المستشار سعود */
+.saud-welcome-card{
+  margin:14px 0 10px;padding:22px 18px;border-radius:24px;
+  background:linear-gradient(135deg, rgba(10,82,63,0.06) 0%, rgba(197,152,45,0.08) 100%), var(--surface);
+  border:1.5px solid var(--gold-border);box-shadow:var(--shadow-lg);text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+}
+.saud-welcome-avatar{
+  width:78px;height:78px;border-radius:50%;padding:2px;background:#FFFFFF!important;
+  border:2.5px solid var(--gold);box-shadow:0 4px 16px rgba(10,82,63,0.18);position:relative;
+}
+.saud-welcome-avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;background:#FFFFFF!important;display:block}
+.saud-welcome-title{font-size:18.5px;font-weight:800;color:var(--ink)}
+.saud-welcome-desc{font-size:13.5px;color:var(--muted);line-height:1.65;max-width:480px;margin:0 auto}
+.saud-mcp-network-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:2px}
+.saud-mcp-node-pill{
+  font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;
+  background:var(--gold-soft);color:var(--gold-ink);border:1px solid var(--gold-border);
+  display:inline-flex;align-items:center;gap:4px;
+}
+.saud-starters-grid{
+  display:grid;grid-template-columns:repeat(auto-fit, minmax(210px, 1fr));gap:8px;width:100%;margin-top:10px;
+}
+.saud-starter-btn{
+  text-align:start;padding:11px 13px;border-radius:14px;background:var(--surface);
+  border:1px solid var(--line-strong);cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--ink);
+}
+.saud-starter-btn:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-soft);transform:translateY(-1px)}
+.saud-starter-btn svg{width:16px;height:16px;color:var(--brand);flex:none}
+
+/* بطاقة الترجمة الفورية داخل الرسالة */
+.msg-translation-card{
+  margin-top:10px;padding:10px 12px;border-radius:12px;
+  background:rgba(10,82,63,0.06);border:1px solid var(--brand-glow);
+  font-size:14px;line-height:1.6;direction:auto;
+}
+.msg-trans-header{display:flex;align-items:center;justify-content:space-between;font-size:11px;font-weight:700;color:var(--brand);margin-bottom:6px}
+.msg-trans-header svg{width:14px;height:14px}
+
+/* نافذة استعراض خادم الشاملة MCP */
+.mcp-modal{position:fixed;inset:0;background:rgba(6,20,22,0.65);z-index:60;display:flex;align-items:flex-end;backdrop-filter:blur(8px)}
+.mcp-modal[hidden]{display:none}
+.mcp-modal-card{
+  width:100%;max-height:86vh;background:var(--surface);border-radius:28px 28px 0 0;
+  display:flex;flex-direction:column;border:1px solid var(--line);box-shadow:var(--shadow-lg);overflow:hidden;
+}
+.mcp-modal-head{
+  display:flex;align-items:center;justify-content:space-between;padding:16px 20px;
+  border-bottom:1px solid var(--line);background:linear-gradient(135deg,var(--brand-soft),var(--surface));
+}
+.mcp-modal-title{display:flex;align-items:center;gap:10px}
+.mcp-modal-title svg{width:26px;height:26px;color:var(--gold)}
+.mcp-modal-title b{font-size:17px;display:block}
+.mcp-modal-title small{font-size:12px;color:var(--muted)}
+.mcp-modal-body{padding:18px 20px;overflow-y:auto;display:flex;flex-direction:column;gap:14px}
+.mcp-status-card{background:var(--surface-alt);border:1px solid var(--line);border-radius:16px;padding:12px 14px;display:grid;gap:8px}
+.mcp-stat-row{display:flex;align-items:center;justify-content:space-between;font-size:13.5px}
+.mcp-badge-online{padding:2px 10px;border-radius:99px;background:#DEF7EC;color:#03543F;font-size:12px}
+:root[data-theme="dark"] .mcp-badge-online{background:#042C21;color:#31C48D}
+.mcp-tool-pills{display:flex;gap:6px;flex-wrap:wrap}
+.mcp-tool-pills span{font-family:monospace;font-size:11.5px;padding:2px 6px;border-radius:6px;background:var(--brand-soft);color:var(--brand)}
+.mcp-results{display:grid;gap:10px;max-height:300px;overflow-y:auto}
+.mcp-res-item{background:var(--surface);border:1px solid var(--line-strong);border-radius:14px;padding:12px;display:grid;gap:6px}
+.mcp-res-head{display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:700;color:var(--gold-ink)}
+:root[data-theme="dark"] .mcp-res-head{color:var(--gold)}
+.mcp-res-quote{font-size:13.5px;line-height:1.6;color:var(--ink)}
+.mcp-res-cite{font-size:11.5px;color:var(--muted);direction:rtl}
+.mcp-config-box{margin-top:8px;padding-top:12px;border-top:1px dashed var(--line);display:grid;gap:6px}
+.mcp-config-box input{font-size:13px}
+
+@media(min-width:700px){
+  .mcp-modal{align-items:center;justify-content:center;padding:20px}
+  .mcp-modal-card{max-width:620px;border-radius:28px}
+  .saud-hero-card{margin-inline:24px}
+  #v-assistant{max-width:860px;margin:0 auto;width:100%}
+}
+@media(min-width:1024px){
+  .saud-hero-card{margin-inline:24px;max-width:740px}
+  #v-assistant{max-width:920px}
+  .saud-input-box{inset:auto 24px calc(env(safe-area-inset-bottom,0px) + 20px) 24px}
+}
 </style>
 </head>
 <body data-v="home">
@@ -705,9 +1010,57 @@ button.pr-d{border:0;color:inherit;font:inherit;font-size:12.5px;cursor:pointer}
       </div>
     </section>
 
+    <!-- شريط اللغات والترجمة الفورية للطلبة الدوليين -->
+    <div class="intl-lang-bar" id="intlLangBar" role="region" aria-label="ترجمة فورية للطلبة الدوليين">
+      <div class="intl-bar-title">
+        <svg viewBox="0 0 24 24"><path d="M3.5 6.5h9M8 4.5v2M5 6.5c.8 3 3 5.2 6 6.5M11 6.5c-.8 3-3 5.2-6 6.5"/><path d="m12.5 20 3.5-8.5 3.5 8.5M13.8 17.5h4.4"/></svg>
+        <span>الترجمة الفورية للطلبة الدوليين:</span>
+      </div>
+      <div class="intl-chips-scroll">
+        <button type="button" class="intl-pill on" data-set-lang="ar">العربية (الأصل)</button>
+        <button type="button" class="intl-pill" data-set-lang="en">English</button>
+        <button type="button" class="intl-pill" data-set-lang="bn">বাংলা (Bengali)</button>
+        <button type="button" class="intl-pill" data-set-lang="ur">اردو (Urdu)</button>
+        <button type="button" class="intl-pill" data-set-lang="fr">Français</button>
+        <button type="button" class="intl-pill" data-set-lang="id">Bahasa Indonesia</button>
+        <button type="button" class="intl-pill more" id="btnMoreLangs">+ المزيد من اللغات</button>
+      </div>
+    </div>
+
     <div class="stats">
       <div class="card stat" data-go="tasks" role="button" tabindex="0"><b id="stOpen">0</b><span>مهام مفتوحة</span></div>
       <div class="card stat" data-go="tasks" role="button" tabindex="0"><b id="stNext">-</b><div class="pbar" id="stBar" hidden><i></i></div><span id="stNextSub">أقرب موعد</span></div>
+    </div>
+
+    <!-- بطاقة المستشار الأكاديمي سعود -->
+    <div class="card saud-hero-card" data-go="assistant" role="button" tabindex="0">
+      <div class="saud-hero-badge">
+        <span class="live on"></span>
+        <span>المستشار الذكي متصل الآن</span>
+        <span class="saud-mcp-tag"><svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;display:inline-block"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10M6 14h6"/></svg> شبكة الشاملة MCP</span>
+      </div>
+      <div class="saud-hero-body">
+        <div class="saud-avatar-ring">
+          <img src="saud-avatar.jpg" alt="المستشار سعود" class="saud-hero-img">
+        </div>
+        <div class="saud-hero-info">
+          <div class="saud-hero-title">
+            <b>سعود | مستشارك الأكاديمي</b>
+            <span class="saud-role-pill">جامعة الإمام</span>
+          </div>
+          <p class="saud-hero-desc">إجابات فورية عن جدولك الدراسي، مكافآتك، والبحث الموثق في المكتبة الشاملة.</p>
+        </div>
+      </div>
+      <div class="saud-hero-chips">
+        <button type="button" class="saud-chip-btn" data-ask="ما هي أول محاضرة عندي اليوم وأين قاعتها؟">محاضرات اليوم</button>
+        <button type="button" class="saud-chip-btn" data-ask="متى ينتهي موعد دوامي اليوم؟">نهاية الدوام</button>
+        <button type="button" class="saud-chip-btn" data-ask="كم متبقي على موعد المكافأة الجامعية القادمة بالتفصيل؟">المكافأة الجامعية</button>
+        <button type="button" class="saud-chip-btn" data-ask="ابحث في المكتبة الشاملة عن حديث إنما الأعمال بالنيات مع التوثيق الكامل ورابط القراءة">المكتبة الشاملة</button>
+      </div>
+      <div class="saud-hero-cta">
+        <span>استشر سعود الآن</span>
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      </div>
     </div>
 
   </section>
@@ -819,12 +1172,30 @@ button.pr-d{border:0;color:inherit;font:inherit;font-size:12.5px;cursor:pointer}
         <div><b id="gCum">0.00</b><span>المعدل التراكمي</span></div>
       </div>
       <p class="muted pad" style="margin:0 16px">الحساب على مقياس 5 درجات: أ+ 5.00، أ 4.75، ب+ 4.50، ب 4.00، ج+ 3.50، ج 3.00، د+ 2.50، د 2.00، هـ 1.00.</p>
+      
+      <div class="card saud-mini-tip" data-ask-saud="كيف أرفع معدلي التراكمي إلى 4.5 وما هي الدرجات المطلوبة لمقرراتي الحالية في جامعة الإمام؟">
+        <img src="saud-avatar.jpg" alt="سعود" class="saud-mini-avatar">
+        <div class="saud-mini-text">
+          <b>استشارة سعود الأكاديمية</b>
+          <span>اسأل سعود: كيف أرفع معدلي وما الدرجات المطلوبة لمقرراتي؟</span>
+        </div>
+        <button class="mini" type="button">استشر سعود</button>
+      </div>
     </div>
 
     <div class="pane" id="p-abs">
       <div class="fab-row"><button class="btn block" id="btnAddAbs"></button></div>
       <p class="muted" id="absNote" hidden style="margin:12px 16px 0;font-size:13px"></p>
       <div style="margin-top:14px" id="absList"></div>
+
+      <div class="card saud-mini-tip" data-ask-saud="ما هي لائحة الأعذار المقبولة للغياب في جامعة الإمام وكيف أقدم عذرًا رسميًا لتجنب الحرمان (DN)؟">
+        <img src="saud-avatar.jpg" alt="سعود" class="saud-mini-avatar">
+        <div class="saud-mini-text">
+          <b>لوائح الغياب والحرمان</b>
+          <span>اسأل سعود عن الأعذار المعتمدة وطريقة تجنب الحرمان الأكاديمي (DN)</span>
+        </div>
+        <button class="mini" type="button">استشر سعود</button>
+      </div>
     </div>
 
     <div class="pane" id="p-notes">
@@ -892,10 +1263,96 @@ button.pr-d{border:0;color:inherit;font:inherit;font-size:12.5px;cursor:pointer}
       </div>
     </div>
   </section>
+
+  <!-- ======== المستشار الذكي سعود ======== -->
+  <section class="view" id="v-assistant">
+    <header class="top saud-top">
+      <div class="top-row">
+        <div class="brand">
+          <div class="saud-top-avatar">
+            <img src="saud-avatar.jpg" alt="سعود" class="saud-avatar-sm">
+            <span class="live on saud-live-dot"></span>
+          </div>
+          <div class="saud-top-titles">
+            <b class="notranslate" translate="no">سعود | المستشار الذكي</b>
+            <div class="saud-subline">
+              <span class="saud-status-txt">متصل الآن</span>
+              <span class="saud-dot-sep">•</span>
+              <span class="saud-mcp-status" id="saudMcpBadge">خوادم MCP الستة نشطة</span>
+            </div>
+          </div>
+        </div>
+        <div class="top-actions">
+          <button class="icon-btn" id="btnTtsToggle" type="button" aria-label="تفعيل أو كتم القراءة الصوتية" title="القراءة الصوتية">
+            <svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+          </button>
+          <button class="icon-btn" id="btnMcpDrawer" type="button" aria-label="خوادم MCP العلمية" title="خوادم MCP المعتمدة">
+            <svg viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10M6 14h6"/></svg>
+          </button>
+          <button class="icon-btn" id="btnClearChat" type="button" aria-label="مسح المحادثة" title="مسح المحادثة">
+            <svg viewBox="0 0 24 24"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l.8 12.5h9.4L17.5 7"/></svg>
+          </button>
+        </div>
+      </div>
+      <!-- شريط المترجم الفوري للمحادثة -->
+      <div class="saud-intl-strip">
+        <div class="saud-intl-label">
+          <svg viewBox="0 0 24 24"><path d="M3.5 6.5h9M8 4.5v2M5 6.5c.8 3 3 5.2 6 6.5M11 6.5c-.8 3-3 5.2-6 6.5"/><path d="m12.5 20 3.5-8.5 3.5 8.5M13.8 17.5h4.4"/></svg>
+          <span>المترجم الفوري:</span>
+        </div>
+        <div class="saud-intl-chips">
+          <button type="button" class="saud-lang-chip on" data-chat-lang="ar">العربية (الأصل)</button>
+          <button type="button" class="saud-lang-chip" data-chat-lang="en">English</button>
+          <button type="button" class="saud-lang-chip" data-chat-lang="bn">বাংলা (Bengali)</button>
+          <button type="button" class="saud-lang-chip" data-chat-lang="ur">اردو (Urdu)</button>
+          <button type="button" class="saud-lang-chip" data-chat-lang="fr">Français</button>
+          <button type="button" class="saud-lang-chip" data-chat-lang="id">Bahasa Indonesia</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="saud-chat-container">
+      <!-- شريط الأسئلة السريعة -->
+      <div class="saud-quick-chips" id="saudQuickChips">
+        <button type="button" class="saud-qchip" data-q="ما هي أول محاضرة عندي اليوم وأين قاعتها ومبناها؟">محاضرات اليوم</button>
+        <button type="button" class="saud-qchip" data-q="متى ينتهي موعد دوامي ومحاضراتي اليوم؟">نهاية الدوام</button>
+        <button type="button" class="saud-qchip" data-q="ما هي محاضراتي غدًا وأين قاعاتي المحددة؟">محاضرات الغد والقاعات</button>
+        <button type="button" class="saud-qchip" data-q="كم متبقي على نزول المكافأة القادمة وما هي ضوابط صرفها؟">المكافأة الجامعية</button>
+        <button type="button" class="saud-qchip" data-q="ابحث لي في المكتبة الشاملة عن حديث إنما الأعمال بالنيات مع التوثيق ورابط القراءة المباشرة">المكتبة الشاملة: بحث وتوثيق</button>
+        <button type="button" class="saud-qchip" data-q="ما هي أركان الصلاة من كتاب الروض المربع مع التوثيق ورابط الشاملة؟">الروض المربع: أركان الصلاة</button>
+        <button type="button" class="saud-qchip" data-q="ما هي لوائح الغياب في جامعة الإمام ومتى يُحرم الطالب؟">لوائح الغياب والحرمان</button>
+      </div>
+
+      <!-- قائمة الرسائل -->
+      <div class="saud-messages" id="saudMessages">
+        <!-- ستملأ بالرسائل -->
+      </div>
+
+      <!-- مؤشر الكتابة التفاعلي -->
+      <div class="saud-typing" id="saudTyping" hidden>
+        <div class="saud-typing-dots">
+          <span></span><span></span><span></span>
+        </div>
+        <span class="saud-typing-txt">سعود يستعرض المراجع وسياقك الأكاديمي…</span>
+      </div>
+
+      <!-- شريط الإدخال والإرسال -->
+      <div class="saud-input-box">
+        <button class="saud-mic-btn" id="btnVoiceInput" type="button" aria-label="تحدث صوتيًا" title="التحدث بالصوت">
+          <svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3M8 22h8"/></svg>
+        </button>
+        <textarea id="saudInput" rows="1" placeholder="اكتب سؤالك لسعود (بالعربية أو أي لغة)…" aria-label="رسالتك للمستشار سعود"></textarea>
+        <button class="saud-send-btn" id="btnSendChat" type="button" aria-label="إرسال">
+          <svg viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
 </main>
 
 <nav class="tabs" id="tabs" aria-label="التنقل">
   <button class="on" data-v="home"><span class="pill" data-ic="home"></span>الرئيسية</button>
+  <button data-v="assistant"><span class="pill" data-ic="bot"></span>المستشار <span class="tab-badge">AI</span></button>
   <button data-v="channels"><span class="pill" data-ic="plane"></span>القنوات</button>
   <button data-v="services"><span class="pill" data-ic="grid"></span>الخدمات</button>
   <button data-v="tools"><span class="pill" data-ic="calc"></span>أدواتي</button>
@@ -920,6 +1377,106 @@ button.pr-d{border:0;color:inherit;font:inherit;font-size:12.5px;cursor:pointer}
 <button class="inst-fab" id="instFab" type="button" hidden></button>
 <div class="adk" id="adk" role="status" aria-live="polite"></div>
 <div class="adk lecn" id="lecn" role="alertdialog" aria-live="assertive"></div>
+
+<!-- نافذة استعراض خادم المكتبة الشاملة MCP -->
+<div class="mcp-modal" id="mcpModal" role="dialog" aria-modal="true" hidden>
+  <div class="mcp-modal-card">
+    <div class="mcp-modal-head">
+      <div class="mcp-modal-title">
+        <svg viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10M6 14h6"/></svg>
+        <div>
+          <b>خادم المكتبة الشاملة (MCP)</b>
+          <small>Model Context Protocol • JSON-RPC 2.0</small>
+        </div>
+      </div>
+      <button class="icon-btn" id="btnCloseMcpModal" aria-label="إغلاق"></button>
+    </div>
+    <div class="mcp-modal-body">
+      <div class="mcp-status-card">
+        <div class="mcp-stat-row">
+          <span>حالة الاتصال بمنظومة MCP:</span>
+          <b class="mcp-badge-online"><span class="live on" style="display:inline-block;width:8px;height:8px;margin-inline-end:4px"></span> متصل ونشط</b>
+        </div>
+        <div class="mcp-stat-row">
+          <span>بروتوكول الربط:</span>
+          <b>Model Context Protocol (JSON-RPC 2.0)</b>
+        </div>
+        <div class="mcp-stat-row">
+          <span>أدوات استخراج النصوص:</span>
+          <div class="mcp-tool-pills">
+            <span>البحث النصي الدقيق</span>
+            <span>استخراج الصفحة والجزء</span>
+            <span>التوثيق المباشر</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mcp-search-section">
+        <label><b>اختبار فوري للبحث في نصوص أمهات الكتب بالأجزاء والصفحات:</b></label>
+        <div class="search" style="margin:8px 0">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="search" id="mcpTestInput" placeholder="اكتب عبارة للبحث (مثال: الأعمال بالنيات، أركان الصلاة، القلتان)…">
+        </div>
+        <button class="btn block" id="btnRunMcpTest" type="button">استخراج وتوثيق النقولات</button>
+      </div>
+
+      <div class="mcp-results" id="mcpResultsList">
+        <!-- ستظهر نتائج البحث هنا -->
+      </div>
+
+      <div style="margin-top:16px;border-top:1px solid var(--line);padding-top:14px">
+        <label style="font-size:13px;font-weight:700;color:var(--brand);display:flex;align-items:center;gap:6px;margin-bottom:8px">
+          <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 14.14 14.14M4.93 19.07 19.07 4.93M12 2v20M2 12h20"/></svg>
+          <b>خوادم MCP العلمية المرتبطة بالتطبيق:</b>
+        </label>
+        <div class="mcp-fed-grid">
+          <div class="mcp-fed-item">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <b>خادم التراث والشاملة</b>
+              <span class="mcp-badge-online" style="font-size:10px">نشط</span>
+            </div>
+            <span>أمهات كتب الفقه، العقيدة، والحديث مع روابط الشاملة</span>
+          </div>
+          <div class="mcp-fed-item">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <b>خادم الحديث الشريف</b>
+              <span class="mcp-badge-online" style="font-size:10px">نشط</span>
+            </div>
+            <span>تخريج الأحاديث وبيان الصحة ودرجة الإسناد</span>
+          </div>
+          <div class="mcp-fed-item">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <b>خادم علوم القرآن والتفاسير</b>
+              <span class="mcp-badge-online" style="font-size:10px">نشط</span>
+            </div>
+            <span>التفاسير المعتمدة وأسباب النزول الموثقة</span>
+          </div>
+          <div class="mcp-fed-item">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <b>خادم الأنصاري للعلوم الشرعية</b>
+              <span class="mcp-badge-online" style="font-size:10px">نشط</span>
+            </div>
+            <span>الفقه المقارن والبحوث المؤصلة لطلبة العلم</span>
+          </div>
+          <div class="mcp-fed-item">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <b>خادم مجمع الجامع للمتون</b>
+              <span class="mcp-badge-online" style="font-size:10px">نشط</span>
+            </div>
+            <span>المتون الفقهية المعتمدة في المناهج الجامعية</span>
+          </div>
+          <div class="mcp-fed-item">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <b>خادم القرآن والقراءات</b>
+              <span class="mcp-badge-online" style="font-size:10px">نشط</span>
+            </div>
+            <span>النصوص القرآنية الموثقة والقراءات المعتمدة</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 (() => {
@@ -996,7 +1553,13 @@ const IC = {
   community:'<circle cx="12" cy="6" r="2.3"/><circle cx="5.5" cy="17" r="2.3"/><circle cx="18.5" cy="17" r="2.3"/><path d="M10.9 8 6.6 15M13.1 8l4.3 7M7.8 17h8.4"/>',
   mail:'<rect x="3.5" y="5.5" width="17" height="13" rx="3"/><path d="m4.5 8 7.5 5.5L19.5 8"/>',
   info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8h.01"/>',
-  awn:'<path d="M12 11.5 8.7 8.2a2.3 2.3 0 0 1 3.3-3.3l0 0a2.3 2.3 0 0 1 3.3 3.3L12 11.5Z"/><path d="M3 15.5h2.8l3 1.2h3.4a1.4 1.4 0 0 1 0 2.8H9.5M12.2 18.3l4.6-1.5a1.8 1.8 0 0 1 1.3 3.3L12.5 21.5H8.7l-2.9-1.3M3 14v7"/>'
+  awn:'<path d="M12 11.5 8.7 8.2a2.3 2.3 0 0 1 3.3-3.3l0 0a2.3 2.3 0 0 1 3.3 3.3L12 11.5Z"/><path d="M3 15.5h2.8l3 1.2h3.4a1.4 1.4 0 0 1 0 2.8H9.5M12.2 18.3l4.6-1.5a1.8 1.8 0 0 1 1.3 3.3L12.5 21.5H8.7l-2.9-1.3M3 14v7"/>',
+  bot:'<rect x="3" y="11" width="18" height="10" rx="3"/><circle cx="8.5" cy="16" r="1.5"/><circle cx="15.5" cy="16" r="1.5"/><path d="M8 7l4-4 4 4M12 3v8M2 16h1M21 16h1"/>',
+  sparkles:'<path d="m12 3 2.5 5.5L20 11l-5.5 2.5L12 19l-2.5-5.5L4 11l5.5-2.5z"/><path d="M19 3v4M21 5h-4"/>',
+  mic:'<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3M8 22h8"/>',
+  send:'<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>',
+  volume:'<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14"/>',
+  book:'<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10M6 14h6"/>'
 };
 const svg = (n) => { const s = document.createElementNS('http://www.w3.org/2000/svg','svg'); s.setAttribute('viewBox','0 0 24 24'); s.innerHTML = IC[n]; return s; };
 const fillIcons = () => {
@@ -3059,6 +3622,575 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
   };
   beat(); setInterval(beat, 45000);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) beat(); });
+})();
+
+/* ---------- المستشار الذكي سعود + المكتبة الشاملة (MCP) ---------- */
+(() => {
+  // عنوان خادم المستشار الذكي. اتركه فارغًا إذا كان الخادم على نفس النطاق، أو ضع رابط الـ Worker/الخادم مثل: 'https://xxxx.workers.dev'
+  const API_BASE = 'https://khadamati-saud.abid-afaz-hasan-alli.workers.dev';
+  // معرّف مجهول للجهاز لتطبيق حدّ الأسئلة اليومي (لا يحمل أي بيانات شخصية)
+  const getDeviceId = () => {
+    try {
+      let d = localStorage.getItem('khadamati.did');
+      if (!d) { d = (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2, 12)); localStorage.setItem('khadamati.did', d); }
+      return d;
+    } catch (e) { return 'nodevice-' + Date.now().toString(36); }
+  };
+  const CHAT_STORAGE_KEY = 'khadamati.saud.chat.v1';
+  const TTS_KEY = 'khadamati.saud.tts';
+  let ttsEnabled = localStorage.getItem(TTS_KEY) === '1';
+
+  let chatHistory = [];
+  try {
+    chatHistory = JSON.parse(localStorage.getItem(CHAT_STORAGE_KEY) || '[]');
+  } catch(e) { chatHistory = []; }
+
+  // رسالة ترحيب أولى إذا كانت المحادثة فارغة
+  if (!chatHistory.length) {
+    chatHistory = [{
+      role: 'assistant',
+      time: new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' }),
+      content: `يا هلا ومرحبًا بك في تطبيق «خدماتي»! 🎓🇸🇦\n\nأنا **سعود**، مستشارك الأكاديمي والجامعي الذكي في جامعة الإمام محمد بن سعود الإسلامية.\n\nيسعدني خدمتك في:\n- 📅 استعراض محاضراتك اليوم وغداً وأماكن القاعات من جدولك المرفوع.\n- ⏰ معرفة مواعيد انتهاء دوامك اليوم وتذكيرات المحاضرات.\n- 💰 الاستفسار عن موعد صرف المكافآت الجامعية ولوائحها المعتمدة.\n- 📚 **البحث والتوثيق العلمي المعتمد من أمهات كتب المكتبة الشاملة عبر بروتوكول MCP** (تفسير، حديث، فقه، أصول، لغة عربية).\n\nبماذا تحب أن نبدأ اليوم؟`
+    }];
+  }
+
+  const msgList = $('#saudMessages');
+  const chatInput = $('#saudInput');
+  const btnSend = $('#btnSendChat');
+  const btnVoice = $('#btnVoiceInput');
+  const btnTts = $('#btnTtsToggle');
+  const btnMcpDrawer = $('#btnMcpDrawer');
+  const btnClear = $('#btnClearChat');
+  const typingIndicator = $('#saudTyping');
+  const mcpBadge = $('#saudMcpBadge');
+
+  if (!msgList || !chatInput || !btnSend) return;
+
+  // تحديث حالة زر القراءة الصوتية
+  const updateTtsUi = () => {
+    if (!btnTts) return;
+    btnTts.classList.toggle('on', ttsEnabled);
+    btnTts.title = ttsEnabled ? 'القراءة الصوتية: مفعّلة' : 'القراءة الصوتية: مكتومة';
+    btnTts.style.color = ttsEnabled ? 'var(--gold)' : '';
+  };
+  updateTtsUi();
+
+  if (btnTts) {
+    btnTts.onclick = () => {
+      ttsEnabled = !ttsEnabled;
+      localStorage.setItem(TTS_KEY, ttsEnabled ? '1' : '0');
+      updateTtsUi();
+      toast(ttsEnabled ? 'تم تفعيل القراءة الصوتية' : 'تم كتم الصوت');
+    };
+  }
+
+  // جمع سياق الطالب الحالي لدقة إجابة المساعد
+  const getStudentContext = () => {
+    const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+    const daysAr = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+    const now = new Date();
+    const dayKey = days[now.getDay()];
+    const dayAr = daysAr[now.getDay()];
+    const currentTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+
+    // استخراج محاضرات الطالب سواء من الجدول الذكي S.sched أو المقررات
+    const sched = S.sched || {};
+    const lectures = sched.lectures || [];
+    const todayLectures = lectures.filter(l => l.day === dayKey).sort((a,b) => a.start - b.start);
+    const tomorrowKey = days[(now.getDay() + 1) % 7];
+    const tomorrowLectures = lectures.filter(l => l.day === tomorrowKey).sort((a,b) => a.start - b.start);
+
+    return {
+      name: S.name || '',
+      currentDay: dayKey,
+      currentDayAr: dayAr,
+      currentTime: currentTime,
+      todayLectures: todayLectures,
+      tomorrowLectures: tomorrowLectures,
+      allSchedule: lectures,
+      courses: S.courses || [],
+      absences: S.abs || [],
+      tasks: (S.tasks || []).filter(t => !t.done),
+      prevGpa: S.prev?.gpa || '',
+      prevHrs: S.prev?.hrs || ''
+    };
+  };
+
+  // تنسيق نصوص الإجابات مع إبراز نصوص الشاملة والتوثيق وأزرار القراءة المباشرة
+  const formatReplyHtml = (raw) => {
+    let text = String(raw || '');
+
+    // استبدال النص المنقول من المصدر أو الكتاب
+    text = text.replace(/\*\*(?:النص المنقول(?: مباشرة من الكتاب| من المصدر)?|النص المقتبس):\*\*\s*(?:\n)?([\s\S]*?)(?=\*\*التوثيق العلمي:\*\*|\*\*رابط القراءة المباشرة|\*\*شرح وتعليق|$)/i, (m, quote) => {
+      return `<div class="quote-box">
+        <div class="quote-tag"><svg viewBox="0 0 24 24" style="width:16px;height:16px;display:inline-block;stroke:currentColor;fill:none;stroke-width:2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10M6 14h6"/></svg> <b>النص الموثق من أمهات الكتب (المكتبة الشاملة):</b></div>
+        <div class="quote-text">${quote.trim().replace(/^["“]|["”]$/g, '')}</div>
+      </div>`;
+    });
+
+    // استبدال التوثيق العلمي
+    text = text.replace(/\[المصدر:\s*([^\]]+)\]/g, (m, cite) => {
+      return `<div class="quote-cite">📜 <b>التوثيق المعتمد:</b> ${cite}</div>`;
+    });
+    text = text.replace(/\*\*التوثيق العلمي:\*\*\s*(?:\n)?([^\n<]+)/i, (m, cite) => {
+      return `<div class="quote-cite">📜 <b>التوثيق المعتمد:</b> ${cite.trim()}</div>`;
+    });
+
+    // تحويل روابط الشاملة إلى أزرار قراءة مباشرة رسمية وفخمة
+    text = text.replace(/\[([^\]]*?(?:المكتبة الشاملة|الشاملة|قراءة|كتاب|المصدر)[^\]]*?)\]\((https:\/\/shamela\.ws[^\)]+)\)/gi, (m, label, url) => {
+      return `<div style="margin:10px 0 6px"><a href="${url}" target="_blank" rel="noopener noreferrer" class="shamela-read-btn">
+        <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;flex:none"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10M6 14h6"/></svg>
+        <span>${label || 'قراءة الكتاب مباشرة في المكتبة الشاملة'}</span>
+        <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;transform:rotate(180deg);margin-inline-start:auto"><path d="m9 18 6-6-6-6"/></svg>
+      </a></div>`;
+    });
+
+    // أي رابط شاملة حر لم يتم وضعه بداخل وسم ماركداون
+    text = text.replace(/(?<!href=")(https:\/\/shamela\.ws\/book\/[^\s<"]+)/gi, (m, url) => {
+      return `<div style="margin:10px 0 6px"><a href="${url}" target="_blank" rel="noopener noreferrer" class="shamela-read-btn">
+        <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;flex:none"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10M6 14h6"/></svg>
+        <span>قراءة المرجع مباشرة في المكتبة الشاملة</span>
+        <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;transform:rotate(180deg);margin-inline-start:auto"><path d="m9 18 6-6-6-6"/></svg>
+      </a></div>`;
+    });
+
+    // استبدال شرح وتعليق المستشار
+    text = text.replace(/\*\*(?:شرح وتعليق(?: المستشار| المساعد)?):\*\*\s*(?:\n)?([\s\S]*?)(?=\*\*|$)/i, (m, exp) => {
+      return `<div class="quote-explain"><b>شرح وتعليق المستشار:</b><br>${exp.trim()}</div>`;
+    });
+
+    // روابط ماركداون عامة أخرى
+    text = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:var(--brand);text-decoration:underline;font-weight:600">$1</a>');
+
+    // تنسيق العناوين العريضة والنقاط
+    text = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+    text = text.replace(/^\* (.*?)$/gm, '• $1');
+    text = text.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>');
+
+    return text;
+  };
+
+  // قراءة النص صوتياً بواسطة محرك النطق
+  const speakText = (text) => {
+    if (!('speechSynthesis' in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      const clean = text.replace(/<[^>]+>/g, '').replace(/[#*`_\[\]]/g, '').slice(0, 450);
+      const ut = new SpeechSynthesisUtterance(clean);
+      ut.lang = 'ar-SA';
+      ut.rate = 1.0;
+      window.speechSynthesis.speak(ut);
+    } catch(e) {}
+  };
+
+  let activeChatLang = S.lang || 'ar';
+
+  // رسم الرسائل مع دعم بطاقة الترحيب والترجمة الفورية لكل رد
+  const renderMessages = () => {
+    msgList.replaceChildren();
+
+    // إذا كانت المحادثة فارغة، نعرض بطاقة الترحيب الملكية الفاخرة
+    if (!chatHistory.length) {
+      const welcomeCard = h('div', { class: 'saud-welcome-card' },
+        h('div', { class: 'saud-welcome-avatar' },
+          h('img', { src: 'saud-avatar.jpg', alt: 'المستشار سعود' }),
+          h('span', { class: 'live on saud-live-dot' })
+        ),
+        h('b', { class: 'saud-welcome-title' }, `أهلاً بك${S.name ? ' يا ' + S.name : ''} في مجلس المستشار سعود`),
+        h('p', { class: 'saud-welcome-desc' }, 'أنا مستشارك الأكاديمي الرقمي بجامعة الإمام محمد بن سعود الإسلامية. مستعد لإفادتك بجدولك ومكافآتك ولوائحك الجامعية، واستخراج وتوثيق النقولات العلمية من أمهات كتب الفقه والحديث والتفسير عبر خوادم MCP المعتمدة مع روابط القراءة المباشرة في المكتبة الشاملة.'),
+        h('div', { class: 'saud-mcp-network-pills' },
+          h('span', { class: 'saud-mcp-node-pill' }, '🟢 خادم التراث والشاملة'),
+          h('span', { class: 'saud-mcp-node-pill' }, '🟢 خادم الحديث الشريف'),
+          h('span', { class: 'saud-mcp-node-pill' }, '🟢 خادم القرآن والتفاسير'),
+          h('span', { class: 'saud-mcp-node-pill' }, '🟢 خادم مجمع الجامع'),
+          h('span', { class: 'saud-mcp-node-pill' }, '🟢 خادم الأنصاري')
+        ),
+        h('div', { class: 'saud-starters-grid' },
+          h('button', { type: 'button', class: 'saud-starter-btn', onclick: () => sendMessage('ما هي أول محاضرة عندي اليوم وأين قاعتها؟') },
+            svg('building'), h('span', {}, 'أول محاضرة وقاعتها اليوم')
+          ),
+          h('button', { type: 'button', class: 'saud-starter-btn', onclick: () => sendMessage('كم متبقي على موعد صرف المكافأة الجامعية القادمة بالتفصيل؟') },
+            svg('award'), h('span', {}, 'موعد صرف المكافأة القادمة')
+          ),
+          h('button', { type: 'button', class: 'saud-starter-btn', onclick: () => sendMessage('ابحث في المكتبة الشاملة عن حديث إنما الأعمال بالنيات مع التوثيق الكامل ورابط القراءة المباشرة') },
+            svg('book'), h('span', {}, 'حديث إنما الأعمال بالنيات موثق')
+          ),
+          h('button', { type: 'button', class: 'saud-starter-btn', onclick: () => sendMessage('ما هي أركان الصلاة من كتاب الروض المربع مع التوثيق ورابط القراءة في الشاملة؟') },
+            svg('bookpen'), h('span', {}, 'أركان الصلاة من الروض المربع')
+          )
+        )
+      );
+      msgList.append(welcomeCard);
+      return;
+    }
+
+    chatHistory.forEach((msg, idx) => {
+      const isSaud = msg.role === 'assistant';
+      const mDiv = h('div', { class: `msg ${isSaud ? 'saud' : 'user'}` });
+
+      if (isSaud) {
+        const av = h('img', { src: 'saud-avatar.jpg', class: 'msg-avatar', alt: 'سعود' });
+        const bubble = h('div', { class: 'msg-bubble' });
+        bubble.innerHTML = formatReplyHtml(msg.content);
+
+        const actions = h('div', { class: 'msg-actions' });
+        const speakBtn = h('button', { type: 'button', class: 'msg-act-btn' }, svg('volume'), 'استماع');
+        speakBtn.onclick = () => speakText(msg.content);
+
+        const copyBtn = h('button', { type: 'button', class: 'msg-act-btn' }, svg('copy'), 'نسخ');
+        copyBtn.onclick = () => {
+          navigator.clipboard.writeText(msg.content.replace(/<[^>]+>/g, '')).then(() => toast('تم نسخ النص الموثق'));
+        };
+
+        const transBtn = h('button', { type: 'button', class: 'msg-act-btn' }, svg('translate'), 'ترجمة فورية');
+        transBtn.onclick = async () => {
+          let existingTrans = bubble.querySelector('.msg-translation-card');
+          if (existingTrans) {
+            existingTrans.hidden = !existingTrans.hidden;
+            return;
+          }
+          const target = activeChatLang !== 'ar' ? activeChatLang : (S.lang || 'en');
+          transBtn.disabled = true;
+          transBtn.textContent = 'جارٍ الترجمة…';
+          try {
+            const cleanText = msg.content.replace(/<[^>]+>/g, '').slice(0, 1200);
+            const r = await fetch(API_BASE + '/api/translate', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ text: cleanText, targetLang: target })
+            });
+            const data = await r.json();
+            transBtn.disabled = false;
+            transBtn.replaceChildren(svg('translate'), 'ترجمة فورية');
+
+            if (data.translatedText) {
+              const langLabels = { en: 'English', bn: 'বাংলা', ur: 'اردو', fr: 'Français', id: 'Bahasa Indonesia' };
+              const tCard = h('div', { class: 'msg-translation-card' },
+                h('div', { class: 'msg-trans-header' },
+                  h('span', {}, `الترجمة الفورية (${langLabels[target] || target}):`),
+                  h('button', { class: 'mini', style: 'padding:2px 8px', onclick: () => tCard.remove() }, 'إخفاء')
+                ),
+                h('div', { style: 'direction:auto' }, data.translatedText)
+              );
+              bubble.insertBefore(tCard, actions);
+            }
+          } catch (err) {
+            transBtn.disabled = false;
+            transBtn.replaceChildren(svg('translate'), 'ترجمة فورية');
+            toast('تعذرت الترجمة الفورية حالياً');
+          }
+        };
+
+        actions.append(speakBtn, copyBtn, transBtn);
+        bubble.append(actions);
+
+        const tm = h('span', { class: 'msg-time' }, msg.time || '');
+        bubble.append(tm);
+        mDiv.append(av, bubble);
+      } else {
+        const av = h('div', { class: 'msg-user-avatar' }, (S.name ? S.name.slice(0, 1) : 'أنت'));
+        const bubble = h('div', { class: 'msg-bubble' });
+        bubble.textContent = msg.content;
+        const tm = h('span', { class: 'msg-time' }, msg.time || '');
+        bubble.append(tm);
+        mDiv.append(av, bubble);
+      }
+      msgList.append(mDiv);
+    });
+    msgList.scrollTop = msgList.scrollHeight;
+  };
+
+  // إرسال رسالة
+  const sendMessage = async (text) => {
+    const q = (text || chatInput.value || '').trim();
+    if (!q) return;
+
+    chatInput.value = '';
+    const nowTime = new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
+
+    // إضافة رسالة المستخدم
+    chatHistory.push({ role: 'user', content: q, time: nowTime });
+    renderMessages();
+
+    // مؤشر ذكي يوضح ما يبحث عنه سعود
+    const typingTxt = typingIndicator.querySelector('.saud-typing-txt');
+    if (typingTxt) {
+      if (/شاملة|حديث|فقه|صلاة|كتاب|مرجع|حكم|طهارة|تفسير/i.test(q)) {
+        typingTxt.textContent = 'سعود يستعلم من خوادم MCP ويستخرج نصوص الكتب وروابط الشاملة…';
+      } else if (/دوام|محاضر|قاع|جدول/i.test(q)) {
+        typingTxt.textContent = 'سعود يستعرض جدولك الدراسي ومواعيد محاضراتك وقاعاتك…';
+      } else if (/مكافأ|صرف|ريال/i.test(q)) {
+        typingTxt.textContent = 'سعود يفحص لوائح وضوابط صرف المكافآت الجامعية…';
+      } else {
+        typingTxt.textContent = 'سعود يحلل استفسارك ويجهز الرد الأكاديمي المعتمد…';
+      }
+    }
+    typingIndicator.hidden = false;
+    msgList.scrollTop = msgList.scrollHeight;
+
+    try {
+      const studentCtx = getStudentContext();
+      studentCtx.preferredLanguage = activeChatLang;
+
+      const res = await fetch(API_BASE + '/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: chatHistory.map(m => ({ role: m.role, content: m.content })),
+          studentContext: studentCtx,
+          deviceId: getDeviceId()
+        })
+      });
+
+      const data = await res.json();
+      typingIndicator.hidden = true;
+
+      const reply = data.limited ? data.error : data.reply || 'عفواً، لم أتمكن من الحصول على إجابة في الوقت الحالي، أرجو المحاولة مجدداً.';
+      const resTime = new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
+
+      chatHistory.push({ role: 'assistant', content: reply, time: resTime });
+      try { localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chatHistory.slice(-50))); } catch(e) {}
+      renderMessages();
+
+      if (ttsEnabled) {
+        speakText(reply);
+      }
+    } catch(err) {
+      typingIndicator.hidden = true;
+      chatHistory.push({
+        role: 'assistant',
+        content: 'تعذر الاتصال بالخادم الذكي مؤقتًا. يرجى التأكد من اتصال الإنترنت.',
+        time: nowTime
+      });
+      renderMessages();
+    }
+  };
+
+  btnSend.onclick = () => sendMessage();
+  chatInput.onkeydown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  // تفريغ المحادثة
+  btnClear.onclick = () => {
+    if (confirm('هل ترغب بمسح سجل المحادثة والبدء من جديد؟')) {
+      localStorage.removeItem(CHAT_STORAGE_KEY);
+      chatHistory = [];
+      location.reload();
+    }
+  };
+
+  // التعرف على الصوت
+  let recognition = null;
+  const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (SpeechRec) {
+    recognition = new SpeechRec();
+    recognition.lang = 'ar-SA';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onstart = () => {
+      btnVoice.classList.add('listening');
+      toast('جاري الاستماع لصوتك…');
+    };
+    recognition.onresult = (ev) => {
+      const text = ev.results[0][0].transcript;
+      chatInput.value = text;
+      sendMessage(text);
+    };
+    recognition.onerror = () => {
+      btnVoice.classList.remove('listening');
+      toast('تعذر التعرف على الصوت');
+    };
+    recognition.onend = () => {
+      btnVoice.classList.remove('listening');
+    };
+
+    btnVoice.onclick = () => {
+      try {
+        recognition.start();
+      } catch(e) {
+        try { recognition.stop(); } catch(e2) {}
+      }
+    };
+  } else {
+    btnVoice.onclick = () => toast('ميزة الإدخال الصوتي غير مدعومة في هذا المتصفح');
+  }
+
+  // شرائح الأسئلة السريعة داخل شاشة المستشار
+  $$('.saud-qchip').forEach(btn => {
+    btn.onclick = () => {
+      const q = btn.dataset.q;
+      if (q) sendMessage(q);
+    };
+  });
+
+  // شرائح الأسئلة في بطاقة الرئيسية وبطاقات الأدوات
+  $$('.saud-chip-btn').forEach(btn => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      const q = btn.dataset.ask;
+      go('assistant');
+      setTimeout(() => sendMessage(q), 300);
+    };
+  });
+  $$('[data-ask-saud]').forEach(el => {
+    el.onclick = () => {
+      const q = el.dataset.askSaud;
+      go('assistant');
+      setTimeout(() => sendMessage(q), 300);
+    };
+  });
+
+  // نافذة فحص واستعراض خادم الشاملة MCP
+  const mcpModal = $('#mcpModal');
+  const btnCloseMcp = $('#btnCloseMcpModal');
+  const btnRunMcp = $('#btnRunMcpTest');
+  const mcpInput = $('#mcpTestInput');
+  const mcpList = $('#mcpResultsList');
+
+  const openMcpModal = () => {
+    mcpModal.hidden = false;
+    fillIcons();
+  };
+  const closeMcpModal = () => {
+    mcpModal.hidden = true;
+  };
+
+  if (btnMcpDrawer) btnMcpDrawer.onclick = openMcpModal;
+  if (btnCloseMcp) btnCloseMcp.onclick = closeMcpModal;
+  if (mcpModal) mcpModal.onclick = (e) => { if (e.target === mcpModal) closeMcpModal(); };
+
+  // اختبار استعلام MCP المباشر
+  if (btnRunMcp) {
+    btnRunMcp.onclick = async () => {
+      const q = (mcpInput.value || '').trim();
+      if (!q) { toast('اكتب عبارة للبحث أولاً'); return; }
+
+      btnRunMcp.disabled = true;
+      btnRunMcp.textContent = 'جارٍ الاستعلام من خادم MCP…';
+      mcpList.replaceChildren(h('div', { class: 'empty' }, 'جارٍ البحث في نصوص أمهات الكتب المعتمدة…'));
+
+      try {
+        const r = await fetch(API_BASE + '/api/mcp/shamela', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            jsonrpc: '2.0',
+            id: Date.now(),
+            method: 'tools/call',
+            params: {
+              name: 'search_shamela',
+              arguments: { query: q, limit: 5 }
+            }
+          })
+        });
+        const data = await r.json();
+        btnRunMcp.disabled = false;
+        btnRunMcp.textContent = 'استخراج وتوثيق النقولات';
+
+        const content = data.result?.content?.[0]?.text;
+        const parsed = content ? JSON.parse(content) : null;
+        const results = parsed?.results || [];
+
+        if (!results.length) {
+          mcpList.replaceChildren(h('div', { class: 'empty' }, 'لم يتم العثور على نص مطابق في الفهرس. جرّب كلمات أخرى.'));
+          return;
+        }
+
+        mcpList.replaceChildren();
+        results.forEach(res => {
+          const item = h('div', { class: 'mcp-res-item' });
+          const head = h('div', { class: 'mcp-res-head' },
+            h('span', {}, res.bookTitle),
+            h('span', {}, `ج ${res.volume} ص ${res.page}`)
+          );
+          const auth = h('small', { class: 'muted' }, `المؤلف: ${res.author} ${res.deathYear ? `(ت ${res.deathYear})` : ''}`);
+          const quote = h('div', { class: 'mcp-res-quote' }, `"${res.verbatimQuote}"`);
+          const cite = h('div', { class: 'mcp-res-cite' }, res.citation);
+
+          const copyBtn = h('button', { class: 'mini', style: 'margin-top:6px;width:fit-content' }, 'نسخ النص مع التوثيق');
+          copyBtn.onclick = () => {
+            navigator.clipboard.writeText(`"${res.verbatimQuote}"\n${res.citation}`).then(() => toast('تم نسخ النص الموثق بنجاح'));
+          };
+
+          const shamelaUrl = res.shamelaUrl || (res.shamelaBookId ? `https://shamela.ws/book/${res.shamelaBookId}/${res.page || 1}` : 'https://shamela.ws');
+          const readBtn = h('a', {
+            href: shamelaUrl,
+            target: '_blank',
+            rel: 'noopener noreferrer',
+            class: 'shamela-read-btn',
+            style: 'margin-top:8px'
+          },
+            svg('book'),
+            h('span', {}, 'قراءة الكتاب مباشرة في المكتبة الشاملة'),
+            h('svg', { viewBox: '0 0 24 24', style: 'width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;transform:rotate(180deg);margin-inline-start:auto' },
+              h('path', { d: 'm9 18 6-6-6-6' })
+            )
+          );
+
+          item.append(head, auth, quote, cite, copyBtn, readBtn);
+          mcpList.append(item);
+        });
+      } catch(err) {
+        btnRunMcp.disabled = false;
+        btnRunMcp.textContent = 'استخراج وتوثيق النقولات';
+        mcpList.replaceChildren(h('div', { class: 'empty', style: 'color:var(--danger)' }, 'حدث خطأ أثناء الاتصال بخادم MCP'));
+      }
+    };
+  }
+
+  // ربط شريط الترجمة الفورية للطلبة الدوليين بالرئيسية
+  $$('.intl-pill[data-set-lang]').forEach(btn => {
+    btn.onclick = () => {
+      const code = btn.dataset.setLang;
+      setLang(code);
+    };
+  });
+  const btnMoreLangs = $('#btnMoreLangs');
+  if (btnMoreLangs) {
+    btnMoreLangs.onclick = openLang;
+  }
+  const curLang = S.lang || 'ar';
+  $$('.intl-pill[data-set-lang]').forEach(btn => {
+    btn.classList.toggle('on', btn.dataset.setLang === curLang);
+  });
+
+  // ربط شريط المترجم الفوري داخل صفحة المحادثة
+  const chatLangPlaceholders = {
+    ar: 'اكتب سؤالك لسعود (بالعربية أو أي لغة)…',
+    en: 'Type your question for Saud (in English or any language)…',
+    bn: 'সৌদকে আপনার প্রশ্ন লিখুন (বাংলা বা যেকোনো ভাষায়)…',
+    ur: 'سعود کے لیے اپنا سوال لکھیں (اردو یا کسی بھی زبان میں)…',
+    fr: 'Écrivez votre question pour Saud (en français ou toute langue)…',
+    id: 'Ketik pertanyaan Anda untuk Saud…'
+  };
+
+  $$('.saud-lang-chip[data-chat-lang]').forEach(chip => {
+    chip.onclick = () => {
+      const code = chip.dataset.chatLang;
+      activeChatLang = code;
+      $$('.saud-lang-chip').forEach(c => c.classList.toggle('on', c === chip));
+      if (chatInput && chatLangPlaceholders[code]) {
+        chatInput.placeholder = chatLangPlaceholders[code];
+      }
+      toast(`تم تفعيل لغة الردود: ${chip.textContent}`);
+    };
+  });
+
+  // مزامنة اللغة الافتراضية في شريط المحادثة
+  if (curLang && curLang !== 'ar') {
+    activeChatLang = curLang;
+    $$('.saud-lang-chip').forEach(c => c.classList.toggle('on', c.dataset.chatLang === curLang));
+    if (chatInput && chatLangPlaceholders[curLang]) {
+      chatInput.placeholder = chatLangPlaceholders[curLang];
+    }
+  }
+
+  renderMessages();
 })();
 })();
 </script>
