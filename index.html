@@ -1080,7 +1080,6 @@ body.saud-open .saud-fab{display:none}
         </div>
         <div class="card sc-card" id="acalCard">
           <h2>التقويم الأكاديمي السنوي</h2>
-          <p class="muted">ارفع التقويم الأكاديمي للعام (PDF أو صورة أو ملف نصي، ويُقرأ حتى لو كان صورة) ليقرأه سعود ويجيبك بدقة عن العطل والإجازات ومواعيد الأعمال والاختبارات والاعتذار عن الفصل (من وإلى).</p>
           <div id="acalInfo"></div>
           <button class="btn block" id="acalPick" type="button">رفع التقويم الأكاديمي السنوي</button>
           <input type="file" id="acalFile" accept="application/pdf,.pdf,image/*,text/plain,.txt" hidden>
@@ -2330,7 +2329,7 @@ $('#calFile').onchange = async (e) => {
     if (!a || !a.text) return;
     const del = h('button', {class:'del', type:'button', 'aria-label':'حذف التقويم الأكاديمي', title:'حذف', onclick:() => { if (!confirm('حذف التقويم الأكاديمي السنوي؟')) return; S.acal = null; save(); err(''); render(); toast('تم حذف التقويم الأكاديمي'); }}, svg('trash'));
     const when = a.at ? new Intl.DateTimeFormat('ar-u-nu-latn-ca-gregory', {day:'numeric', month:'long', year:'numeric'}).format(new Date(a.at)) : '';
-    const lines = (a.lines || []).slice(0, 160), nl = lines.filter(x => !x.startsWith('== ')).length;
+    const lines = (a.lines || []), nl = lines.filter(x => !x.startsWith('== ')).length;
     // الأرقام والتواريخ تُعزل لتبقى مرتبة داخل السطر العربي ولا تتداخل
     const bidi = (t) => String(t).split(/(\d{1,4}(?:\/\d{1,4})+(?:-\d{1,2})?)/).map((x, i) => i % 2 ? h('bdi', {dir: 'ltr'}, x) : x);
     const row = (x) => {
@@ -2341,7 +2340,7 @@ $('#calFile').onchange = async (e) => {
     };
     box.append(h('div', {class:'acal-sum'},
       h('div', {class:'acal-sum-h'}, h('b', {class:'notranslate acal-name', translate:'no'}, a.name || 'التقويم الأكاديمي'), del),
-      h('span', {class:'muted'}, 'قرأه سعود' + (when ? ' · ' + when : '') + ' · اسأله عن أي إجازة أو موعد.'),
+      when ? h('span', {class:'muted'}, 'أُضيف ' + when) : null,
       lines.length ? h('details', {class:'acal-lines'}, h('summary', {class:'acal-sm'}, 'أبرز المواعيد المقروءة (' + nl + ')'), ...lines.map(row)) : null));
   };
   const clean = (s) => calNorm(s).replace(/[ \t\u00A0]+/g, ' ').replace(/\n\s*\n+/g, '\n').trim();
@@ -2487,7 +2486,7 @@ $('#calFile').onchange = async (e) => {
       if (ocrUsed) { const r = await reviewText(text, tableRead ? 'قُرئ الجدول صفًّا صفًّا: التواريخ والأيام محسوبة ومطابقة بين الهجري والميلادي، أما نصوص الإجراءات فقد يكون فيها خطأ، فراجعها وصحّحها ثم احفظ.' : ''); if (r == null) return; text = clean(r); if (text.length < 30) return; }
       const all = text.split('\n').map(x => x.trim()).filter(Boolean), tl = all.filter(x => x.startsWith('== ') || x.includes(' | '));
       const lines = tl.filter(x => !x.startsWith('== ')).length >= 3 ? tl : [...new Set(all.filter(x => x.length > 6 && x.length < 220 && KEY.test(x) && /[0-9\u0660-\u0669]/.test(x)))];
-      S.acal = {name: f.name.replace(/\.[^.]+$/, '').slice(0, 60), text: text.slice(0, 20000), lines, at: Date.now()};
+      S.acal = {name: f.name.replace(/\.[^.]+$/, '').slice(0, 60), text, lines, at: Date.now()};
       save(); render(); toast('تم رفع التقويم الأكاديمي، وسعود يقرؤه الآن');
     } catch (er) { err('تعذّرت قراءة الملف. جرّب ملفًا آخر.'); }
     finally { btn.disabled = false; render(); }
@@ -3898,7 +3897,6 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
       currentTime: now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0'),
       todayLectures: byDay(dayKey),
       tomorrowLectures: byDay(days[(now.getDay() + 1) % 7]),
-      allSchedule: lectures,
       courses: S.courses || [],
       absences: S.abs || [],
       tasks: (S.tasks || []).filter(t => !t.done),
@@ -3907,8 +3905,28 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
       cumGpa: num('#gCum'),
       semGpa: num('#gSem'),
       gpaScale: 5,
-      weeklyCalendar: (S.cal && S.cal.w) ? {title: S.cal.t || '', weeks: S.cal.w} : null,
-      academicCalendar: (S.acal && S.acal.text) ? {name: S.acal.name || '', text: String(S.acal.text).slice(0, 14000)} : null
+      todayDate: (() => { const d = now; return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); })(),
+      scheduleText: (() => {
+        const t12 = (m) => { const hh = Math.floor(m / 60); return (hh % 12 || 12) + ':' + String(m % 60).padStart(2, '0') + (hh < 12 ? ' ص' : ' م'); };
+        const out = []; days.forEach((k, i) => { const ls = byDay(k); if (ls.length) out.push(daysAr[i] + ': ' + ls.map(l => l.course + ' من ' + t12(l.start) + ' إلى ' + t12(l.end) + (l.room ? ' (القاعة ' + l.room + ')' : '')).join(' ؛ ')); });
+        return out.length ? out.join('\n') : '';
+      })(),
+      weeklyCalendarText: (() => {
+        const w = S.cal && S.cal.w; if (!Array.isArray(w) || !w.length) return '';
+        return (S.cal.t ? S.cal.t + '\n' : '') + w.map(x => (x[0] ? 'الأسبوع ' + x[0] : (x[3] || 'إجازة')) + ': من ' + x[1] + ' إلى ' + x[2]).join('\n');
+      })(),
+      absencesText: (S.abs || []).map(a => a.name + ': غاب ' + (a.n || 0) + (a.max ? ' من أصل ' + a.max + ' (المتبقي ' + Math.max(0, a.max - (a.n || 0)) + ')' : '')).join('\n'),
+      tasksText: (() => {
+        const t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()), dd = (n) => n === 1 ? 'يوم' : n === 2 ? 'يومين' : n <= 10 ? n + ' أيام' : n + ' يومًا';
+        return (S.tasks || []).map(t => { let left = ''; if (t.due) { const d = new Date(String(t.due).slice(0, 10) + 'T00:00'); const n = Math.round((d - t0) / 864e5); left = ' — ' + (n === 0 ? 'اليوم' : n === 1 ? 'غدًا' : n > 1 ? 'بعد ' + dd(n) : 'فات منذ ' + dd(-n)); }
+          return '- ' + t.title + (t.due ? ' | الموعد: ' + String(t.due).replace('T', ' الساعة ') + left : ' | بلا موعد') + (t.done ? ' | منجزة' : ' | غير منجزة'); }).join('\n');
+      })(),
+      prayerTimesText: (() => { try { if (!ptToday) return ''; const nm = {fajr: 'الفجر', sunrise: 'الشروق', dhuhr: 'الظهر', asr: 'العصر', maghrib: 'المغرب', isha: 'العشاء'}; const f = (o) => Object.keys(nm).filter(k => o && o[k]).map(k => nm[k] + ' ' + hm12(o[k])).join('، ');
+        return 'اليوم: ' + f(ptToday) + (ptNext ? '\nغدًا: ' + f(ptNext) : ''); } catch (e) { return ''; } })(),
+      hijriDateToday: (($('#prH') || {}).textContent || ''),
+      notesText: (() => { try { return String(S.notes || '').replace(/<br\s*\/?>|<\/(?:div|p|li)>/gi, '\n').replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim(); } catch (e) { return ''; } })(),
+      coursesText: (S.courses || []).filter(c => c && c.n).map(c => c.n + ' (' + (c.h || '') + ' ساعات)').join('، '),
+      academicCalendar: (S.acal && S.acal.text) ? {name: S.acal.name || '', text: String(S.acal.text)} : null
     };
   };
 
@@ -3920,7 +3938,7 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
     .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:var(--brand);text-decoration:underline;font-weight:600">$1</a>')
     .replace(/\*\*|__/g, '');
   const formatReplyHtml = (raw, hasCites) => {
-    let text = esc(String(raw || '').replace(/\r/g, '').replace(/```[a-z]*\n?/gi, '').replace(/`/g, ''));
+    let text = esc(String(raw || '').replace(/\r/g, '').replace(/```[a-z]*\n?/gi, '').replace(/`/g, '')).replace(/(\d{3,4})\s*(?:ه|هـ|هجري|هجرية)(?![\u0621-\u064A])/g, '$1هـ');   // الهجري يُكتب «هـ» دائمًا
     const hold = [], keep = (html) => { hold.push(html); return '\n\u0001' + (hold.length - 1) + '\u0002\n'; };
 
     // كتل: عناوين، قوائم، جداول، فواصل، فقرات (بدون أي رموز # ظاهرة)
