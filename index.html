@@ -3923,6 +3923,11 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
       })(),
       prayerTimesText: (() => { try { if (!ptToday) return ''; const nm = {fajr: 'الفجر', sunrise: 'الشروق', dhuhr: 'الظهر', asr: 'العصر', maghrib: 'المغرب', isha: 'العشاء'}; const f = (o) => Object.keys(nm).filter(k => o && o[k]).map(k => nm[k] + ' ' + hm12(o[k])).join('، ');
         return 'اليوم: ' + f(ptToday) + (ptNext ? '\nغدًا: ' + f(ptNext) : ''); } catch (e) { return ''; } })(),
+      rewardText: (() => { try {
+        const t0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()), fd = (iso) => new Intl.DateTimeFormat('ar-u-nu-latn-ca-gregory', {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'}).format(new Date(iso + 'T12:00'));
+        const out = []; for (let i = 0; i < 14 && out.length < 6; i++) { const r = rwOf(now.getFullYear(), now.getMonth() + i), n = Math.round((new Date(r.iso + 'T00:00') - t0) / 864e5); if (n < 0) continue;
+          out.push('- ' + fd(r.iso) + ' (' + (n === 0 ? 'اليوم' : n === 1 ? 'غدًا' : n === 2 ? 'بعد يومين' : n <= 10 ? 'بعد ' + n + ' أيام' : 'بعد ' + n + ' يومًا') + ')' + (r.moved ? ' — موعدها الأصلي 25 فوافق إجازة أسبوعية فتنزل الأحد' : '')); }
+        return 'المكافأة الجامعية تنزل يوم 25 من كل شهر ميلادي، فإن وافق الجمعة أو السبت نزلت الأحد. المواعيد القادمة:\n' + out.join('\n'); } catch (e) { return ''; } })(),
       hijriDateToday: (($('#prH') || {}).textContent || ''),
       notesText: (() => { try { return String(S.notes || '').replace(/<br\s*\/?>|<\/(?:div|p|li)>/gi, '\n').replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim(); } catch (e) { return ''; } })(),
       coursesText: (S.courses || []).filter(c => c && c.n).map(c => c.n + ' (' + (c.h || '') + ' ساعات)').join('، '),
@@ -4084,15 +4089,37 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
   // ---- الإدخال الصوتي ----
   const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (SpeechRec) {
-    const recognition = new SpeechRec();
-    recognition.lang = 'ar-SA'; recognition.continuous = false; recognition.interimResults = false;
-    recognition.onstart = () => { btnVoice.classList.add('listening'); toast('جاري الاستماع لصوتك…'); };
-    recognition.onresult = (ev) => { const t = ev.results[0][0].transcript; chatInput.value = t; sendMessage(t); };
-    recognition.onerror = () => { btnVoice.classList.remove('listening'); toast('تعذر التعرف على الصوت'); };
-    recognition.onend = () => btnVoice.classList.remove('listening');
-    btnVoice.onclick = () => { try { recognition.start(); } catch (e) { try { recognition.stop(); } catch (e2) {} } };
+    let rec = null, busy = false;
+    const MSG = {
+      'not-allowed': 'الميكروفون محجوب. اضغط أيقونة القفل بجانب رابط الموقع واسمح بالميكروفون ثم أعد المحاولة',
+      'service-not-allowed': 'الميكروفون محجوب. اضغط أيقونة القفل بجانب رابط الموقع واسمح بالميكروفون ثم أعد المحاولة',
+      'audio-capture': 'لم أجد ميكروفونًا في هذا الجهاز. تأكد من توصيله وتفعيله',
+      'no-speech': 'لم أسمع شيئًا، حاول مرة أخرى',
+      'network': 'خدمة التعرف على الصوت تحتاج إنترنت. جرّب متصفح Chrome إن استمرت المشكلة'
+    };
+    const start = (lang) => {
+      rec = new SpeechRec(); rec.lang = lang; rec.continuous = false; rec.interimResults = false; rec.maxAlternatives = 1;
+      let got = false, retried = false;
+      rec.onstart = () => { busy = true; btnVoice.classList.add('listening'); toast('جاري الاستماع لصوتك…'); };
+      rec.onresult = (ev) => { got = true; const t = ev.results[0][0].transcript; chatInput.value = t; sendMessage(t); };
+      rec.onerror = (e) => {
+        btnVoice.classList.remove('listening'); busy = false;
+        if (e.error === 'language-not-supported' && lang !== 'ar') { retried = true; setTimeout(() => start('ar'), 150); return; }
+        if (e.error === 'aborted') return;
+        toast(MSG[e.error] || 'تعذر التعرف على الصوت (' + (e.error || 'خطأ') + ')');
+      };
+      rec.onend = () => { btnVoice.classList.remove('listening'); busy = false; };
+      try { rec.start(); } catch (err) { btnVoice.classList.remove('listening'); busy = false; toast('تعذر تشغيل الميكروفون، أعد المحاولة'); }
+    };
+    btnVoice.onclick = async () => {
+      if (busy) { try { rec.stop(); } catch (e) {} return; }
+      // في الحاسوب يحتاج المتصفح إذنًا صريحًا للميكروفون قبل التعرف على الصوت
+      try { if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) { const st = await navigator.mediaDevices.getUserMedia({audio: true}); st.getTracks().forEach(t => t.stop()); } }
+      catch (err) { toast(err && err.name === 'NotFoundError' ? MSG['audio-capture'] : MSG['not-allowed']); return; }
+      start('ar-SA');
+    };
   } else {
-    btnVoice.onclick = () => toast('الإدخال الصوتي غير مدعوم في هذا المتصفح');
+    btnVoice.onclick = () => toast('هذا المتصفح لا يدعم الإدخال الصوتي. استخدم Chrome أو Edge');
   }
 
   // ---- لغة مربع الكتابة حسب لغة التطبيق (الترجمة من زر الترجمة العلوي) ----
