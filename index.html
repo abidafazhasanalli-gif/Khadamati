@@ -805,7 +805,6 @@ body.saud-open .saud-fab{display:none}
 .sp-acts svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .sp .saud-body{flex:1;min-height:0;display:flex;flex-direction:column;padding:0}
 .sp .saud-messages{position:relative;flex:1;min-height:0;overflow-y:auto;padding:16px 14px 40px;display:flex;flex-direction:column;justify-content:flex-start;gap:16px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-.sp .saud-messages::after{content:"";flex:none;height:60dvh}
 .sp .msg{max-width:100%}
 .sp .msg.user{align-self:flex-end;max-width:88%}
 .sp .msg.saud{align-self:stretch}
@@ -1225,7 +1224,6 @@ body.saud-open .saud-fab{display:none}
       </div>
       <div class="sp-acts">
         
-        <button class="icon-btn" id="btnVoicePick" type="button" aria-label="اختيار صوت سعود" title="اختيار صوت سعود"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg></button>
         <button class="icon-btn" id="btnClearChat" type="button" aria-label="مسح المحادثة" title="مسح المحادثة"><svg viewBox="0 0 24 24"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l.8 12.5h9.4L17.5 7"/></svg></button>
         <button class="icon-btn" id="btnSaudClose" type="button" aria-label="إغلاق" title="إغلاق"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
       </div>
@@ -2855,7 +2853,7 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
     txt(c, s.title || 'جدولي الجامعي', W - margin, top + 30 * u, Math.round(58 * u), t.ink, {weight: 700, max: usable});
     txt(c, s.name.trim() || 'الجدول الدراسي', W - margin, top + 88 * u, Math.round(30 * u), t.muted, {max: usable});
     const gridTop = top + 132 * u, headH = Math.round(72 * u), gap = Math.round(8 * u), rad = Math.round(14 * u);
-    const sideTimes = !s.showTime || s.format === 'landscape', labelW = sideTimes ? Math.round(66 * u) : 0, colW = (usable - labelW) / days.length;
+    const land = s.format === 'landscape', labelW = land ? Math.round(176 * u) : (!s.showTime ? Math.round(66 * u) : 0), colW = (usable - labelW) / days.length;
     rr(c, margin, gridTop, usable, headH, Math.round(20 * u), t.bar);
     const colX = i => W - margin - labelW - colW * (i + 1);
     days.forEach((d, i) => txt(c, DAY_AR[d], colX(i) + colW / 2, gridTop + headH / 2, Math.round(32 * u), t.barText, {weight: 700, align: 'center', max: colW - 12}));
@@ -2871,8 +2869,19 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
     segs.forEach(([x, y], k) => {
       days.forEach((_, i) => rr(c, colX(i) + gap / 2, starts[k], colW - gap, (y - x) * scale, rad, t.empty));
       if (k < nb) { const cy = starts[k] + (y - x) * scale + brk / 2; for (let q = -1; q <= 1; q++) { c.beginPath(); c.arc(W / 2 + q * 26 * u + 0, cy, 4 * u, 0, 7); c.fillStyle = t.muted; c.fill(); } }
-      if (labelW) for (let m = Math.ceil(x / 60) * 60; m <= y; m += 60) txt(c, fmtH(m / 60), W - margin - labelW / 2, yOf(m) + 4 * u, Math.round(28 * u), t.muted, {weight: 700, align: 'center'});
+      if (labelW && !land) for (let m = Math.ceil(x / 60) * 60; m <= y; m += 60) txt(c, fmtH(m / 60), W - margin - labelW / 2, yOf(m) + 4 * u, Math.round(28 * u), t.muted, {weight: 700, align: 'center'});
     });
+    // الخلفية الأفقية: وقت كل محاضرة مكتوب كاملًا (من … إلى …) في الجانب الأيمن بمحاذاة موضعها
+    if (land) {
+      const rs = [...new Map(s.lectures.map(l => [l.start + '-' + l.end, l])).values()].map(l => ({a: l.start, b: l.end, cy: (yOf(l.start) + yOf(l.end)) / 2})).sort((p, q) => p.cy - q.cy);
+      const fs = Math.round(27 * u), lh = Math.round(36 * u), bh = lh * 2 + Math.round(14 * u); let prev = -1e9;
+      rs.forEach(r => {
+        const cy = Math.max(r.cy, prev + bh); prev = cy;
+        const fx = W - margin - labelW / 2, tm = m => ar(h12(m)) + ' ' + per(m);
+        txt(c, 'من ' + tm(r.a), fx, cy - lh / 2, fs, t.ink, {weight: 700, align: 'center', max: labelW - 8});
+        txt(c, 'إلى ' + tm(r.b), fx, cy + lh / 2, fs, t.muted, {weight: 700, align: 'center', max: labelW - 8});
+      });
+    }
     const cells = [];
     days.forEach((d, i) => {
       for (const {l, lane, n} of lanesOf(s.lectures.filter(q => q.day === d))) {
@@ -3834,8 +3843,6 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
     } catch (e) { return 'nodevice-' + Date.now().toString(36); }
   };
   const CHAT_STORAGE_KEY = 'khadamati.saud.chat.v1';
-  const TTS_KEY = 'khadamati.saud.tts';
-  let ttsEnabled = false; try { localStorage.removeItem(TTS_KEY); localStorage.removeItem('khadamati.saud.voice'); } catch (e) {}
   const timeNow = () => new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
 
   const welcomeMsg = () => {
@@ -3855,7 +3862,6 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
   const chatInput = $('#saudInput');
   const btnSend = $('#btnSendChat');
   const btnVoice = $('#btnVoiceInput');
-  const btnTts = $('#btnTtsToggle');
   const btnClear = $('#btnClearChat');
   const saudBody = $('#saudBody');
   if (!msgList || !chatInput || !btnSend) return;
@@ -3875,77 +3881,6 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
   updateNet();
 
   const setTyping = (on) => { const x = $('#saudNetTxt'); if (x) x.textContent = on ? 'يكتب…' : (navigator.onLine !== false ? 'متصل' : 'غير متصل'); };
-
-  // ---- القراءة الصوتية ----
-  const updateTtsUi = () => {
-    if (!btnTts) return;
-    btnTts.title = ttsEnabled ? 'القراءة الصوتية: مفعّلة' : 'القراءة الصوتية: مكتومة';
-    btnTts.style.color = ttsEnabled ? 'var(--gold)' : '';
-  };
-  updateTtsUi();
-  if (btnTts) btnTts.onclick = () => {
-    ttsEnabled = !ttsEnabled;
-    localStorage.setItem(TTS_KEY, ttsEnabled ? '1' : '0');
-    updateTtsUi();
-    toast(ttsEnabled ? 'تم تفعيل القراءة الصوتية' : 'تم كتم الصوت');
-  };
-  const btnPick = $('#btnVoicePick');
-  if (btnPick) btnPick.onclick = () => {
-    const ss = window.speechSynthesis;
-    if (!ss) { toast('هذا المتصفح لا يدعم القراءة الصوتية'); return; }
-    const show = () => {
-      const old = document.getElementById('voiceDlg'); if (old) old.remove();
-      const all = (ss.getVoices() || []).slice();
-      all.sort((a, b) => (/^ar/i.test(b.lang) - /^ar/i.test(a.lang)) || a.name.localeCompare(b.name));
-      let cur = ''; try { cur = localStorage.getItem('khadamati.saud.voice') || ''; } catch (e) {}
-      const ov = document.createElement('div'); ov.id = 'voiceDlg';
-      ov.style.cssText = 'position:fixed;inset:0;z-index:70;background:rgba(6,20,22,.6);display:flex;align-items:center;justify-content:center;padding:18px';
-      const card = document.createElement('div');
-      card.style.cssText = 'width:100%;max-width:420px;background:var(--surface);color:var(--ink);border-radius:20px;padding:18px;box-shadow:var(--shadow-lg);direction:rtl';
-      const t = document.createElement('h3'); t.textContent = 'اختيار صوت سعود'; t.style.cssText = 'margin:0 0 10px;font-size:18px';
-      const hint = document.createElement('p'); hint.className = 'muted'; hint.style.margin = '0 0 12px';
-      hint.textContent = all.length ? 'اختر الصوت ثم اضغط «حفظ وتجربة» لتسمعه (الأصوات العربية أولًا).' : 'لا توجد أصوات على هذا الجهاز. ثبّت صوتًا عربيًا من إعدادات الجهاز (الكلام / تحويل النص إلى كلام) ثم أعد المحاولة.';
-      const sel = document.createElement('select'); sel.style.cssText = 'width:100%;margin-bottom:14px';
-      const o0 = document.createElement('option'); o0.value = ''; o0.textContent = 'تلقائي (يفضّل صوت رجل)'; sel.append(o0);
-      all.forEach(v => { const o = document.createElement('option'); o.value = v.name; o.textContent = v.name + ' — ' + v.lang; sel.append(o); });
-      sel.value = cur;
-      const row = document.createElement('div'); row.style.cssText = 'display:flex;gap:8px';
-      const ok = document.createElement('button'); ok.type = 'button'; ok.className = 'btn grow'; ok.textContent = 'حفظ وتجربة'; ok.style.flex = '1';
-      const no = document.createElement('button'); no.type = 'button'; no.className = 'btn ghost'; no.textContent = 'إغلاق';
-      ok.onclick = () => {
-        try { localStorage.setItem('khadamati.saud.voice', sel.value || ''); } catch (e) {}
-        ttsEnabled = true; try { localStorage.setItem(TTS_KEY, '1'); } catch (e) {} updateTtsUi();
-        speakText('أهلًا بك، أنا سعود، مستشارك الأكاديمي.');
-      };
-      no.onclick = () => ov.remove();
-      ov.onclick = (e) => { if (e.target === ov) ov.remove(); };
-      row.append(ok, no); card.append(t, hint, sel, row); ov.append(card);
-      (document.getElementById('saudPanel') || document.body).append(ov);
-    };
-    if ((ss.getVoices() || []).length) show();
-    else { let done = false; const go = () => { if (!done) { done = true; show(); } }; ss.onvoiceschanged = go; setTimeout(go, 900); }
-  };
-  try { if ('speechSynthesis' in window) { window.speechSynthesis.getVoices(); window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices(); } } catch (e) {}
-  const speakText = (text, onend) => {
-    if (!('speechSynthesis' in window)) return;
-    try {
-      window.speechSynthesis.cancel();
-      const clean = String(text).replace(/<[^>]+>/g, '').replace(/[#*`_\[\]]/g, '').slice(0, 450);
-      const ut = new SpeechSynthesisUtterance(clean);
-      ut.lang = 'ar-SA';
-      if (onend) { ut.onend = onend; ut.onerror = onend; }
-      // صوت رجل: نفضّل أصوات الرجال العربية المعروفة، وإن لم توجد نخفض النبرة
-      const vs = (window.speechSynthesis.getVoices() || []).filter(v => /^ar/i.test(v.lang));
-      const FEM = /(hoda|zariyah|salma|laila|layla|amina|fatima|hanan|female|zira|نساء|امرأة)/i;
-      const MALE = /(naayf|naif|majed|maged|hamed|hamza|shakir|tarik|omar|ahmed|bassel|male|رجل)/i;
-      let saved = ''; try { saved = localStorage.getItem('khadamati.saud.voice') || ''; } catch (e) {}
-      const all = window.speechSynthesis.getVoices() || [];
-      const man = (saved && all.find(v => v.name === saved)) || vs.find(v => MALE.test(v.name) && !FEM.test(v.name)) || vs.find(v => !FEM.test(v.name));
-      if (man) { ut.voice = man; ut.lang = man.lang; }
-      ut.pitch = saved ? 1 : 0.75; ut.rate = 0.95;
-      window.speechSynthesis.speak(ut);
-    } catch (e) {}
-  };
 
   // ---- سياق الطالب ----
   const getStudentContext = () => {
@@ -4043,8 +3978,7 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
     msgList.replaceChildren();
     if (saudBody) saudBody.classList.toggle('convo', chatHistory.some(m => m.role === 'user'));
     chatHistory.forEach(msg => msgList.append(buildMsg(msg)));
-    if (where === 'bottom') { const lm = msgList.querySelector('.msg:last-of-type'); msgList.scrollTop = lm ? Math.max(0, lm.offsetTop + lm.offsetHeight - msgList.clientHeight + 16) : 0; }
-    else if (where === 'reply') { const k = msgList.querySelectorAll('.msg.saud'); const last = k[k.length - 1]; if (last) msgList.scrollTop = Math.max(0, last.offsetTop - 10); }
+    if (where === 'bottom' || where === 'reply') msgList.scrollTop = msgList.scrollHeight;   // مثل واتساب: آخر رسالة في الأسفل
     else msgList.scrollTop = keepTop;
   };
 
@@ -4060,14 +3994,13 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
     chatInput.value = ''; autosize();
     chatHistory.push({ role: 'user', content: q, time: timeNow() });
     pending = true; btnSend.disabled = true; setTyping(true);
-    try { localStorage.removeItem('khadamati.saud.mcp'); } catch (e) {}
-  renderMessages('bottom');
+    renderMessages('bottom');
 
     let reply = '', cites = [], remaining = null, bubble = null, mDiv = null, raf = 0;
     const live = () => {   // رسم الجواب أثناء وصوله دون أي مؤشرات أو نقاط
-      if (!mDiv) { mDiv = buildMsg({ role: 'assistant', content: '', time: timeNow() }); msgList.append(mDiv); msgList.scrollTop = Math.max(0, mDiv.offsetTop - 10); bubble = mDiv.querySelector('.msg-bubble'); }
+      if (!mDiv) { mDiv = buildMsg({ role: 'assistant', content: '', time: timeNow() }); msgList.append(mDiv); msgList.scrollTop = msgList.scrollHeight; bubble = mDiv.querySelector('.msg-bubble'); }
       if (raf) return;
-      raf = requestAnimationFrame(() => { raf = 0; if (bubble) { const keep = bubble.querySelector('.msg-actions'); const old = msgList.scrollTop; bubble.innerHTML = formatReplyHtml(reply, false); msgList.scrollTop = old; } });
+      raf = requestAnimationFrame(() => { raf = 0; if (bubble) { const keep = bubble.querySelector('.msg-actions'); const old = msgList.scrollTop, stick = msgList.scrollHeight - old - msgList.clientHeight < 160; bubble.innerHTML = formatReplyHtml(reply, false); msgList.scrollTop = stick ? msgList.scrollHeight : old; } });
     };
     try {
       const studentCtx = getStudentContext();
@@ -4113,7 +4046,7 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
       if (raf) cancelAnimationFrame(raf);
       pending = false; btnSend.disabled = false; setTyping(false);
       try { localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chatHistory.filter(m => !m.ephemeral).slice(-50))); } catch (e) {}
-      renderMessages('keep'); if (!mDiv) renderMessages('reply');
+      renderMessages('bottom');
     }
   };
 
@@ -4198,7 +4131,6 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
   const closeSaud = (fromPop) => {
     if (panel.hidden) return;
     panel.hidden = true; document.body.classList.remove('saud-open');
-    try { window.speechSynthesis.cancel(); } catch (e) {}
     if (!fromPop && history.state && history.state.saud) { try { history.back(); } catch (e) {} }
   };
   btnClose.onclick = () => closeSaud(false);
