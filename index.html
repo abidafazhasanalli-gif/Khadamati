@@ -701,7 +701,6 @@ button.pr-d{border:0;color:inherit;font:inherit;font-size:12.5px;cursor:pointer}
 }
 .saud-hero-card:active{transform:scale(.985)}
 .saud-hero-badge{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--brand);margin-bottom:12px}
-.saud-mcp-tag{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:99px;background:var(--gold-soft);color:var(--gold-ink);border:1px solid var(--gold-border);font-size:11px}
 .saud-hero-body{display:flex;align-items:center;gap:14px}
 .saud-avatar-ring{
   position:relative;width:84px;height:84px;border-radius:50%;padding:2px;
@@ -827,11 +826,20 @@ body.saud-open .saud-fab{display:none}
 .ans-table{overflow-x:auto;margin:10px 0}.ans-table table{border-collapse:collapse;min-width:100%;font-size:14.5px}
 .ans-table td,.ans-table th{border:1px solid var(--line-strong);padding:6px 10px;text-align:start}.ans-table th{background:var(--brand-soft)}
 /* التقويم السنوي */
-.acal-sum{margin-top:10px;display:grid;gap:6px}
-.acal-sum-h{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.acal-lines{margin-top:8px;border:1px solid var(--line);border-radius:14px;overflow:hidden}
-.acal-lines>b{display:block;padding:8px 12px;background:var(--brand-soft);color:var(--brand);font-size:14px}
-.acal-lines div{padding:7px 12px;font-size:13.5px;border-top:1px solid var(--line);line-height:1.6}
+.acal-sum{margin-top:10px;display:grid;gap:6px;min-width:0;max-width:100%}
+.acal-sum>*{min-width:0;max-width:100%}
+.acal-sum-h{display:flex;justify-content:space-between;align-items:center;gap:8px;min-width:0}
+.acal-name{min-width:0;flex:1 1 auto;overflow-wrap:anywhere;word-break:break-word;line-height:1.5}
+.acal-sum-h .del{flex:none}
+.acal-sum .muted{overflow-wrap:anywhere;line-height:1.7}
+.acal-lines{margin-top:8px;border:1px solid var(--line);border-radius:14px;overflow:hidden;min-width:0;max-width:100%}
+.acal-lines[open]{max-height:min(62vh,560px);overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+.acal-sm{padding:9px 12px;font-weight:600;cursor:pointer;line-height:1.6}
+.acal-h{display:block;padding:8px 12px;background:var(--brand-soft);color:var(--brand);font-size:14px;border-top:1px solid var(--line);overflow-wrap:anywhere}
+.acal-ln{display:grid;gap:3px;padding:9px 12px;border-top:1px solid var(--line);line-height:1.7;min-width:0;overflow-wrap:anywhere;word-break:break-word;font-size:13.5px}
+.acal-t{font-weight:700;font-size:14px}
+.acal-d{color:var(--muted,#5e8171);font-size:13px}
+.acal-w{color:#b45309;font-size:12.5px}
 
 /* ===== صفحة المستشار سعود (#v-assistant) ===== */
 #v-assistant{display:none;height:100%;flex-direction:column;min-height:0}
@@ -950,57 +958,10 @@ body.saud-open .saud-fab{display:none}
 .quote-explain{margin-top:10px;padding:8px 10px;border-radius:10px;background:var(--brand-soft);color:var(--brand-deep);font-size:14px;line-height:1.6}
 :root[data-theme="dark"] .quote-explain{color:#7FE1C4}
 
-/* زر القراءة المباشرة في خوادم الكتب والمصادر المعتمدة MCP */
-.mcp-read-btn, .shamela-read-btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  margin:10px 0 4px;padding:12px 18px;border-radius:14px;
-  background:linear-gradient(135deg, var(--brand) 0%, var(--brand-deep) 100%);
-  color:#FFFFFF!important;font-size:14px;font-weight:700;text-decoration:none;
-  box-shadow:0 3px 12px var(--brand-glow);border:1px solid rgba(255,255,255,0.2);
-  transition:all .18s ease;width:100%;text-align:center;
-}
-.mcp-read-btn:hover, .shamela-read-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
-.mcp-read-btn svg, .shamela-read-btn svg{width:18px;height:18px;stroke:currentColor;fill:none}
 
-.mcp-fed-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-.mcp-fed-item{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 10px;display:flex;flex-direction:column;gap:2px}
-.mcp-fed-item b{font-size:12.5px;color:var(--ink);font-weight:700}
-.mcp-fed-item span{font-size:11px;color:var(--muted)}
 
-/* نافذة استعراض خادم الشاملة MCP */
-.mcp-modal{position:fixed;inset:0;background:rgba(6,20,22,0.65);z-index:60;display:flex;align-items:flex-end;backdrop-filter:blur(8px)}
-.mcp-modal[hidden]{display:none}
-.mcp-modal-card{
-  width:100%;max-height:86vh;background:var(--surface);border-radius:28px 28px 0 0;
-  display:flex;flex-direction:column;border:1px solid var(--line);box-shadow:var(--shadow-lg);overflow:hidden;
-}
-.mcp-modal-head{
-  display:flex;align-items:center;justify-content:space-between;padding:16px 20px;
-  border-bottom:1px solid var(--line);background:linear-gradient(135deg,var(--brand-soft),var(--surface));
-}
-.mcp-modal-title{display:flex;align-items:center;gap:10px}
-.mcp-modal-title svg{width:26px;height:26px;color:var(--gold)}
-.mcp-modal-title b{font-size:17px;display:block}
-.mcp-modal-title small{font-size:12px;color:var(--muted)}
-.mcp-modal-body{padding:18px 20px;overflow-y:auto;display:flex;flex-direction:column;gap:14px}
-.mcp-status-card{background:var(--surface-alt);border:1px solid var(--line);border-radius:16px;padding:12px 14px;display:grid;gap:8px}
-.mcp-stat-row{display:flex;align-items:center;justify-content:space-between;font-size:13.5px}
-.mcp-badge-online{padding:2px 10px;border-radius:99px;background:#DEF7EC;color:#03543F;font-size:12px}
-:root[data-theme="dark"] .mcp-badge-online{background:#042C21;color:#31C48D}
-.mcp-tool-pills{display:flex;gap:6px;flex-wrap:wrap}
-.mcp-tool-pills span{font-family:monospace;font-size:11.5px;padding:2px 6px;border-radius:6px;background:var(--brand-soft);color:var(--brand)}
-.mcp-results{display:grid;gap:10px;max-height:300px;overflow-y:auto}
-.mcp-res-item{background:var(--surface);border:1px solid var(--line-strong);border-radius:14px;padding:12px;display:grid;gap:6px}
-.mcp-res-head{display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:700;color:var(--gold-ink)}
-:root[data-theme="dark"] .mcp-res-head{color:var(--gold)}
-.mcp-res-quote{font-size:13.5px;line-height:1.6;color:var(--ink)}
-.mcp-res-cite{font-size:11.5px;color:var(--muted);direction:rtl}
-.mcp-config-box{margin-top:8px;padding-top:12px;border-top:1px dashed var(--line);display:grid;gap:6px}
-.mcp-config-box input{font-size:13px}
 
 @media(min-width:700px){
-  .mcp-modal{align-items:center;justify-content:center;padding:20px}
-  .mcp-modal-card{max-width:620px;border-radius:28px}
   .saud-hero-card{margin-inline:24px}
 }
 @media(min-width:1024px){
@@ -1048,21 +1009,6 @@ body.saud-open .saud-fab{display:none}
       </div>
     </section>
 
-    <!-- شريط اللغات والترجمة الفورية للطلبة الدوليين -->
-    <div class="intl-lang-bar" id="intlLangBar" role="region" aria-label="ترجمة فورية للطلبة الدوليين">
-      <div class="intl-bar-title">
-        <svg viewBox="0 0 24 24"><path d="M3.5 6.5h9M8 4.5v2M5 6.5c.8 3 3 5.2 6 6.5M11 6.5c-.8 3-3 5.2-6 6.5"/><path d="m12.5 20 3.5-8.5 3.5 8.5M13.8 17.5h4.4"/></svg>
-        <span>الترجمة الفورية للطلبة الدوليين:</span>
-      </div>
-      <div class="intl-chips-scroll">
-        <button type="button" class="intl-pill on" data-set-lang="ar">العربية (الأصل)</button>
-        <button type="button" class="intl-pill" data-set-lang="en">English</button>
-        <button type="button" class="intl-pill" data-set-lang="bn">বাংলা (Bengali)</button>
-        <button type="button" class="intl-pill" data-set-lang="ur">اردو (Urdu)</button>
-        <button type="button" class="intl-pill" data-set-lang="fr">Français</button>
-        <button type="button" class="intl-pill" data-set-lang="id">Bahasa Indonesia</button>
-        <button type="button" class="intl-pill more" id="btnMoreLangs">+ المزيد من اللغات</button>
-      </div>
     </div>
 
     <div class="stats">
@@ -1278,8 +1224,7 @@ body.saud-open .saud-fab{display:none}
         <div><b class="notranslate" translate="no">سعود</b><span id="saudNetTxt">متصل</span></div>
       </div>
       <div class="sp-acts">
-        <button class="icon-btn" id="btnMcpCfg" type="button" aria-label="إضافة أدوات MCP" title="أدوات MCP"><svg viewBox="0 0 24 24"><path d="M9 2v6M15 2v6M7 8h10v4a5 5 0 0 1-10 0V8ZM12 17v5"/></svg></button>
-        <button class="icon-btn" id="btnTtsToggle" type="button" aria-label="القراءة الصوتية" title="القراءة الصوتية"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14"/></svg></button>
+        
         <button class="icon-btn" id="btnVoicePick" type="button" aria-label="اختيار صوت سعود" title="اختيار صوت سعود"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg></button>
         <button class="icon-btn" id="btnClearChat" type="button" aria-label="مسح المحادثة" title="مسح المحادثة"><svg viewBox="0 0 24 24"><path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l.8 12.5h9.4L17.5 7"/></svg></button>
         <button class="icon-btn" id="btnSaudClose" type="button" aria-label="إغلاق" title="إغلاق"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
@@ -1469,7 +1414,7 @@ const makeDate = (init, back = 0) => {
   const y0 = new Date().getFullYear();
   const d = h('select', {'aria-label':'اليوم'}, opt('', 'اليوم'), Array.from({length:31}, (_, i) => opt(i + 1, i + 1)));
   const m = h('select', {'aria-label':'الشهر'}, opt('', 'الشهر'), MONTHS.map((n, i) => opt(i + 1, n)));
-  const y = h('select', {'aria-label':'السنة'}, opt('', 'السنة'), Array.from({length: 4 + back}, (_, k) => opt(y0 - back + k, y0 - back + k)));
+  const y = h('select', {'aria-label':'السنة'}, opt('', 'السنة'), Array.from({length: Math.max(4 + back, 2050 - (y0 - back) + 1)}, (_, k) => opt(y0 - back + k, y0 - back + k)));
   const el = h('div', {class:'dp'}, d, m, y);
   Object.defineProperty(el, 'value', {
     get() {
@@ -2185,6 +2130,198 @@ $('#calFile').onchange = async (e) => {
   } catch (er) { calErr('تعذّرت قراءة الملف. جرّب ملفًا آخر أو أدخل بداية الفصل يدويًا.'); }
   finally { btn.disabled = false; renderCal(); if (!S.cal) btn.textContent = old; }
 };
+/* ---------- قارئ جداول التقويم الأكاديمي (تواريخ بالأرقام + إجراءات بالعربية، كل خلية في عمودها) ---------- */
+/* قارئ التقويم الأكاديمي الجدولي: يقرأ التواريخ بالأرقام فقط، والإجراءات بالعربية، كلٌّ في عموده */
+(function (root) {
+  const DOW = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+  const p2 = (n) => String(n).padStart(2, '0');
+
+  /* ---------- هجري ⇄ ميلادي (أم القرى) ---------- */
+  let HF = null;
+  try { HF = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura-nu-latn', {year: 'numeric', month: 'numeric', day: 'numeric', timeZone: 'UTC'}); } catch (e) {}
+  const g2h = (y, m, d) => {
+    if (!HF) return null;
+    const o = {}; HF.formatToParts(new Date(Date.UTC(y, m - 1, d, 12))).forEach((x) => { if (x.type === 'year' || x.type === 'month' || x.type === 'day') o[x.type] = parseInt(x.value, 10); });
+    return o.year ? {y: o.year, m: o.month, d: o.day} : null;
+  };
+  const h2g = (y, m, d) => {
+    if (!HF) return null;
+    const base = Date.UTC(622, 6, 16) + ((y - 1) * 354.367 + (m - 1) * 29.53 + (d - 1)) * 864e5;
+    for (let k = -40; k <= 40; k++) {
+      const t = new Date(base + k * 864e5), r = g2h(t.getUTCFullYear(), t.getUTCMonth() + 1, t.getUTCDate());
+      if (r && r.y === y && r.m === m && r.d === d) return {y: t.getUTCFullYear(), m: t.getUTCMonth() + 1, d: t.getUTCDate()};
+    }
+    return null;
+  };
+  const dowOf = (g) => DOW[new Date(Date.UTC(g.y, g.m - 1, g.d, 12)).getUTCDay()];
+  const dayDiff = (a, b) => Math.round((Date.UTC(a.y, a.m - 1, a.d) - Date.UTC(b.y, b.m - 1, b.d)) / 864e5);
+
+  /* ---------- هندسة الجدول من الألوان ---------- */
+  // img: {w, h, data: RGBA}
+  const geom = (img) => {
+    const {w, h, data: d} = img;
+    const gold = (i) => { const r = d[i], g = d[i + 1], b = d[i + 2]; return r > 140 && g > 120 && b < 150 && r - b > 45 && r >= g && r - g < 40; };
+    let run = null, best = null;
+    for (let y = 0; y < h; y++) {
+      let n = 0, a = w, z = 0;
+      for (let x = 0; x < w; x += 2) if (gold((y * w + x) * 4)) { n++; if (x < a) a = x; z = x; }
+      if (n * 2 > w * 0.5) { if (!run) run = {t: y, b: y, x0: a, x1: z}; else { run.b = y; run.x0 = Math.min(run.x0, a); run.x1 = Math.max(run.x1, z); } }
+      else if (run) { if (!best || run.b - run.t > best.b - best.t) best = run; run = null; if (best.b - best.t > h * 0.012) break; }
+    }
+    if (run && (!best || run.b - run.t > best.b - best.t)) best = run;
+    if (!best || best.b - best.t < h * 0.008) return null;
+    const x0 = best.x0, x1 = best.x1, hb = best.b, W = x1 - x0;
+    // نهاية الجدول: ننزل ما دام الشريط الأيسر داكنًا (تُحتمل خطوط فاصلة فاتحة رفيعة)
+    const dark = (y) => { let n = 0, c = 0; for (let x = x0 + 3; x < x0 + 12; x++) { const i = (y * w + x) * 4; c++; if (0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2] < 165) n++; } return n / c > 0.7; };
+    let last = hb; const gapMax = Math.max(8, Math.round(h * 0.006));
+    for (let y = hb + 1; y < h; y++) { if (dark(y)) last = y; else if (y - last > gapMax) break; }
+    return {x0, x1, W, top: best.t, hb, tb: last};
+  };
+
+  /* ---------- قصّ وتحويل رمادي معكوس + عتبة أوتسو ---------- */
+  const otsu = (g) => {
+    const hist = new Array(256).fill(0); for (let i = 0; i < g.length; i++) hist[g[i]]++;
+    let sum = 0; for (let i = 0; i < 256; i++) sum += i * hist[i];
+    let sB = 0, wB = 0, mx = 0, th = 128; const tot = g.length;
+    for (let i = 0; i < 256; i++) { wB += hist[i]; if (!wB) continue; const wF = tot - wB; if (!wF) break; sB += i * hist[i]; const mB = sB / wB, mF = (sum - sB) / wF, v = wB * wF * (mB - mF) * (mB - mF); if (v > mx) { mx = v; th = i; } }
+    return th;
+  };
+  // أعمدة الأيام الفاتحة: نقيس السطوع لكل عمود على امتداد الجدول، والأعمدة الفاتحة في أغلب الصفوف هي أعمدة الأيام
+  const lightCols = (img, g) => {
+    const {w, data: d} = img, cols = []; let a = -1;
+    const ys = []; for (let y = g.hb + 4; y < g.tb; y += 3) ys.push(y);
+    for (let x = g.x0; x <= g.x1; x++) {
+      let n = 0; for (const y of ys) { const k = (y * w + x) * 4; if (0.299 * d[k] + 0.587 * d[k + 1] + 0.114 * d[k + 2] > 185) n++; }
+      const light = n / ys.length > 0.4;
+      if (light && a < 0) a = x; else if (!light && a >= 0) { if (x - a > g.W * 0.03) cols.push([a, x - 1]); a = -1; }
+    }
+    if (a >= 0 && g.x1 - a > g.W * 0.03) cols.push([a, g.x1]);
+    return cols;
+  };
+  // mode: 'otsu' أو رقم عتبة سطوع (البكسل الأفتح من العتبة = حبر النص الأبيض → أسود على أبيض)؛ الخلايا الفاتحة (أعمدة الأيام) تُمحى كخلفية
+  const crop = (img, x, y, w, h, mode, mask) => {
+    x = Math.max(0, Math.round(x)); y = Math.max(0, Math.round(y)); w = Math.min(img.w - x, Math.round(w)); h = Math.min(img.h - y, Math.round(h));
+    const lum = new Uint8Array(w * h), g = new Uint8Array(w * h);
+    for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) { const k = ((y + j) * img.w + x + i) * 4; lum[j * w + i] = Math.round(0.299 * img.data[k] + 0.587 * img.data[k + 1] + 0.114 * img.data[k + 2]); }
+    if (mask && mask.length) {   // الأعمدة الفاتحة في الصفوف التي هي فيها فاتحة فعلًا تُمحى (الصفوف المدمجة الداكنة تبقى)
+      for (const [a, b] of mask) {
+        const xa = Math.max(0, a - x), xb = Math.min(w - 1, b - x); if (xb < xa) continue;
+        const ia = xa + Math.round((xb - xa) * 0.2), ib = xb - Math.round((xb - xa) * 0.2);
+        for (let j = 0; j < h; j++) { let s = 0, c = 0; for (let i = ia; i <= ib; i += 2) { s += lum[j * w + i]; c++; } if (c && s / c > 150) for (let i = xa; i <= xb; i++) lum[j * w + i] = 80; }
+        // نصف سطر فوق/تحت لتغطية حواف الحرف
+      }
+    }
+    if (typeof mode === 'number') for (let i = 0; i < g.length; i++) g[i] = lum[i] > mode ? 0 : 255;
+    else { const inv = lum.map((v) => 255 - v), th = otsu(inv); for (let i = 0; i < g.length; i++) g[i] = inv[i] > th ? 255 : 0; }
+    return {w, h, gray: g, ox: x, oy: y};
+  };
+
+  /* ---------- استخراج التواريخ من كلمات التعرف ---------- */
+  const RX = /(1[34]\d{2}|20\d{2})\/(\d{2})\/(\d{1,2})(?:-(\d{1,2}))?/;
+  const parseTok = (word) => {
+    const m = RX.exec(String(word.text || '').replace(/[^\d\/-]/g, ''));
+    if (!m) return null;
+    const y = +m[1], mo = +m[2], d1 = +m[3], d2 = m[4] ? +m[4] : null, hij = y < 1600;
+    if (mo < 1 || mo > 12 || d1 < 1 || d1 > 31 || (d2 !== null && (d2 < 1 || d2 > 31))) return null;
+    const lo = d2 === null ? d1 : Math.min(d1, d2), hi = d2 === null ? d1 : Math.max(d1, d2);
+    const b = word.bbox;
+    return {hij, y, m: mo, lo, hi, cx: (b.x0 + b.x1) / 2, cy: (b.y0 + b.y1) / 2, y0: b.y0, y1: b.y1, hgt: b.y1 - b.y0, x0: b.x0, x1: b.x1};
+  };
+  const median = (a) => { const s = [...a].sort((x, y) => x - y); return s.length ? s[Math.floor(s.length / 2)] : 0; };
+
+  const buildPairs = (words, W) => {
+    let toks = words.map(parseTok).filter(Boolean);
+    const hy = median(toks.filter((t) => t.hij).map((t) => t.y)), gy = median(toks.filter((t) => !t.hij).map((t) => t.y));
+    toks = toks.filter((t) => Math.abs(t.y - (t.hij ? hy : gy)) <= 1);   // سنة بعيدة عن سنوات الملف = خطأ قراءة
+    const H = toks.filter((t) => t.hij), G = toks.filter((t) => !t.hij);
+    const th = median(toks.map((t) => t.hgt)) || 20, maxDy = th * 4.2, maxDx = W * 0.07;
+    const usedG = new Set(), pairs = [];
+    H.sort((a, b) => a.cy - b.cy);
+    for (const h of H) {
+      let bi = -1, bd = 1e9;
+      G.forEach((g, i) => { if (usedG.has(i)) return; const dy = g.cy - h.cy; if (dy > th * 0.8 && dy < maxDy && Math.abs(g.cx - h.cx) < maxDx && dy < bd) { bd = dy; bi = i; } });
+      if (bi >= 0) { usedG.add(bi); pairs.push({h, g: G[bi]}); } else pairs.push({h, g: null});
+    }
+    G.forEach((g, i) => { if (!usedG.has(i)) pairs.push({h: null, g}); });
+    return {pairs, th};
+  };
+
+  const variants = (n, len) => { const t = String(n).padStart(len, '0'), out = []; for (let i = 0; i < len; i++) for (let k = 0; k <= 9; k++) if (String(k) !== t[i]) out.push(+(t.slice(0, i) + k + t.slice(i + 1))); return out; };
+  const repair = (hv, gv) => {
+    if (hv.d !== hv.d2 || gv.d !== gv.d2) return null;
+    const hits = [];
+    for (const m of [gv.m, ...variants(gv.m, 2)]) for (const d of [gv.d, ...variants(gv.d, 2)]) {
+      if ((m === gv.m) + (d === gv.d) !== 1) continue;
+      const r = g2h(gv.y, m, d); if (r && r.y === hv.y && r.m === hv.m && r.d === hv.d) hits.push({h: hv, g: {y: gv.y, m, d, d2: d}});
+    }
+    for (const m of [hv.m, ...variants(hv.m, 2)]) for (const d of [hv.d, ...variants(hv.d, 2)]) {
+      if ((m === hv.m) + (d === hv.d) !== 1) continue;
+      const r = h2g(hv.y, m, d); if (r && r.y === gv.y && r.m === gv.m && r.d === gv.d) hits.push({h: {y: hv.y, m, d, d2: d}, g: gv});
+    }
+    return hits.length === 1 ? hits[0] : null;
+  };
+  const dateOf = (p) => {
+    // نُكمل الناقص من الآخر عبر تقويم أم القرى، ونُعلّم ما فيه شك
+    let h = p.h, g = p.g, warn = false;
+    let hv = h ? {y: h.y, m: h.m, d: h.lo, d2: h.hi} : null, gv = g ? {y: g.y, m: g.m, d: g.lo, d2: g.hi} : null;
+    if (hv && !gv) { const x = h2g(hv.y, hv.m, hv.d), x2 = h2g(hv.y, hv.m, hv.d2); if (x) gv = {...x, d2: x2 ? x2.d : x.d}; }
+    else if (gv && !hv) { const x = g2h(gv.y, gv.m, gv.d), x2 = g2h(gv.y, gv.m, gv.d2); if (x) hv = {...x, d2: x2 ? x2.d : x.d}; }
+    else if (hv && gv) {
+      const c = h2g(hv.y, hv.m, hv.d);
+      if (c && Math.abs(dayDiff(c, {y: gv.y, m: gv.m, d: gv.d})) > 1) {
+        // خطأ قراءة: نجرّب تغيير رقم واحد في الميلادي أو الهجري حتى يتطابقا تمامًا
+        const fixed = repair(hv, gv);
+        if (fixed) { hv = fixed.h; gv = fixed.g; }
+        else { const x = g2h(gv.y, gv.m, gv.d), x2 = g2h(gv.y, gv.m, gv.d2); if (x) hv = {...x, d2: x2 ? x2.d : x.d}; warn = true; }
+      }
+    }
+    if (!gv) return null;
+    return {h: hv, g: gv, warn};
+  };
+  const fmtG = (g, d) => g.y + '/' + p2(g.m) + '/' + p2(d);
+  const fmtH = (h, d) => h ? h.y + '/' + p2(h.m) + '/' + p2(d) : '';
+
+  const mkPoint = (dt, last) => {
+    const d = last ? dt.g.d2 : dt.g.d, hd = last ? (dt.h && dt.h.d2) : (dt.h && dt.h.d);
+    const gm = {y: dt.g.y, m: dt.g.m, d};
+    return {g: fmtG(dt.g, d), h: dt.h ? fmtH(dt.h, hd) : '', dow: dowOf(gm), iso: dt.g.y + '-' + p2(dt.g.m) + '-' + p2(d)};
+  };
+
+  /* ---------- تجميع الصفوف وربطها بنص الإجراء ---------- */
+  // dateWords: كلمات أرقام (إحداثيات صفحة كاملة)؛ actLines: [{text, cy}] بإحداثيات صفحة كاملة
+  const assemble = (dateWords, actLines, W) => {
+    const {pairs, th} = buildPairs(dateWords, W);
+    const items = pairs.map((p) => ({p, cy: ((p.h || p.g).y0 + (p.g || p.h).y1) / 2, cx: ((p.h || p.g).cx + (p.g || p.h).cx) / 2, dt: dateOf(p)})).filter((x) => x.dt).sort((a, b) => a.cy - b.cy);
+    const rows = [], thr = th * 2.4;
+    for (const it of items) { const r = rows[rows.length - 1]; if (r && Math.abs(r.cy - it.cy) < thr) { r.items.push(it); r.cy = (r.cy * (r.items.length - 1) + it.cy) / r.items.length; } else rows.push({cy: it.cy, items: [it]}); }
+    const out = rows.map((r) => {
+      r.items.sort((a, b) => b.cx - a.cx);   // يمين = بداية المدة
+      const a = r.items[0], b = r.items[r.items.length - 1];
+      const single = r.items.length === 1, warn = r.items.some((x) => x.dt.warn);
+      let s, e;
+      if (single) { const dt = a.dt; s = mkPoint(dt, false); e = dt.g.d2 !== dt.g.d ? mkPoint(dt, true) : null; }
+      else { s = mkPoint(a.dt, false); e = mkPoint(b.dt, false); }
+      return {cy: r.cy, s, e, warn, t: []};
+    });
+    const spacing = out.length > 1 ? median(out.slice(1).map((r, i) => r.cy - out[i].cy)) : th * 4;
+    const stray = [];
+    for (const ln of actLines) {
+      let bi = -1, bd = 1e9; out.forEach((r, i) => { const dy = Math.abs(ln.cy - r.cy); if (dy < bd) { bd = dy; bi = i; } });
+      if (bi >= 0 && bd < spacing * 0.62) out[bi].t.push(ln); else stray.push(ln.text);
+    }
+    out.forEach((r) => { r.t.sort((x, y) => x.cy - y.cy); r.title = r.t.map((x) => x.text).join(' ').replace(/\s+/g, ' ').trim(); delete r.t; });
+    return {rows: out, stray};
+  };
+
+  const rowText = (r) => {
+    const part = (p) => p.dow + ' ' + p.g + 'م' + (p.h ? ' الموافق ' + p.h + 'هـ' : '');
+    const when = r.e ? 'من ' + part(r.s) + ' إلى ' + part(r.e) : 'بتاريخ ' + part(r.s);
+    return (r.title || 'إجراء غير مقروء') + ' | ' + when + (r.warn ? ' | تنبيه: قد يكون في التاريخ خطأ قراءة' : '');
+  };
+
+  root.AcalCore = {geom, lightCols, crop, assemble, rowText, g2h, h2g, parseTok, DOW};
+})(typeof window !== 'undefined' ? window : globalThis);
+
 /* ---------- التقويم الأكاديمي السنوي (يقرؤه سعود) ---------- */
 {
   const KEY = /(إجازة|اجازة|أجازة|عطلة|اعتذار|الاعتذار|انسحاب|حذف|اضافة|إضافة|اختبار|الاختبارات|بداية|نهاية|بدء|الدراسة|التسجيل|تأجيل|الفصل|اليوم الوطني|يوم التأسيس|العيد)/;
@@ -2195,11 +2332,19 @@ $('#calFile').onchange = async (e) => {
     if (!a || !a.text) return;
     const del = h('button', {class:'del', type:'button', 'aria-label':'حذف التقويم الأكاديمي', title:'حذف', onclick:() => { if (!confirm('حذف التقويم الأكاديمي السنوي؟')) return; S.acal = null; save(); err(''); render(); toast('تم حذف التقويم الأكاديمي'); }}, svg('trash'));
     const when = a.at ? new Intl.DateTimeFormat('ar-u-nu-latn-ca-gregory', {day:'numeric', month:'long', year:'numeric'}).format(new Date(a.at)) : '';
-    const lines = (a.lines || []).slice(0, 40);
+    const lines = (a.lines || []).slice(0, 160), nl = lines.filter(x => !x.startsWith('== ')).length;
+    // الأرقام والتواريخ تُعزل لتبقى مرتبة داخل السطر العربي ولا تتداخل
+    const bidi = (t) => String(t).split(/(\d{1,4}(?:\/\d{1,4})+(?:-\d{1,2})?)/).map((x, i) => i % 2 ? h('bdi', {dir: 'ltr'}, x) : x);
+    const row = (x) => {
+      if (x.startsWith('== ')) return h('b', {class: 'acal-h'}, x.replace(/^=+\s*|\s*=+$/g, ''));
+      const ps = x.split(' | ');
+      return ps.length < 2 ? h('div', {class: 'acal-ln'}, h('span', {class: 'acal-t'}, ...bidi(x)))
+        : h('div', {class: 'acal-ln'}, h('span', {class: 'acal-t'}, ps[0]), h('span', {class: 'acal-d'}, ...bidi(ps[1])), ps[2] ? h('span', {class: 'acal-w'}, ps[2]) : null);
+    };
     box.append(h('div', {class:'acal-sum'},
-      h('div', {class:'acal-sum-h'}, h('b', {class:'notranslate', translate:'no'}, a.name || 'التقويم الأكاديمي'), del),
+      h('div', {class:'acal-sum-h'}, h('b', {class:'notranslate acal-name', translate:'no'}, a.name || 'التقويم الأكاديمي'), del),
       h('span', {class:'muted'}, 'قرأه سعود' + (when ? ' · ' + when : '') + ' · اسأله عن أي إجازة أو موعد.'),
-      lines.length ? h('details', {class:'acal-lines'}, h('summary', {style:'padding:8px 12px;font-weight:600;cursor:pointer'}, 'أبرز المواعيد المقروءة (' + lines.length + ')'), ...lines.map(x => h('div', {}, x))) : null));
+      lines.length ? h('details', {class:'acal-lines'}, h('summary', {class:'acal-sm'}, 'أبرز المواعيد المقروءة (' + nl + ')'), ...lines.map(row)) : null));
   };
   const clean = (s) => calNorm(s).replace(/[ \t\u00A0]+/g, ' ').replace(/\n\s*\n+/g, '\n').trim();
   $('#acalPick').onclick = () => $('#acalFile').click();
@@ -2222,8 +2367,8 @@ $('#calFile').onchange = async (e) => {
     x.putImageData(d, 0, 0); return o;
   };
   const ocrCanvases = async (cvs, onProg) => {
-    const T = await loadOcr(), total = cvs.length * 2; let done = 0, out = '';
-    for (const c of cvs) for (const inv of [false, true]) {
+    const T = await loadOcr(), total = cvs.length; let done = 0, out = '';
+    for (const c of cvs) for (const inv of [true]) {
       const r = await T.recognize(prep(c, inv), 'ara', { logger: (m) => { if (m && m.status === 'recognizing text') onProg(Math.min(99, Math.round(((done + (m.progress || 0)) / total) * 100))); } });
       out += '\n' + ((r && r.data && r.data.text) || ''); done++;
     }
@@ -2235,19 +2380,72 @@ $('#calFile').onchange = async (e) => {
     c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height); if (bmp.close) bmp.close(); return c;
   };
   const pageToCanvas = async (page) => {
-    const v1 = page.getViewport({scale: 1}), sc = Math.min(3, 2400 / v1.width), vp = page.getViewport({scale: sc});
+    const v1 = page.getViewport({scale: 1}), sc = Math.min(10, 2400 / v1.width), vp = page.getViewport({scale: sc});
     const c = document.createElement('canvas'); c.width = Math.round(vp.width); c.height = Math.round(vp.height);
     await page.render({canvasContext: c.getContext('2d'), viewport: vp}).promise; return c;
   };
-  const reviewText = (text) => new Promise((done) => {   // يراجع الطالب النص المقروء ويصحّحه قبل الحفظ
+  // ---- قراءة التقويم الجدولي: التواريخ بعامل أرقام فقط، والإجراءات بعامل عربي، ثم يُربط كل إجراء بتاريخه حسب موضع الصف ----
+  const scaled = (cv, k) => { const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(cv.width * k)); c.height = Math.max(1, Math.round(cv.height * k)); const x = c.getContext('2d', {willReadFrequently: true}); x.imageSmoothingQuality = 'high'; x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(cv, 0, 0, c.width, c.height); return c; };
+  const pixOf = (cv, x, y, w, h) => { const d = cv.getContext('2d', {willReadFrequently: true}).getImageData(x, y, w, h); return {w, h, data: d.data}; };
+  const grayCv = (c, pad = 12) => {
+    const cv = document.createElement('canvas'); cv.width = c.w + pad * 2; cv.height = c.h + pad * 2; const x = cv.getContext('2d');
+    x.fillStyle = '#fff'; x.fillRect(0, 0, cv.width, cv.height);
+    const id = x.createImageData(c.w, c.h); for (let i = 0; i < c.w * c.h; i++) { const v = c.gray[i]; id.data[i * 4] = id.data[i * 4 + 1] = id.data[i * 4 + 2] = v; id.data[i * 4 + 3] = 255; }
+    x.putImageData(id, pad, pad); return cv;
+  };
+  const pagePrep = (big) => {   // يضبط المقياس بحيث يكون عرض الجدول ≈ 1000 بكسل (المقياس الذي تُقرأ عنده الأرقام بدقة)
+    let k = Math.min(1, 1100 / big.width), norm = scaled(big, k), g = AcalCore.geom(pixOf(norm, 0, 0, norm.width, norm.height));
+    if (!g) return null;
+    const k2 = k * 1000 / g.W;
+    if (Math.abs(k2 / k - 1) > 0.08) { k = Math.min(k2, 1.6); norm = scaled(big, k); g = AcalCore.geom(pixOf(norm, 0, 0, norm.width, norm.height)); if (!g) return null; }
+    return {norm, g, k};
+  };
+  const SEM = [[/(الأول|الاول)/, 'الفصل الدراسي الأول'], [/(الثاني)/, 'الفصل الدراسي الثاني'], [/(الصيفي|الصيف)/, 'الفصل الصيفي']];
+  const readTable = async (cvs, setStatus) => {
+    const T = await loadOcr(); let eng = null, ara = null; const allRows = []; const stray = [];
+    try {
+      eng = await T.createWorker('eng'); await eng.setParameters({tessedit_char_whitelist: '0123456789/-', tessedit_pageseg_mode: '11'});
+      ara = await T.createWorker('ara'); await ara.setParameters({tessedit_pageseg_mode: '6'});
+      for (let pi = 0; pi < cvs.length; pi++) {
+        const big = cvs[pi], pr = pagePrep(big); if (!pr) continue;
+        const {norm, g, k} = pr, img = pixOf(norm, 0, 0, norm.width, norm.height);
+        setStatus('جارٍ قراءة التواريخ… (صفحة ' + (pi + 1) + ')');
+        const ax = g.x1 - 0.47 * g.W, masks = AcalCore.lightCols(img, g);
+        const dc = AcalCore.crop(img, g.x0, g.hb + 4, ax - g.x0, g.tb - g.hb - 4, 140, masks);
+        const dr = await eng.recognize(grayCv(dc, 12));
+        const words = (dr.data.words || []).map((w) => ({text: w.text, bbox: {x0: w.bbox.x0 - 12 + dc.ox, x1: w.bbox.x1 - 12 + dc.ox, y0: w.bbox.y0 - 12 + dc.oy, y1: w.bbox.y1 - 12 + dc.oy}}));
+        setStatus('جارٍ قراءة الإجراءات… (صفحة ' + (pi + 1) + ')');
+        const bx = Math.max(0, Math.round((g.x1 - 0.455 * g.W) / k)), by = Math.round((g.hb + 3) / k), bw = Math.min(big.width - bx, Math.round((0.455 * g.W + 4) / k)), bh = Math.min(big.height - by, Math.round((g.tb - g.hb) / k));
+        const ac = AcalCore.crop(pixOf(big, bx, by, bw, bh), 0, 0, bw, bh, 'otsu');
+        const ar = await ara.recognize(grayCv(ac, 16));
+        const lines = (ar.data.lines || []).map((l) => ({text: clean(String(l.text || '').replace(/[|_~\[\]{}]+/g, ' ')).replace(/\n/g, ' ').trim(), cy: ((l.bbox.y0 + l.bbox.y1) / 2 - 16 + by) * k})).filter((l) => l.text.length > 2);
+        // عنوان الفصل من رأس الصفحة (إن لم يُقرأ نستعمل ترتيب الصفحة)
+        let sem = ''; try {
+          const hc = pixOf(big, 0, 0, big.width, Math.max(20, Math.round(g.top / k) - 4)), hg = new Uint8Array(hc.w * hc.h);
+          for (let i = 0; i < hg.length; i++) hg[i] = (0.299 * hc.data[i * 4] + 0.587 * hc.data[i * 4 + 1] + 0.114 * hc.data[i * 4 + 2]) < 200 ? 0 : 255;
+          const hr = await ara.recognize(grayCv({w: hc.w, h: hc.h, gray: hg}, 12)), ht = calNorm(hr.data.text || '');
+          for (const [rx, nm] of SEM) if (rx.test(ht)) { sem = nm; break; }
+        } catch (e) {}
+        if (!sem) sem = ['الفصل الدراسي الأول', 'الفصل الدراسي الثاني', 'الفصل الصيفي'][pi] || ('الصفحة ' + (pi + 1));
+        const a = AcalCore.assemble(words, lines, g.W);
+        a.rows.forEach((r) => allRows.push({...r, sem})); a.stray.forEach((t) => stray.push(t));
+      }
+    } finally { try { if (eng) await eng.terminate(); } catch (e) {} try { if (ara) await ara.terminate(); } catch (e) {} }
+    if (allRows.length < 3) return null;
+    const out = []; let cur = '';
+    for (const r of allRows) { if (r.sem !== cur) { cur = r.sem; out.push('== ' + cur + ' =='); } out.push(AcalCore.rowText(r)); }
+    if (stray.length) out.push('== نصوص لم تُربط بتاريخ ==', ...stray);
+    return out.join('\n');
+  };
+  const reviewText = (text, note) => new Promise((done) => {   // يراجع الطالب النص المقروء ويصحّحه قبل الحفظ
     const ov = document.createElement('div');
-    ov.style.cssText = 'position:fixed;inset:0;z-index:70;background:rgba(6,20,22,.6);display:flex;align-items:center;justify-content:center;padding:14px';
+    ov.style.cssText = 'position:fixed;inset:0;z-index:70;background:rgba(6,20,22,.6);display:flex;align-items:center;justify-content:center;padding:14px;overflow:auto';
     const card = document.createElement('div');
-    card.style.cssText = 'width:100%;max-width:560px;max-height:92vh;display:flex;flex-direction:column;gap:10px;background:var(--surface);color:var(--ink);border-radius:20px;padding:16px;box-shadow:var(--shadow-lg);direction:rtl';
+    card.style.cssText = 'width:100%;max-width:560px;max-height:92vh;max-height:92dvh;min-width:0;box-sizing:border-box;display:flex;flex-direction:column;gap:10px;background:var(--surface);color:var(--ink);border-radius:20px;padding:16px;box-shadow:var(--shadow-lg);direction:rtl';
     const t = document.createElement('h3'); t.textContent = 'راجع نص التقويم المقروء'; t.style.margin = '0';
     const hint = document.createElement('p'); hint.className = 'muted'; hint.style.margin = '0';
-    hint.textContent = 'قُرئ النص من الصورة تلقائيًا وقد تكون فيه أخطاء في الأرقام أو الكلمات. صحّحه إن لزم ثم احفظ.';
-    const ta = document.createElement('textarea'); ta.value = text; ta.style.cssText = 'width:100%;min-height:42vh;flex:1;font-size:14px;line-height:1.7;direction:rtl';
+    hint.textContent = note || 'قُرئ النص من الصورة تلقائيًا وقد تكون فيه أخطاء في الأرقام أو الكلمات. صحّحه إن لزم ثم احفظ.';
+    const ta = document.createElement('textarea'); ta.value = text; ta.style.cssText = 'width:100%;min-height:42vh;flex:1;font-size:16px;line-height:1.7;direction:rtl;box-sizing:border-box;max-width:100%;resize:none';
     const row = document.createElement('div'); row.style.cssText = 'display:flex;gap:8px';
     const ok = document.createElement('button'); ok.type = 'button'; ok.className = 'btn grow'; ok.style.flex = '1'; ok.textContent = 'حفظ التقويم';
     const no = document.createElement('button'); no.type = 'button'; no.className = 'btn ghost'; no.textContent = 'إلغاء';
@@ -2271,20 +2469,26 @@ $('#calFile').onchange = async (e) => {
           raw += tc.items.map(x => x.str + (x.hasEOL ? '\n' : ' ')).join('') + '\n';
         }
       }
-      let text = clean(raw), ocrUsed = false;
+      let text = clean(raw), ocrUsed = false, tableRead = false;
       if (text.length < 80 && !isTxt) {   // ملف صور / ممسوح: نقرؤه بالتعرّف الضوئي
         if (navigator.onLine === false) { err('قراءة الصور تحتاج اتصالًا بالإنترنت.'); return; }
         const cvs = [];
         if (isImg) cvs.push(await imgToCanvas(f));
-        else for (let i = 1; i <= Math.min(pdf.numPages, 3); i++) cvs.push(await pageToCanvas(await pdf.getPage(i)));
+        else for (let i = 1; i <= Math.min(pdf.numPages, 4); i++) cvs.push(await pageToCanvas(await pdf.getPage(i)));
         btn.textContent = 'جارٍ قراءة الصورة… 0%';
-        try { text = clean(await ocrCanvases(cvs, (p) => { btn.textContent = 'جارٍ قراءة الصورة… ' + p + '%'; })); }
-        catch (er) { err('تعذّر تشغيل قارئ الصور. تأكد من الإنترنت وأعد المحاولة.'); return; }
+        let structured = null;
+        try { structured = await readTable(cvs, (m) => { btn.textContent = m; }); } catch (er) { structured = null; }
+        if (structured) { text = structured; tableRead = true; }
+        else {
+          try { text = clean(await ocrCanvases(cvs, (p) => { btn.textContent = 'جارٍ قراءة الصورة… ' + p + '%'; })); }
+          catch (er) { err('تعذّر تشغيل قارئ الصور. تأكد من الإنترنت وأعد المحاولة.'); return; }
+        }
         ocrUsed = true;
       }
       if (text.length < 30) { err('لم أستطع قراءة نص من الملف. جرّب صورة أوضح.'); return; }
-      if (ocrUsed) { const r = await reviewText(text); if (r == null) return; text = clean(r); if (text.length < 30) return; }
-      const lines = [...new Set(text.split('\n').map(x => x.trim()).filter(x => x.length > 6 && x.length < 220 && KEY.test(x) && /[0-9\u0660-\u0669]/.test(x)))];
+      if (ocrUsed) { const r = await reviewText(text, tableRead ? 'قُرئ الجدول صفًّا صفًّا: التواريخ والأيام محسوبة ومطابقة بين الهجري والميلادي، أما نصوص الإجراءات فقد يكون فيها خطأ، فراجعها وصحّحها ثم احفظ.' : ''); if (r == null) return; text = clean(r); if (text.length < 30) return; }
+      const all = text.split('\n').map(x => x.trim()).filter(Boolean), tl = all.filter(x => x.startsWith('== ') || x.includes(' | '));
+      const lines = tl.filter(x => !x.startsWith('== ')).length >= 3 ? tl : [...new Set(all.filter(x => x.length > 6 && x.length < 220 && KEY.test(x) && /[0-9\u0660-\u0669]/.test(x)))];
       S.acal = {name: f.name.replace(/\.[^.]+$/, '').slice(0, 60), text: text.slice(0, 20000), lines, at: Date.now()};
       save(); render(); toast('تم رفع التقويم الأكاديمي، وسعود يقرؤه الآن');
     } catch (er) { err('تعذّرت قراءة الملف. جرّب ملفًا آخر.'); }
@@ -2651,7 +2855,7 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
     txt(c, s.title || 'جدولي الجامعي', W - margin, top + 30 * u, Math.round(58 * u), t.ink, {weight: 700, max: usable});
     txt(c, s.name.trim() || 'الجدول الدراسي', W - margin, top + 88 * u, Math.round(30 * u), t.muted, {max: usable});
     const gridTop = top + 132 * u, headH = Math.round(72 * u), gap = Math.round(8 * u), rad = Math.round(14 * u);
-    const labelW = s.showTime ? 0 : Math.round(66 * u), colW = (usable - labelW) / days.length;
+    const sideTimes = !s.showTime || s.format === 'landscape', labelW = sideTimes ? Math.round(66 * u) : 0, colW = (usable - labelW) / days.length;
     rr(c, margin, gridTop, usable, headH, Math.round(20 * u), t.bar);
     const colX = i => W - margin - labelW - colW * (i + 1);
     days.forEach((d, i) => txt(c, DAY_AR[d], colX(i) + colW / 2, gridTop + headH / 2, Math.round(32 * u), t.barText, {weight: 700, align: 'center', max: colW - 12}));
@@ -3617,7 +3821,7 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
   document.addEventListener('visibilitychange', () => { if (!document.hidden) beat(); });
 })();
 
-/* ---------- المستشار الذكي سعود + كتب الجامع (aljam3) ---------- */
+/* ---------- المستشار الذكي سعود ---------- */
 (() => {
   // عنوان خادم المستشار الذكي (Cloudflare Worker). اتركه فارغًا إذا كان الخادم على نفس النطاق.
   const API_BASE = 'https://khadamati-saud.abid-afaz-hasan-alli.workers.dev';
@@ -3631,14 +3835,14 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
   };
   const CHAT_STORAGE_KEY = 'khadamati.saud.chat.v1';
   const TTS_KEY = 'khadamati.saud.tts';
-  let ttsEnabled = localStorage.getItem(TTS_KEY) === '1';
+  let ttsEnabled = false; try { localStorage.removeItem(TTS_KEY); localStorage.removeItem('khadamati.saud.voice'); } catch (e) {}
   const timeNow = () => new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
 
   const welcomeMsg = () => {
     const hr = new Date().getHours(), g = hr >= 4 && hr < 12 ? 'صباح الخير' : 'مساء الخير', n = String(S.name || '').trim();
     return {
       role: 'assistant', time: timeNow(), welcome: true,
-      content: `${g}${n ? ' يا ' + n : ''}، يسعدني خدمتك.\n\nأنا سعود، مستشارك الأكاديمي في جامعة الإمام. أجيبك عن جدولك ومحاضراتك وغيابك ومعدلك والتقويم الأكاديمي والمكافأة، وأبحث لك في كتب الجامع وأنقل النص موثقًا مع رابط الكتاب مباشرة.\n\nتفضل بسؤالك.`
+      content: `${g}${n ? ' يا ' + n : ''}، يسعدني خدمتك.\n\nأنا سعود، مستشارك الأكاديمي في جامعة الإمام. أجيبك عن جدولك ومحاضراتك وغيابك ومعدلك والتقويم الأكاديمي والمكافأة، وأساعدك في مهماتك الجامعية.\n\nتفضل بسؤالك.`
     };
   };
 
@@ -3774,7 +3978,6 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
   };
 
   // ---- تنسيق الرد ----
-  const READ_ICON = '<svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;flex:none"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10M6 14h6"/></svg>';
   const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const inline = (s) => s
     .replace(/\*\*([^*\n]+?)\*\*/g, '<b>$1</b>').replace(/__([^_\n]+?)__/g, '<b>$1</b>')
@@ -3784,16 +3987,6 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
   const formatReplyHtml = (raw, hasCites) => {
     let text = esc(String(raw || '').replace(/\r/g, '').replace(/```[a-z]*\n?/gi, '').replace(/`/g, ''));
     const hold = [], keep = (html) => { hold.push(html); return '\n\u0001' + (hold.length - 1) + '\u0002\n'; };
-    text = text.replace(/\*\*(?:النص المنقول(?: مباشرة من الكتاب| من الكتاب| من المصدر)?|النص المقتبس):\*\*\s*(?:\n)?([\s\S]*?)(?=\*\*التوثيق العلمي:\*\*|\*\*شرح وتعليق|$)/i, (m, q) =>
-      keep(`<div class="quote-box"><div class="quote-tag">${READ_ICON} <b>النص الموثق من الكتاب (الجامع):</b></div><div class="quote-text">${q.trim().replace(/^["“]|["”]$/g, '').replace(/\n/g, '<br>')}</div></div>`));
-    const citeBox = (c) => keep(`<div class="quote-cite">📜 <b>التوثيق المعتمد:</b> ${c}</div>`);
-    text = text.replace(/\*\*التوثيق العلمي:\*\*\s*\[المصدر:\s*([^\]]+)\]/g, (m, c) => citeBox(c));
-    text = text.replace(/\[المصدر:\s*([^\]]+)\]/g, (m, c) => citeBox(c));
-    text = text.replace(/\*\*التوثيق العلمي:\*\*[ \t]*\n?([^\n][^\n]*)/i, (m, c) => citeBox(c.trim()));
-    text = text.replace(/\*\*(?:شرح وتعليق(?: المستشار| المساعد)?):\*\*\s*(?:\n)?([\s\S]*?)(?=\*\*[^*]+:\*\*|$)/i, (m, e) => keep(`<div class="quote-explain"><b>شرح وتعليق المستشار:</b><br>${inline(e.trim()).replace(/\n/g, '<br>')}</div>`));
-    const AJ = /\[([^\]]*)\]\((https?:\/\/(?:www\.)?aljam3\.com[^)\s]*)\)/g;
-    if (hasCites) text = text.replace(AJ, '').replace(/https?:\/\/(?:www\.)?aljam3\.com[^\s<"]*/g, '');
-    else text = text.replace(AJ, (m, l, u) => keep(`<a href="${u}" target="_blank" rel="noopener noreferrer" class="mcp-read-btn">${READ_ICON}<span>${l || 'اقرأ الكتاب مباشرة'}</span></a>`));
 
     // كتل: عناوين، قوائم، جداول، فواصل، فقرات (بدون أي رموز # ظاهرة)
     const lines = text.split('\n'), out = []; let par = [], list = null, tbl = [];
@@ -3817,15 +4010,6 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
     return '<div class="ans">' + out.join('') + '</div>';
   };
 
-  // أزرار «اقرأ الكتاب» تحت رد سعود (من نتائج الجامع نفسها)
-  const citeButtons = (cites) => {
-    const seen = new Set();
-    return (cites || []).filter(c => c && /^https?:\/\//.test(c.readingUrl || '') && !seen.has(c.readingUrl) && seen.add(c.readingUrl)).slice(0, 6).map(c =>
-      h('a', { href: c.readingUrl, target: '_blank', rel: 'noopener noreferrer', class: 'mcp-read-btn', style: 'margin:8px 0 0' },
-        svg('book'),
-        h('span', {}, 'اقرأ الكتاب مباشرة' + (c.bookTitle ? ': ' + c.bookTitle : '') + (c.page ? ' — ص ' + c.page : ''))));
-  };
-
   // ---- رسم الرسائل ----
   let pending = false;
   const buildMsg = (msg) => {
@@ -3836,20 +4020,12 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
       const bubble = h('div', { class: 'msg-bubble' });
       const cites = Array.isArray(msg.citations) ? msg.citations : [];
       bubble.innerHTML = formatReplyHtml(msg.content, cites.length > 0);
-      citeButtons(cites).forEach(b => bubble.append(b));
-      const spLbl = h('span', {}, 'استماع'); let spOn = false;
-      const speakBtn = h('button', { type: 'button', class: 'msg-act-btn' }, svg('volume'), spLbl);
-      const spReset = () => { spOn = false; spLbl.textContent = 'استماع'; };
-      speakBtn.onclick = () => {
-        if (spOn) { try { window.speechSynthesis.cancel(); } catch (e) {} spReset(); return; }
-        spOn = true; spLbl.textContent = 'إيقاف'; speakText(msg.content, spReset);
-      };
       const copyBtn = h('button', { type: 'button', class: 'msg-act-btn' }, svg('copy'), 'نسخ');
       copyBtn.onclick = () => {
         const tx = String(msg.content).replace(/<[^>]+>/g, '').replace(/^\s{0,3}#{1,6}\s*/gm, '');
         (navigator.clipboard ? navigator.clipboard.writeText(tx) : Promise.reject()).then(() => toast('تم نسخ النص')).catch(() => toast('تعذر النسخ'));
       };
-      bubble.append(h('div', { class: 'msg-actions' }, speakBtn, copyBtn));
+      bubble.append(h('div', { class: 'msg-actions' }, copyBtn));
       bubble.append(h('span', { class: 'msg-time' }, msg.time || ''));
       mDiv.append(bubble);
     } else {
@@ -3884,7 +4060,8 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
     chatInput.value = ''; autosize();
     chatHistory.push({ role: 'user', content: q, time: timeNow() });
     pending = true; btnSend.disabled = true; setTyping(true);
-    renderMessages('bottom');
+    try { localStorage.removeItem('khadamati.saud.mcp'); } catch (e) {}
+  renderMessages('bottom');
 
     let reply = '', cites = [], remaining = null, bubble = null, mDiv = null, raf = 0;
     const live = () => {   // رسم الجواب أثناء وصوله دون أي مؤشرات أو نقاط
@@ -3903,7 +4080,6 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
           messages: chatHistory.slice(firstUser).filter(m => !m.ephemeral).map(m => ({ role: m.role, content: m.content })),
           studentContext: studentCtx,
           deviceId: getDeviceId(),
-          mcpServers: getMcp(),
           stream: true
         })
       });
@@ -3931,7 +4107,6 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
       if (!reply) reply = 'عفوًا، لم أتمكن من الحصول على إجابة في الوقت الحالي، حاول بعد قليل.';
       chatHistory.push({ role: 'assistant', content: reply, time: timeNow(), citations: cites });
       if (typeof remaining === 'number' && remaining > 0 && remaining <= 3) toast(`متبقي لك ${remaining} من أسئلة اليوم`);
-      if (ttsEnabled) speakText(reply);
     } catch (err) {
       chatHistory.push({ role: 'assistant', content: reply || 'تعذر الاتصال بسعود الآن. تأكد من الإنترنت وحاول مرة أخرى.', time: timeNow(), citations: cites });
     } finally {
@@ -3981,45 +4156,7 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
   chatInput.placeholder = PH[S.lang || 'ar'] || PH.ar;
 
 
-  // ---- شريط اللغات في الرئيسية للطلبة الدوليين ----
-  $$('.intl-pill[data-set-lang]').forEach(btn => { btn.onclick = () => setLang(btn.dataset.setLang); });
-  const btnMoreLangs = $('#btnMoreLangs');
-  if (btnMoreLangs) btnMoreLangs.onclick = openLang;
-  const curLang = S.lang || 'ar';
-  $$('.intl-pill[data-set-lang]').forEach(btn => btn.classList.toggle('on', btn.dataset.setLang === curLang));
-
   renderMessages('bottom');
-
-  // ---- خوادم MCP يضيفها الطالب (عامة بلا مفاتيح؛ المحمية تُضاف في أسرار الخادم) ----
-  const MCP_KEY = 'khadamati.saud.mcp';
-  const getMcp = () => { try { const a = JSON.parse(localStorage.getItem(MCP_KEY) || '[]'); return Array.isArray(a) ? a.filter(x => x && /^https:\/\//.test(x.url)).slice(0, 5) : []; } catch (e) { return []; } };
-  const setMcp = (a) => { try { localStorage.setItem(MCP_KEY, JSON.stringify(a)); } catch (e) {} };
-  const openMcpCfg = () => {
-    const list = h('div', { style: 'display:grid;gap:8px;margin:10px 0' });
-    const nm = h('input', { type: 'text', placeholder: 'اسم الأداة (مثال: كتب أخرى)', 'aria-label': 'اسم خادم MCP' });
-    const ur = h('input', { type: 'url', placeholder: 'https://example.com/mcp', 'aria-label': 'رابط خادم MCP', style: 'direction:ltr;text-align:left' });
-    const draw = () => {
-      const a = getMcp();
-      list.replaceChildren(...(a.length ? a.map((s, i) => h('div', { class: 'card', style: 'padding:10px 12px;display:flex;align-items:center;gap:8px;justify-content:space-between' },
-        h('div', { style: 'min-width:0' }, h('b', { class: 'notranslate', translate: 'no' }, s.name || 'MCP'), h('div', { class: 'muted', style: 'direction:ltr;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px' }, s.url)),
-        h('button', { class: 'del', type: 'button', 'aria-label': 'حذف', onclick: () => { a.splice(i, 1); setMcp(a); draw(); } }, svg('trash')))) : [h('div', { class: 'empty', style: 'padding:12px' }, 'لا خوادم مضافة. كتب الجامع مفعّلة دائمًا.')]));
-    };
-    draw();
-    const add = h('button', { class: 'btn block', type: 'button', onclick: () => {
-      const u = ur.value.trim(); if (!/^https:\/\/[^\s]+$/i.test(u)) { toast('أدخل رابطًا يبدأ بـ https://'); return; }
-      const a = getMcp(); if (a.length >= 5) { toast('الحد الأقصى 5 خوادم'); return; }
-      if (a.some(x => x.url === u)) { toast('هذا الخادم مضاف'); return; }
-      a.push({ name: nm.value.trim().slice(0, 40) || 'MCP', url: u }); setMcp(a); nm.value = ''; ur.value = ''; draw(); toast('تمت إضافة الخادم لسعود');
-    } }, 'إضافة الخادم');
-    const m = h('div', { class: 'mcp-modal', id: 'mcpCfgModal' },
-      h('div', { class: 'mcp-modal-card' },
-        h('div', { class: 'mcp-modal-head' }, h('div', { class: 'mcp-modal-title' }, h('div', {}, h('b', {}, 'أدوات سعود (MCP)'), h('small', {}, 'أضف أي خادم MCP ليستعمله سعود في إجاباته'))),
-          h('button', { class: 'icon-btn', type: 'button', 'aria-label': 'إغلاق', style: 'background:var(--brand-soft);color:var(--brand)', onclick: () => m.remove() }, svg('close'))),
-        h('div', { class: 'mcp-modal-body' }, list, nm, ur, add,
-          h('p', { class: 'muted', style: 'margin:0;font-size:12.5px;line-height:1.7' }, 'للخوادم العامة التي لا تحتاج مفتاحًا فقط. الخوادم التي تحتاج مفتاحًا تُضاف في أسرار الـ Worker (المتغير MCP_SERVERS) كي لا يظهر المفتاح في الواجهة أو GitHub.'))));
-    m.onclick = (e) => { if (e.target === m) m.remove(); };
-    panel.append(m);
-  };
 
   // ---- الأيقونة العائمة: قابلة للسحب بحرية، والنقر يفتح المحادثة ----
   const fab = $('#saudFab'), panel = $('#saudPanel'), btnClose = $('#btnSaudClose');
@@ -4065,7 +4202,6 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
     if (!fromPop && history.state && history.state.saud) { try { history.back(); } catch (e) {} }
   };
   btnClose.onclick = () => closeSaud(false);
-  $('#btnMcpCfg').onclick = openMcpCfg;
   panel.addEventListener('click', (e) => { if (e.target === panel) closeSaud(false); });
   window.addEventListener('popstate', () => closeSaud(true));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panel.hidden) closeSaud(false); });
