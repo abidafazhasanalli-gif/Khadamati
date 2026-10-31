@@ -202,7 +202,11 @@ footer b{color:var(--ink)}
 .pbar.warn i{background:var(--warn)}
 .pbar.late i{background:var(--danger)}
 .rem{font-size:12px;color:var(--muted)}
-.rem.warn{color:var(--warn-ink);font-weight:600}
+.rem.ok{color:var(--brand);font-weight:600}
+.task.d-ok{border-inline-start:4px solid var(--brand)}.task.d-warn{border-inline-start:4px solid var(--gold);background:var(--gold-soft)}.task.d-late{border-inline-start:4px solid var(--danger);background:var(--danger-soft)}
+.task.d-warn .check{border-color:var(--gold)}.task.d-late .check{border-color:var(--danger)}
+.pbar.ok i{background:var(--brand)}.pbar.warn i{background:var(--gold)}
+.rem.warn{color:var(--gold-ink);font-weight:600}
 .rem.late{color:var(--danger);font-weight:600}
 #stNext{font-size:16px;line-height:1.5;min-height:24px}
 .disc{margin:0;font-size:13px}
@@ -559,6 +563,7 @@ footer b{color:var(--ink)}
 
 /* ---------- tab bar ---------- */
 /* ---------- tab bar ---------- */
+.voice-lang{flex:none;max-width:112px;min-height:44px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:12.5px;padding:0 6px}
 .tabs{
   position:fixed;inset:auto 0 0 0;z-index:25;display:grid;grid-template-columns:repeat(5,1fr);
   background:var(--surface);border-top:1px solid var(--line);
@@ -658,7 +663,7 @@ footer b{color:var(--ink)}
 
 
 /* ===== شعار الجامعة بإطار الجبل ===== */
-.brand .logo{width:46px;height:66px;flex:none;background:url(icon-512.png) -19px -9.4px/84.1px 84.1px no-repeat;clip-path:polygon(50% 0,100% 33%,100% 95%,93% 100%,7% 100%,0 95%,0 33%)}
+.brand .logo{width:46px;height:66px;flex:none;background:url(logo-shield.png) center/contain no-repeat;filter:drop-shadow(0 2px 4px rgba(0,0,0,.18))}
 .svc-ico,.tg-ico{--ic:#0B6E5B;--soft:#E6F3EE;--fg:var(--ic);--shield:polygon(50% 0,100% 26%,100% 93%,93% 100%,7% 100%,0 93%,0 26%);position:relative;border-radius:0!important;clip-path:var(--shield);background:var(--ic)!important;color:var(--fg)!important;box-shadow:none!important}
 @supports(background:color-mix(in srgb,red 10%,white)){
 .svc-ico,.tg-ico{--soft:color-mix(in srgb,var(--ic) 13%,#fff)}
@@ -765,7 +770,13 @@ button.pr-d{border:0;color:inherit;font:inherit;font-size:12.5px;cursor:pointer}
 #p-abs .abs-top b{color:var(--blue-deep)}
 #p-abs .bar{background:var(--blue-soft)}
 #p-abs .bar i{background:var(--brand)}
-#p-abs .bar.warn i{background:var(--blue)}
+#p-abs .bar.warn i{background:var(--gold)}
+#p-abs .bar.over i{background:var(--danger)}
+#p-abs .abs.a-warn{border-color:var(--gold);background:var(--gold-soft)}
+#p-abs .abs.a-over{border-color:var(--danger);background:var(--danger-soft)}
+#p-abs .abs.a-warn .abs-ctl .muted{color:var(--gold-ink);font-weight:600}
+#p-abs .abs.a-over .abs-ctl .muted{color:var(--danger);font-weight:700}
+#p-abs .abs.a-warn .abs-top b{color:var(--gold-ink)}#p-abs .abs.a-over .abs-top b{color:var(--danger)}
 #p-abs .stepper button{background:var(--blue-soft);color:var(--blue)}
 #p-abs .stepper b{color:var(--blue-deep)}
 #p-abs .abs-ctl .muted{color:var(--blue-deep)}
@@ -1644,12 +1655,13 @@ const dueInfo = (t) => {
   const now = Date.now(), end = due.getTime(), start = t.created || (end - 7 * DAY);
   const left = end - now, late = left < 0;
   const pct = late ? 100 : Math.min(100, Math.max(3, (now - start) / Math.max(end - start, 1) * 100));
-  const st = late ? 'late' : left <= DAY ? 'warn' : 'ok';
+  const st = (late || left <= DAY) ? 'late' : left <= 3 * DAY ? 'warn' : 'ok';
   return {pct, st, text: late ? 'انتهت منذ ' + span(-left) : 'متبقٍّ ' + span(left)};
 };
 const taskRow = (t) => {
   const due = dueOf(t), late = due && !t.done && due < new Date();
-  return h('div', {class:'card task' + (t.done ? ' done' : '') + (late ? ' late' : '')},
+  const _di = (!t.done && dueInfo(t)) || null;
+  return h('div', {class:'card task' + (t.done ? ' done' : '') + (late ? ' late' : '') + (_di ? ' d-' + _di.st : '')},
     h('button', {class:'check', onclick:() => { t.done = !t.done; save(); renderTasks(); }, 'aria-label':'تبديل الإنجاز'}, svg('check')),
     h('div', {class:'task-body'}, h('b', {}, t.title), t.due ? h('span', {}, (late ? 'متأخرة · ' : 'ينتهي ') + fmtDate(t.due)) : null,
       ...((!t.done && dueInfo(t)) ? (() => { const i = dueInfo(t); const bar = h('div', {class:'pbar ' + i.st}, h('i', {})); bar.firstChild.style.width = i.pct + '%'; return [bar, h('div', {class:'rem ' + i.st}, i.text)]; })() : [])),
@@ -1784,9 +1796,9 @@ const renderAbs = () => {
   }
   if (!S.abs.length) { box.replaceChildren(h('div', {class:'empty'}, 'لا مقررات بعد. اعتمد جدولك لتُضاف تلقائيًا، أو أضف المقرر يدويًا.')); return; }
   box.replaceChildren(...S.abs.map((a, i) => {
-    const r = a.max ? a.n / a.max : 0, cls = r >= 1 ? 'over' : r >= .75 ? 'warn' : '';
+    const r = a.max ? a.n / a.max : 0, cls = (r >= 1 || (a.max - a.n) <= 0) ? 'over' : (r >= .5 || (a.max - a.n) <= 2) ? 'warn' : '';
     const left = a.max - a.n;
-    return h('div', {class:'card abs'},
+    return h('div', {class:'card abs a-' + (cls || 'ok')},
       h('div', {class:'abs-top'}, h('b', {class:'notranslate', translate:'no'}, a.name),
         h('button', {class:'del', 'aria-label':'حذف', onclick:() => { S.abs.splice(i, 1); save(); renderAbs(); }}, svg('trash'))),
       h('div', {class:'bar ' + cls}, h('i', {style:'width:' + Math.min(100, r * 100) + '%'})),
@@ -1908,13 +1920,33 @@ const dayN = (iso, now) => Math.round((new Date(iso + 'T00:00') - new Date(now.g
 const daysAr = (n) => n === 1 ? 'يوم واحد' : n === 2 ? 'يومان' : n >= 3 && n <= 10 ? n + ' أيام' : n + ' يومًا';
 const defEx = (w) => { const st = w.filter(x => x[0]); return st.length >= 3 ? st[st.length - 2][1] : ''; };
 const exOf = (c) => c.ex !== undefined ? c.ex : defEx(c.w);
+/* التقويم السنوي هو المعتمد عند التعارض مع الأسبوعي (مثل إجازة الخريف)؛ وما لا يوجد فيه يُؤخذ من الأسبوعي */
+const vacKey = (n) => { const m = String(n || '').match(/(?:إجازة|اجازة|أجازة|عطلة)\s*(?:ال)?(\S{2,12})/); return m ? m[1].replace(/^ال/, '') : ''; };
+const acalVacs = () => {
+  const t = S.acal && S.acal.text; if (!t) return [];
+  const out = [];
+  String(t).split('\n').forEach((x) => {
+    const ps = x.split(' | '); if (ps.length < 2) return;
+    const title = ps[0].trim();
+    if (!/(إجازة|اجازة|أجازة|عطلة)/.test(title) || /(اعتذار|الاعتذار|انسحاب|حذف|إضافة|اضافة|تسجيل|اختبار|الاختبارات|تأجيل|بدء|بداية الدراسة)/.test(title)) return;
+    const d = [...ps[1].matchAll(/(\d{4})\/(\d{2})\/(\d{2})\s*م/g)].map((m) => m[1] + '-' + m[2] + '-' + m[3]);
+    if (!d.length) return;
+    const e = d[d.length - 1] >= d[0] ? d[d.length - 1] : d[0];
+    out.push({s: d[0], e, n: title.replace(/\s+/g, ' ')});
+  });
+  return out;
+};
+const sameVac = (wv, av) => (wv.s <= av.e && wv.e >= av.s) || (vacKey(wv.n) && vacKey(wv.n) === vacKey(av.n));
 const calState = (now) => {
   const w = S.cal && S.cal.w; if (!Array.isArray(w) || !w.length) return null;
   const today = ymd(now), first = w[0][1], last = w[w.length - 1][2], total = w.filter(x => x[0]).length;
   if (w.length < 3 && (new Date(last) - new Date(first)) / 864e5 > 14) return {st:'bad', total};   // قراءة قديمة خاطئة: أسبوع واحد لكل الفصل
   if (today < first) return {st:'before', d:dayN(first, now), total};
   if (today > last) return {st:'after', total};
-  const cw = [...w].reverse().find(x => x[1] <= today), left = dayN(last, now), ex = exOf(S.cal), exd = ex ? dayN(ex, now) : null;
+  const av = acalVacs(), inA = av.find((v) => today >= v.s && today <= v.e);
+  let cw = [...w].reverse().find(x => x[1] <= today); const left = dayN(last, now), ex = exOf(S.cal), exd = ex ? dayN(ex, now) : null;
+  if (inA) return {st:'vac', label:inA.n, total, left, exd, back:dayN(inA.e, now) + 1};
+  if (cw && !cw[0] && av.some((v) => sameVac({s:cw[1], e:cw[2], n:cw[3]}, v))) { const wk = [...w].reverse().find(x => x[0] && x[1] <= today); if (wk) cw = wk; }   // الأسبوعي يقول إجازة والسنوي لا يقول
   return cw[0] ? {st:'on', n:cw[0], total, left, exd} : {st:'vac', label:cw[3] || 'إجازة', total, left, exd, back:dayN(cw[2], now) + 1};
 };
 const goCal = () => {
@@ -1954,7 +1986,8 @@ const calEvents = (c) => {
 /* الإجازات والعطل الرسمية فقط (من الجدول الأسبوعي + اليوم الوطني)، دون الجمعة والسبت */
 const calHolidays = (c) => {
   const w = c && c.w; if (!Array.isArray(w) || !w.length) return [];
-  const out = []; w.forEach(x => { if (!x[0]) out.push({s:x[1], e:x[2], n:x[3] || 'إجازة'}); });
+  const av = acalVacs(), out = []; w.forEach(x => { if (!x[0]) { const v = {s:x[1], e:x[2], n:x[3] || 'إجازة'}; if (!av.some((a) => sameVac(v, a))) out.push(v); } });
+  av.forEach((a) => out.push({s:a.s, e:a.e, n:a.n, ann:true}));
   const vac = out.slice();
   for (const iso of (calEvents(c) || {nat:[]}).nat) {
     if (vac.some(v => iso >= v.s && iso <= v.e)) continue;
@@ -2487,7 +2520,7 @@ $('#calFile').onchange = async (e) => {
       const all = text.split('\n').map(x => x.trim()).filter(Boolean), tl = all.filter(x => x.startsWith('== ') || x.includes(' | '));
       const lines = tl.filter(x => !x.startsWith('== ')).length >= 3 ? tl : [...new Set(all.filter(x => x.length > 6 && x.length < 220 && KEY.test(x) && /[0-9\u0660-\u0669]/.test(x)))];
       S.acal = {name: f.name.replace(/\.[^.]+$/, '').slice(0, 60), text, lines, at: Date.now()};
-      save(); render(); toast('تم رفع التقويم الأكاديمي، وسعود يقرؤه الآن');
+      save(); render(); try { lastWk = ''; wkTick(new Date()); lastRw = ''; rwTick(new Date()); } catch (e) {} toast('تم رفع التقويم الأكاديمي، وسعود يقرؤه الآن');
     } catch (er) { err('تعذّرت قراءة الملف. جرّب ملفًا آخر.'); }
     finally { btn.disabled = false; render(); }
   };
@@ -3916,7 +3949,7 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
       })(),
       weeklyCalendarText: (() => {
         const w = S.cal && S.cal.w; if (!Array.isArray(w) || !w.length) return '';
-        return (S.cal.t ? S.cal.t + '\n' : '') + w.map(x => (x[0] ? 'الأسبوع ' + x[0] : (x[3] || 'إجازة')) + ': من ' + x[1] + ' إلى ' + x[2]).join('\n');
+        return (S.acal && S.acal.text ? '(تنبيه: عند أي تعارض بين هذا الجدول الأسبوعي والتقويم الأكاديمي السنوي، المعتمد هو السنوي)\n' : '') + (S.cal.t ? S.cal.t + '\n' : '') + w.map(x => (x[0] ? 'الأسبوع ' + x[0] : (x[3] || 'إجازة')) + ': من ' + x[1] + ' إلى ' + x[2]).join('\n');
       })(),
       absencesText: (S.abs || []).map(a => a.name + ': غاب ' + (a.n || 0) + (a.max ? ' من أصل ' + a.max + ' (المتبقي ' + Math.max(0, a.max - (a.n || 0)) + ')' : '')).join('\n'),
       tasksText: (() => {
@@ -4100,6 +4133,19 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
       'no-speech': 'لم أسمع شيئًا، حاول مرة أخرى',
       'network': 'خدمة التعرف على الصوت تحتاج إنترنت. جرّب متصفح Chrome إن استمرت المشكلة'
     };
+    /* لغة التحدث: اختيار الطالب، وإلا لغة التطبيق، وإلا العربية. تدعم أي لغة يوفّرها متصفح الجهاز */
+    const VMAP = {ar:'ar-SA', en:'en-US', fr:'fr-FR', es:'es-ES', de:'de-DE', pt:'pt-BR', it:'it-IT', ru:'ru-RU', tr:'tr-TR', ur:'ur-PK', bn:'bn-BD', id:'id-ID', ms:'ms-MY', fa:'fa-IR', hi:'hi-IN', 'zh-CN':'zh-CN', 'zh-TW':'zh-TW', ja:'ja-JP', ko:'ko-KR', sw:'sw-KE', ha:'ha-NG', so:'so-SO', iw:'he-IL', he:'he-IL', jw:'jv-ID', tl:'fil-PH', th:'th-TH', vi:'vi-VN', ta:'ta-IN', ne:'ne-NP', ps:'ps-AF', am:'am-ET', uz:'uz-UZ', kk:'kk-KZ', az:'az-AZ', ku:'ku-TR'};
+    const toLoc = (c) => !c ? 'ar-SA' : (VMAP[c] || c);
+    const getVL = () => { try { return localStorage.getItem('voiceLang') || ''; } catch (e) { return ''; } };
+    const voiceLocale = () => getVL() || toLoc(S.lang || '');
+    try {
+      const sel = document.createElement('select'); sel.id = 'voiceLang'; sel.className = 'voice-lang notranslate'; sel.setAttribute('translate', 'no'); sel.setAttribute('aria-label', 'لغة التحدث');
+      const o0 = document.createElement('option'); o0.value = ''; o0.textContent = '🎙 تلقائي'; sel.appendChild(o0);
+      LANGS.forEach((l) => { const o = document.createElement('option'); o.value = toLoc(l.code); o.textContent = l.nat + (l.ar && l.ar !== l.nat ? ' · ' + l.ar : ''); sel.appendChild(o); });
+      sel.value = getVL(); if (sel.value !== getVL()) sel.value = '';
+      sel.onchange = () => { try { if (sel.value) localStorage.setItem('voiceLang', sel.value); else localStorage.removeItem('voiceLang'); } catch (e) {} toast(sel.value ? 'سيُفهم كلامك بهذه اللغة' : 'لغة التحدث تلقائية حسب لغة التطبيق'); };
+      btnVoice.parentNode.insertBefore(sel, btnVoice);
+    } catch (e) {}
     const start = (lang) => {
       rec = new SpeechRec(); rec.lang = lang; rec.continuous = false; rec.interimResults = false; rec.maxAlternatives = 1;
       let got = false, retried = false;
@@ -4107,7 +4153,7 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
       rec.onresult = (ev) => { got = true; const t = ev.results[0][0].transcript; chatInput.value = t; sendMessage(t); };
       rec.onerror = (e) => {
         btnVoice.classList.remove('listening'); busy = false;
-        if (e.error === 'language-not-supported' && lang !== 'ar') { retried = true; setTimeout(() => start('ar'), 150); return; }
+        if (e.error === 'language-not-supported' && lang !== 'ar-SA') { retried = true; toast('جهازك لا يدعم هذه اللغة في الصوت، سأستخدم العربية'); setTimeout(() => start('ar-SA'), 400); return; }
         if (e.error === 'aborted') return;
         toast(MSG[e.error] || 'تعذر التعرف على الصوت (' + (e.error || 'خطأ') + ')');
       };
@@ -4119,7 +4165,7 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
       // في الحاسوب يحتاج المتصفح إذنًا صريحًا للميكروفون قبل التعرف على الصوت
       try { if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) { const st = await navigator.mediaDevices.getUserMedia({audio: true}); st.getTracks().forEach(t => t.stop()); } }
       catch (err) { toast(err && err.name === 'NotFoundError' ? MSG['audio-capture'] : MSG['not-allowed']); return; }
-      start('ar-SA');
+      start(voiceLocale());
     };
   } else {
     btnVoice.onclick = () => toast('هذا المتصفح لا يدعم الإدخال الصوتي. استخدم Chrome أو Edge');

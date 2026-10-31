@@ -1,0 +1,17 @@
+name = "khadamati-saud"
+main = "saud-worker.js"
+compatibility_date = "2025-01-01"
+
+# Workers AI: مجاني ضمن الحصة اليومية في الخطة المجانية (لا مفتاح ولا بطاقة)
+[ai]
+binding = "AI"
+
+[vars]
+ALLOWED_ORIGIN = "https://abidafazhasanalli-gif.github.io"   # عدّلها إلى عنوان موقعك (بدون / في النهاية)
+MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+DAILY_LIMIT = "20"
+
+# (اختياري، مجاني) لتفعيل الحدّ اليومي: npx wrangler kv namespace create LIMITS ثم ضع المعرّف هنا
+# [[kv_namespaces]]
+# binding = "LIMITS"
+# id = "ضع-المعرف-هنا"
