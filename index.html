@@ -563,7 +563,6 @@ footer b{color:var(--ink)}
 
 /* ---------- tab bar ---------- */
 /* ---------- tab bar ---------- */
-.voice-lang{flex:none;max-width:112px;min-height:44px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:12.5px;padding:0 6px}
 .tabs{
   position:fixed;inset:auto 0 0 0;z-index:25;display:grid;grid-template-columns:repeat(5,1fr);
   background:var(--surface);border-top:1px solid var(--line);
@@ -4136,16 +4135,7 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
     /* لغة التحدث: اختيار الطالب، وإلا لغة التطبيق، وإلا العربية. تدعم أي لغة يوفّرها متصفح الجهاز */
     const VMAP = {ar:'ar-SA', en:'en-US', fr:'fr-FR', es:'es-ES', de:'de-DE', pt:'pt-BR', it:'it-IT', ru:'ru-RU', tr:'tr-TR', ur:'ur-PK', bn:'bn-BD', id:'id-ID', ms:'ms-MY', fa:'fa-IR', hi:'hi-IN', 'zh-CN':'zh-CN', 'zh-TW':'zh-TW', ja:'ja-JP', ko:'ko-KR', sw:'sw-KE', ha:'ha-NG', so:'so-SO', iw:'he-IL', he:'he-IL', jw:'jv-ID', tl:'fil-PH', th:'th-TH', vi:'vi-VN', ta:'ta-IN', ne:'ne-NP', ps:'ps-AF', am:'am-ET', uz:'uz-UZ', kk:'kk-KZ', az:'az-AZ', ku:'ku-TR'};
     const toLoc = (c) => !c ? 'ar-SA' : (VMAP[c] || c);
-    const getVL = () => { try { return localStorage.getItem('voiceLang') || ''; } catch (e) { return ''; } };
-    const voiceLocale = () => getVL() || toLoc(S.lang || '');
-    try {
-      const sel = document.createElement('select'); sel.id = 'voiceLang'; sel.className = 'voice-lang notranslate'; sel.setAttribute('translate', 'no'); sel.setAttribute('aria-label', 'لغة التحدث');
-      const o0 = document.createElement('option'); o0.value = ''; o0.textContent = '🎙 تلقائي'; sel.appendChild(o0);
-      LANGS.forEach((l) => { const o = document.createElement('option'); o.value = toLoc(l.code); o.textContent = l.nat + (l.ar && l.ar !== l.nat ? ' · ' + l.ar : ''); sel.appendChild(o); });
-      sel.value = getVL(); if (sel.value !== getVL()) sel.value = '';
-      sel.onchange = () => { try { if (sel.value) localStorage.setItem('voiceLang', sel.value); else localStorage.removeItem('voiceLang'); } catch (e) {} toast(sel.value ? 'سيُفهم كلامك بهذه اللغة' : 'لغة التحدث تلقائية حسب لغة التطبيق'); };
-      btnVoice.parentNode.insertBefore(sel, btnVoice);
-    } catch (e) {}
+    const voiceLocale = () => toLoc(S.lang || '');   // تلقائي: لغة التطبيق التي اختارها الطالب
     const start = (lang) => {
       rec = new SpeechRec(); rec.lang = lang; rec.continuous = false; rec.interimResults = false; rec.maxAlternatives = 1;
       let got = false, retried = false;
