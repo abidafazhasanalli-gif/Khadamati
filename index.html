@@ -2852,7 +2852,7 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
     txt(c, s.title || 'جدولي الجامعي', W - margin, top + 30 * u, Math.round(58 * u), t.ink, {weight: 700, max: usable});
     txt(c, s.name.trim() || 'الجدول الدراسي', W - margin, top + 88 * u, Math.round(30 * u), t.muted, {max: usable});
     const gridTop = top + 132 * u, headH = Math.round(72 * u), gap = Math.round(8 * u), rad = Math.round(14 * u);
-    const land = s.format === 'landscape', labelW = land ? Math.round(176 * u) : (!s.showTime ? Math.round(66 * u) : 0), colW = (usable - labelW) / days.length;
+    const land = s.format === 'landscape', labelW = land ? Math.round(104 * u) : (!s.showTime ? Math.round(66 * u) : 0), colW = (usable - labelW) / days.length;
     rr(c, margin, gridTop, usable, headH, Math.round(20 * u), t.bar);
     const colX = i => W - margin - labelW - colW * (i + 1);
     days.forEach((d, i) => txt(c, DAY_AR[d], colX(i) + colW / 2, gridTop + headH / 2, Math.round(32 * u), t.barText, {weight: 700, align: 'center', max: colW - 12}));
@@ -2869,18 +2869,21 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
       days.forEach((_, i) => rr(c, colX(i) + gap / 2, starts[k], colW - gap, (y - x) * scale, rad, t.empty));
       if (k < nb) { const cy = starts[k] + (y - x) * scale + brk / 2; for (let q = -1; q <= 1; q++) { c.beginPath(); c.arc(W / 2 + q * 26 * u + 0, cy, 4 * u, 0, 7); c.fillStyle = t.muted; c.fill(); } }
       if (labelW && !land) for (let m = Math.ceil(x / 60) * 60; m <= y; m += 60) txt(c, fmtH(m / 60), W - margin - labelW / 2, yOf(m) + 4 * u, Math.round(28 * u), t.muted, {weight: 700, align: 'center'});
+      // الخلفية الأفقية: أرقام الساعات فقط + خطوط تقسيم (ساعة متصلة، نصف ساعة متقطعة، ربع ساعة علامة صغيرة) ليُعرف موضع الربع والنصف
+      if (land) {
+        const xl = colX(days.length - 1) + gap / 2, xr = colX(0) + colW - gap / 2, gx = W - margin - labelW, fsH = Math.round(36 * u);
+        c.save(); c.lineCap = 'butt';
+        for (let m = Math.ceil(x / 15) * 15; m <= y; m += 15) {
+          const yy = Math.round(yOf(m)) + 0.5, hr = m % 60 === 0, hf = m % 30 === 0;
+          if (hr) { c.globalAlpha = 0.55; c.strokeStyle = t.muted; c.lineWidth = Math.max(2, Math.round(2.2 * u)); c.setLineDash([]); c.beginPath(); c.moveTo(xl, yy); c.lineTo(gx, yy); c.stroke(); }
+          else if (hf) { c.globalAlpha = 0.4; c.strokeStyle = t.muted; c.lineWidth = Math.max(1, Math.round(1.5 * u)); c.setLineDash([Math.round(10 * u), Math.round(8 * u)]); c.beginPath(); c.moveTo(xl, yy); c.lineTo(gx, yy); c.stroke(); }
+          c.setLineDash([]); c.globalAlpha = hr ? 0.9 : 0.6; c.strokeStyle = t.muted; c.lineWidth = Math.max(1, Math.round(2 * u));
+          const tl = Math.round((hr ? 26 : hf ? 18 : 10) * u); c.beginPath(); c.moveTo(gx, yy); c.lineTo(gx + tl, yy); c.stroke();
+        }
+        c.restore();
+        for (let m = Math.ceil(x / 60) * 60; m <= y; m += 60) txt(c, fmtH(m / 60), W - margin - labelW / 2 + 8 * u, yOf(m), fsH, t.ink, {weight: 700, align: 'center'});
+      }
     });
-    // الخلفية الأفقية: وقت كل محاضرة مكتوب كاملًا (من … إلى …) في الجانب الأيمن بمحاذاة موضعها
-    if (land) {
-      const rs = [...new Map(s.lectures.map(l => [l.start + '-' + l.end, l])).values()].map(l => ({a: l.start, b: l.end, cy: (yOf(l.start) + yOf(l.end)) / 2})).sort((p, q) => p.cy - q.cy);
-      const fs = Math.round(27 * u), lh = Math.round(36 * u), bh = lh * 2 + Math.round(14 * u); let prev = -1e9;
-      rs.forEach(r => {
-        const cy = Math.max(r.cy, prev + bh); prev = cy;
-        const fx = W - margin - labelW / 2, tm = m => ar(h12(m)) + ' ' + per(m);
-        txt(c, 'من ' + tm(r.a), fx, cy - lh / 2, fs, t.ink, {weight: 700, align: 'center', max: labelW - 8});
-        txt(c, 'إلى ' + tm(r.b), fx, cy + lh / 2, fs, t.muted, {weight: 700, align: 'center', max: labelW - 8});
-      });
-    }
     const cells = [];
     days.forEach((d, i) => {
       for (const {l, lane, n} of lanesOf(s.lectures.filter(q => q.day === d))) {
