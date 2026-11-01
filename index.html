@@ -53,7 +53,7 @@ svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 
 /* ---------- header ---------- */
 .top{
-  background:linear-gradient(135deg, var(--brand) 0%, var(--brand-deep) 100%);
+  background:var(--brand);
   color:var(--brand-ink);
   padding:calc(env(safe-area-inset-top,0px) + 16px) 20px 24px;
   border-radius:0 0 30px 30px;position:relative;z-index:2;
@@ -561,6 +561,21 @@ footer b{color:var(--ink)}
 .custom{display:flex;gap:8px;justify-content:center;margin-top:14px;align-items:center}
 .custom input{width:88px;text-align:center}
 
+
+.qa{flex:none;display:flex;flex-direction:column;max-height:44vh;background:var(--surface);border-top:1px solid var(--line)}
+.qa-h{flex:none;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px 4px;font-weight:700;font-size:13.5px;color:var(--brand-deep)}
+.qa-hb{display:flex;align-items:center;gap:6px}
+.qa-back,.qa-tg{min-height:32px;padding:0 12px;border-radius:99px;border:1.5px solid var(--line);background:var(--brand-soft);color:var(--brand-deep);font:inherit;font-size:12.5px;font-weight:700}
+.qa-tg{padding:0 10px}
+.qa-b{overflow:auto;padding:4px 10px 10px;-webkit-overflow-scrolling:touch}
+.qa-cats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media(min-width:700px){.qa-cats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.qa-cat{display:flex;align-items:center;gap:10px;min-height:58px;padding:8px 12px;border-radius:16px;border:1.5px solid var(--line);background:var(--brand-soft);color:var(--brand-deep);font:inherit;font-weight:700;font-size:13px;line-height:1.35;text-align:start}
+.qa-cat svg{width:26px;height:26px;flex:none;fill:none;stroke:var(--brand);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.qa-list{display:flex;flex-direction:column;gap:6px}
+.qa-days{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.qa-q{width:100%;min-height:44px;padding:8px 14px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:13.5px;font-weight:600;text-align:start}
+.qa-cat:active,.qa-q:active{transform:scale(.97);background:var(--brand-soft)}
 /* ---------- tab bar ---------- */
 /* ---------- tab bar ---------- */
 .tabs{
@@ -803,7 +818,7 @@ body.saud-open .saud-fab{display:none}
 .sp{width:100%;max-width:920px;height:100%;display:flex;flex-direction:column;background:var(--bg);animation:spin .22s ease}
 @keyframes spin{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @media(min-width:900px){.sp{height:calc(100% - 32px);margin-top:16px;border-radius:26px;overflow:hidden;box-shadow:var(--shadow-lg)}}
-.sp-head{flex:none;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:calc(env(safe-area-inset-top,0px) + 12px) 10px 12px 8px;background:linear-gradient(135deg,var(--brand),var(--brand-deep));color:#fff}
+.sp-head{flex:none;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:calc(env(safe-area-inset-top,0px) + 12px) 10px 12px 8px;background:var(--brand);color:#fff}
 .sp-who{display:flex;align-items:center;gap:10px;min-width:0;flex:1 1 auto}
 .sp-av{position:relative;width:48px;height:48px;border-radius:50%;padding:2px;background:#fff;flex:none}
 .sp-av img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
@@ -1879,7 +1894,7 @@ const PT = (() => {
     const out = {fajr:f(t.fajr), sunrise:f(t.sunrise), dhuhr:f(t.dhuhr), asr:f(t.asr), maghrib:f(t.sunset)};
     out.isha = out.maghrib + (isRamadan(date) ? 120 : 90) / 60;
     const base = new Date(y, m, d).getTime(), r = {};
-    for (const key in out) r[key] = isFinite(out[key]) ? new Date(base + out[key] * 3600000) : null;
+    for (const key in out) r[key] = isFinite(out[key]) ? new Date(Math.round((base + out[key] * 3600000) / 60000) * 60000) : null;   // تقريب لأقرب دقيقة كما في الجداول الرسمية
     return r;
   };
 })();
@@ -1892,10 +1907,27 @@ const hms = (ms) => { ms = Math.max(0, Math.floor(ms / 1000)); return p2(Math.fl
 const hm12 = (d) => { if (!d) return '--:--'; const hh = d.getHours(); return (hh % 12 || 12) + ':' + p2(d.getMinutes()) + (hh >= 12 ? ' م' : ' ص'); };
 const dayKey = (d) => d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate();
 let ptDay = '', ptToday = null, ptPrev = null, ptNext = null;
+/* المطابقة مع تقويم أم القرى الرسمي (الطريقة 4) عند توفر الإنترنت، ويُحفظ الناتج فيبقى صحيحًا دون اتصال؛ وبدونه يُستعمل الحساب المحلي */
+const PTK = ['fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha'], ptFetching = {};
+const ptKey = (d) => d.getFullYear() + '-' + p2(d.getMonth() + 1) + '-' + p2(d.getDate()) + '|' + LOC.lat.toFixed(2) + '|' + LOC.lng.toFixed(2);
+const ptCached = (d) => (S.ptc && S.ptc[ptKey(d)]) || null;
+const ptApply = (o, d) => { const c = ptCached(d); if (c) PTK.forEach((k) => { const m = /^(\d{1,2}):(\d{2})/.exec(String(c[k] || '')); if (m) o[k] = new Date(d.getFullYear(), d.getMonth(), d.getDate(), +m[1], +m[2]); }); return o; };
+const ptFetch = (d) => {
+  const key = ptKey(d); if (ptCached(d) || ptFetching[key] || navigator.onLine === false || typeof fetch !== 'function') return;
+  ptFetching[key] = 1;
+  let tz = ''; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
+  fetch('https://api.aladhan.com/v1/timings/' + p2(d.getDate()) + '-' + p2(d.getMonth() + 1) + '-' + d.getFullYear() + '?latitude=' + LOC.lat + '&longitude=' + LOC.lng + '&method=4' + (tz ? '&timezonestring=' + encodeURIComponent(tz) : ''))
+    .then((r) => r.json()).then((j) => {
+      const t = j && j.data && j.data.timings; if (!t || !t.Fajr || !t.Isha) return;
+      S.ptc = S.ptc || {}; S.ptc[key] = {fajr:t.Fajr, sunrise:t.Sunrise, dhuhr:t.Dhuhr, asr:t.Asr, maghrib:t.Maghrib, isha:t.Isha};
+      const ks = Object.keys(S.ptc).sort(); while (ks.length > 8) delete S.ptc[ks.shift()];
+      save(); ptDay = '';
+    }).catch(() => {}).then(() => { delete ptFetching[key]; });
+};
 const ptLoad = (now) => {
   const k = dayKey(now) + '|' + LOC.lat.toFixed(3) + '|' + LOC.lng.toFixed(3);
   if (k === ptDay) return; ptDay = k;
-  const day = (off) => PT(new Date(now.getFullYear(), now.getMonth(), now.getDate() + off), LOC.lat, LOC.lng);
+  const day = (off) => { const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + off); ptFetch(d); return ptApply(PT(d, LOC.lat, LOC.lng), d); };
   ptPrev = day(-1); ptToday = day(0); ptNext = day(1);
 };
 /* ---------- الترحيب + التقويم الأسبوعي ---------- */
@@ -2598,6 +2630,7 @@ const locate = (manual) => {
     (e) => onGeoErr(e, manual), {enableHighAccuracy:!!manual, timeout:15000, maximumAge:manual ? 0 : 600000});
 };
 $('#prLocBtn').onclick = () => locate(true);
+
 prLocText(); prTick(); setInterval(prTick, 1000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) { prTick(); if (watchId == null) locate(false); } });
 locate(false);
@@ -3883,7 +3916,7 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
     const hr = new Date().getHours(), g = hr >= 4 && hr < 12 ? 'صباح الخير' : 'مساء الخير', n = String(S.name || '').trim();
     return {
       role: 'assistant', time: timeNow(), welcome: true,
-      content: `${g}${n ? ' يا ' + n : ''}، يسعدني خدمتك.\n\nأنا سعود، مستشارك الأكاديمي في جامعة الإمام. أجيبك عن جدولك ومحاضراتك وغيابك ومعدلك والتقويم الأكاديمي والمكافأة، وأساعدك في مهماتك الجامعية.\n\nتفضل بسؤالك.`
+      content: `${g}${n ? ' يا ' + n : ''}، يسعدني خدمتك.\n\nأنا سعود، مستشارك الأكاديمي في جامعة الإمام. أجيبك عن جدولك ومحاضراتك وغيابك ومعدلك والتقويم الأكاديمي والمكافأة، وأساعدك في مهماتك الجامعية.\n\nاختر من الأسئلة الجاهزة أدناه لتأتيك الإجابة فورًا، أو اكتب سؤالك.`
     };
   };
 
@@ -3978,7 +4011,7 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
     .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:var(--brand);text-decoration:underline;font-weight:600">$1</a>')
     .replace(/\*\*|__/g, '');
   const formatReplyHtml = (raw, hasCites) => {
-    let text = esc(String(raw || '').replace(/\r/g, '').replace(/```[a-z]*\n?/gi, '').replace(/`/g, '')).replace(/(\d{3,4})\s*(?:ه|هـ|هجري|هجرية)(?![\u0621-\u064A])/g, '$1هـ');   // الهجري يُكتب «هـ» دائمًا
+    let text = esc(String(raw || '').replace(/\r/g, '').replace(/```[a-z]*\n?/gi, '').replace(/`/g, '')).replace(/(\d{3,4})\s*(?:[هھۀہ][\u200C\u200D\u0640]*|هجري|هجرية)(?![\u0621-\u064A])/g, '$1هـ');   // الهجري يُكتب «هـ» دائمًا
     const hold = [], keep = (html) => { hold.push(html); return '\n\u0001' + (hold.length - 1) + '\u0002\n'; };
 
     // كتل: عناوين، قوائم، جداول، فواصل، فقرات (بدون أي رموز # ظاهرة)
@@ -4107,6 +4140,211 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
       renderMessages('bottom');
     }
   };
+
+  // ---- نظام الأسئلة الجاهزة: إجابات فورية محسوبة من بيانات التطبيق (بلا أي استدعاء للذكاء الاصطناعي) ----
+  const qNow = () => { try { const p = new Intl.DateTimeFormat('en-CA', {timeZone:'Asia/Riyadh', year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit', hourCycle:'h23'}).formatToParts(new Date()), g = (t) => +p.find((x) => x.type === t).value; return new Date(g('year'), g('month') - 1, g('day'), g('hour'), g('minute'), g('second')); } catch (e) { return new Date(); } };   // توقيت الرياض
+  const q_fd = (iso) => new Intl.DateTimeFormat('ar-u-nu-latn-ca-gregory', {weekday:'long', day:'numeric', month:'long', year:'numeric'}).format(new Date(iso + 'T12:00'));
+  const q_dt = (iso, hj) => q_fd(iso) + 'م' + (hj ? ' (الموافق ' + hj + 'هـ)' : '');
+  const q_t12 = (m) => { const hh = Math.floor(m / 60); return (hh % 12 || 12) + ':' + String(m % 60).padStart(2, '0') + (hh < 12 ? ' ص' : ' م'); };
+  const q_rel = (n) => n === 0 ? 'اليوم' : n === 1 ? 'غدًا' : n === 2 ? 'بعد يومين' : n < 0 ? 'منذ ' + daysAr(-n) : 'بعد ' + daysAr(n);
+  const q_days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'], q_daysAr = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+  const q_hasCal = () => !!((S.acal && S.acal.text) || (S.cal && S.cal.w && S.cal.w.length));
+  const q_noAcal = 'لم ترفع التقويم الأكاديمي السنوي بعد، ولا أريد أن أعطيك موعدًا غير موجود في مصدر رسمي. ارفعه من تبويب الأدوات ثم اسألني مرة أخرى.';
+  const q_src = (kind, now) => {
+    const nm = S.acal && S.acal.name ? ' (' + S.acal.name + ')' : '';
+    const m = {acal: 'التقويم الأكاديمي السنوي المرفوع' + nm, cal: 'التقويم الأسبوعي المرفوع', both: 'التقويم الأكاديمي السنوي المرفوع، وما لم يرد فيه يُؤخذ من التقويم الأسبوعي', sch: 'جدولك الأسبوعي المرفوع', abs: 'غياباتك المسجلة في التطبيق', task: 'مهامك المسجلة في التطبيق', pray: 'حساب أم القرى لموقعك الحالي', rw: 'القاعدة المعتمدة في دليل الطالب'}[kind];
+    return m ? '\n\nالمصدر: ' + m + (kind === 'sch' || kind === 'abs' || kind === 'task' ? '' : ' — بتوقيت الرياض، حتى ' + q_fd(ymd(now))) : '';
+  };
+  let q_evC = {k: '', v: []};
+  const q_events = () => {
+    const t = S.acal && S.acal.text; if (!t) return [];
+    if (q_evC.k === t) return q_evC.v;
+    const out = []; let sem = '';
+    String(t).split('\n').forEach((x) => {
+      const m = /^==\s*(.*?)\s*==$/.exec(x.trim()); if (m) { sem = m[1]; return; }
+      const ps = x.split(' | '); if (ps.length < 2) return;
+      const g = [...ps[1].matchAll(/(\d{4})\/(\d{2})\/(\d{2})\s*م/g)].map((a) => a[1] + '-' + a[2] + '-' + a[3]);
+      const hh = [...ps[1].matchAll(/(\d{4}\/\d{2}\/\d{2})\s*هـ/g)].map((a) => a[1]);
+      if (!g.length) return;
+      out.push({title: ps[0].trim(), s: g[0], e: g[g.length - 1] >= g[0] ? g[g.length - 1] : g[0], hs: hh[0] || '', he: hh[hh.length - 1] || '', sem, warn: /تنبيه/.test(x)});
+    });
+    out.sort((a, b) => a.s < b.s ? -1 : a.s > b.s ? 1 : 0);
+    q_evC = {k: t, v: out}; return out;
+  };
+  const q_find = (re, ex) => q_events().filter((e) => re.test(e.title) && !(ex && ex.test(e.title)));
+  const q_pick = (list, now, k) => { const t = ymd(now), up = list.filter((e) => e.e >= t); return up.length ? up.slice(0, k) : list.slice(-k); };
+  const q_evLine = (e, now) => {
+    const t = ymd(now), rng = e.e !== e.s ? 'من ' + q_dt(e.s, e.hs) + ' إلى ' + q_dt(e.e, e.he) : q_dt(e.s, e.hs);
+    const st = e.e < t ? 'انتهى' : e.s <= t ? 'جارٍ الآن، ينتهي ' + q_rel(dayN(e.e, now)) : q_rel(dayN(e.s, now));
+    return '- ' + e.title + ': ' + rng + ' (' + st + ')' + (e.warn ? ' — تنبيه: قد يكون في التاريخ خطأ قراءة، راجع التقويم الأصلي' : '');
+  };
+  const q_evAns = (re, ex, what, head, now, k) => {
+    if (!(S.acal && S.acal.text)) return q_noAcal;
+    const l = q_find(re, ex);
+    if (!l.length) return 'لم أجد ' + what + ' في التقويم الأكاديمي المرفوع، فلا أستطيع إعطاءك موعدًا غير موجود في المصدر.' + q_src('acal', now);
+    return head + '\n' + q_pick(l, now, k || 4).map((e) => q_evLine(e, now)).join('\n') + q_src('acal', now);
+  };
+  const q_lecs = () => (S.sched || {}).lectures || [];
+  const q_noSch = 'لم أجد جدول محاضراتك في التطبيق. ارفع جدولك من تبويب الأدوات ثم اسألني مرة أخرى.';
+  const q_lecLines = (ls) => ls.map((l) => '- ' + l.course + ' من ' + q_t12(l.start) + ' إلى ' + q_t12(l.end) + (l.room ? ' (القاعة ' + l.room + ')' : '')).join('\n');
+  const q_cnt = (n) => n === 1 ? 'محاضرة واحدة' : n === 2 ? 'محاضرتان' : n + ' محاضرات';
+  const q_lec = (d, word) => {
+    if (!q_lecs().length) return q_noSch;
+    const st = calState(d), nm = q_daysAr[d.getDay()];
+    if (st && st.st === 'vac') return word + ' ' + nm + ' ضمن ' + st.label + '، فلا محاضرات.' + q_src('both', d);
+    const ls = q_lecs().filter((l) => l.day === q_days[d.getDay()]).sort((a, b) => a.start - b.start);
+    if (!ls.length) return word + ' ' + nm + ': لا توجد عندك محاضرات.' + q_src('sch', d);
+    return word + ' ' + nm + ' عندك ' + q_cnt(ls.length) + ':\n' + q_lecLines(ls) + q_src('sch', d);
+  };
+  const q_lecDay = (i) => {
+    if (!q_lecs().length) return q_noSch;
+    const ls = q_lecs().filter((l) => l.day === q_days[i]).sort((a, b) => a.start - b.start);
+    return ls.length ? 'جدول يوم ' + q_daysAr[i] + ' (' + q_cnt(ls.length) + '):\n' + q_lecLines(ls) + q_src('sch') : 'يوم ' + q_daysAr[i] + ': لا توجد عندك محاضرات.';
+  };
+  const q_tasks = () => (S.tasks || []).filter((t) => !t.done).sort((a, b) => String(a.due || '9999').localeCompare(String(b.due || '9999')));
+  const q_due = (t, now) => { if (!t.due) return 'بلا موعد'; const iso = String(t.due).slice(0, 10), n = dayN(iso, now); return q_rel(n) + ' (' + q_fd(iso) + (String(t.due).length > 10 ? '، ' + String(t.due).slice(11, 16) : '') + ')'; };
+  const q_hol = () => (S.cal && S.cal.w && S.cal.w.length) ? calHolidays(S.cal) : acalVacs();
+  const q_holLine = (v, now) => { const t = ymd(now); return '- ' + v.n + ': من ' + q_fd(v.s) + (v.e !== v.s ? ' إلى ' + q_fd(v.e) : '') + ' (' + (v.e < t ? 'انتهت' : v.s <= t ? 'جارية الآن، تنتهي ' + q_rel(dayN(v.e, now)) : q_rel(dayN(v.s, now))) + ')'; };
+  const q_rwNext = (now, k) => { const t = ymd(now), out = []; for (let i = 0; i < 8 && out.length < k; i++) { const r = rwOf(now.getFullYear(), now.getMonth() + i); if (r.iso >= t) out.push(r); } return out; };
+  const q_rwNote = '\n\nتنبيه: هذا موعد متوقع بحسب القاعدة المعتمدة في دليل الطالب (25 من كل شهر ميلادي، وتُرحَّل إلى الأحد إن وافقت الجمعة أو السبت)، وليس إعلانًا رسميًا بالصرف؛ تأكد من الجهة الرسمية.';
+  const q_exRe = /اختبار/, q_exEx = /(اعتذار|تأجيل|بديل|منتصف|الفترية|نتائج|رصد)/;
+
+  const QA = {
+    c_today: {q: 'ما تاريخ اليوم؟', rel: ['c_week', 'c_start', 'c_end'], run: (now) => { const hj = (typeof fmtH !== 'undefined' && fmtH) ? fmtH.format(now).replace(/\s*هـ$/, '') : ''; return q_fd(ymd(now)) + 'م' + (hj ? '، الموافق ' + hj + 'هـ' : '') + '.\nالتوقيت: الرياض.'; }},
+    c_week: {q: 'في أي أسبوع نحن؟', rel: ['c_end', 'v_near', 'e_left'], run: (now) => {
+      if (!(S.cal && S.cal.w && S.cal.w.length)) return q_hasCal() ? 'لم ترفع التقويم الأسبوعي، فلا أعرف رقم الأسبوع بدقة. ارفعه من تبويب الأدوات.' : q_noAcal;
+      const st = calState(now); if (!st) return 'لم أستطع تحديد الأسبوع من التقويم المرفوع.';
+      if (st.st === 'on') return 'نحن في الأسبوع ' + st.n + ' من ' + st.total + '، وبقي على نهاية أسابيع الفصل ' + daysAr(Math.max(0, st.left)) + '.' + q_src('both', now);
+      if (st.st === 'vac') return 'الآن: ' + st.label + '، وتعود الدراسة بعد ' + daysAr(Math.max(1, st.back)) + '.' + q_src('both', now);
+      if (st.st === 'before') return 'لم يبدأ الفصل بعد، يبدأ بعد ' + daysAr(st.d) + '.' + q_src('cal', now);
+      return 'انتهى الفصل المرفوع. ارفع تقويم الفصل الجديد.';
+    }},
+    c_start: {q: 'متى بداية الدراسة؟', rel: ['c_reg', 'c_end', 'c_week'], run: (now) => {
+      if (S.acal && S.acal.text && q_find(/(بداية|بدء|ابتداء).*(الدراسة|الفصل)/, /(إجازة|اعتذار|تسجيل|حذف)/).length) return q_evAns(/(بداية|بدء|ابتداء).*(الدراسة|الفصل)/, /(إجازة|اعتذار|تسجيل|حذف)/, 'موعد بداية الدراسة', 'بداية الدراسة:', now, 3);
+      const w = S.cal && S.cal.w; if (Array.isArray(w) && w.length) return 'بداية الأسبوع الأول في التقويم الأسبوعي: ' + q_fd(w[0][1]) + ' (' + q_rel(dayN(w[0][1], now)) + ').' + q_src('cal', now);
+      return q_hasCal() ? q_evAns(/(بداية|بدء)/, null, 'موعد بداية الدراسة', '', now, 3) : q_noAcal;
+    }},
+    c_end: {q: 'متى ينتهي الفصل الدراسي؟', rel: ['e_final', 'e_left', 'c_week'], run: (now) => {
+      if (S.acal && S.acal.text && q_find(/(نهاية|انتهاء|آخر يوم).*(الدراسة|الفصل)/).length) return q_evAns(/(نهاية|انتهاء|آخر يوم).*(الدراسة|الفصل)/, null, 'موعد نهاية الفصل', 'نهاية الفصل:', now, 3);
+      const w = S.cal && S.cal.w; if (Array.isArray(w) && w.length) { const l = w[w.length - 1][2]; return 'آخر أسبوع في التقويم الأسبوعي ينتهي ' + q_fd(l) + ' (' + q_rel(dayN(l, now)) + ').' + q_src('cal', now); }
+      return q_noAcal;
+    }},
+    c_reg: {q: 'مواعيد التسجيل والحذف والإضافة', rel: ['c_apology', 'c_start', 'c_events'], run: (now) => q_evAns(/(تسجيل|حذف|إضافة|اضافة|السحب)/, /نتائج/, 'مواعيد التسجيل والحذف والإضافة', 'مواعيد التسجيل والحذف والإضافة:', now, 6)},
+    c_apology: {q: 'مواعيد الاعتذار والتأجيل', rel: ['c_reg', 'c_events', 'e_final'], run: (now) => q_evAns(/(اعتذار|تأجيل|انسحاب)/, null, 'مواعيد الاعتذار والتأجيل', 'مواعيد الاعتذار والتأجيل:', now, 6)},
+    c_events: {q: 'ما أحداث التقويم القادمة؟', rel: ['c_reg', 'c_apology', 'v_near'], run: (now) => { if (!(S.acal && S.acal.text)) return q_noAcal; const t = ymd(now), l = q_events().filter((e) => e.e >= t).slice(0, 7); return l.length ? 'أقرب أحداث التقويم:\n' + l.map((e) => q_evLine(e, now)).join('\n') + q_src('acal', now) : 'لا توجد أحداث قادمة في التقويم المرفوع.' + q_src('acal', now); }},
+
+    s_today: {q: 'ما محاضراتي اليوم؟', rel: ['s_next', 's_tmr', 's_rooms'], run: (now) => q_lec(now, 'اليوم')},
+    s_tmr: {q: 'ما محاضراتي غدًا؟', rel: ['s_today', 's_week', 'v_tmr'], run: (now) => q_lec(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1), 'غدًا')},
+    s_next: {q: 'ما محاضرتي القادمة؟', rel: ['s_today', 's_rooms', 's_tmr'], run: (now) => {
+      if (!q_lecs().length) return q_noSch;
+      const mn = now.getHours() * 60 + now.getMinutes();
+      for (let i = 0; i < 8; i++) {
+        const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i), st = calState(d); if (st && st.st === 'vac') continue;
+        const l = q_lecs().filter((x) => x.day === q_days[d.getDay()] && (i > 0 || x.end > mn)).sort((a, b) => a.start - b.start)[0];
+        if (l) return 'محاضرتك القادمة: ' + l.course + ' ' + (i === 0 ? (l.start <= mn ? 'الآن، وتنتهي ' + q_t12(l.end) : 'اليوم من ' + q_t12(l.start) + ' إلى ' + q_t12(l.end)) : (i === 1 ? 'غدًا ' : 'يوم ') + q_daysAr[d.getDay()] + ' من ' + q_t12(l.start) + ' إلى ' + q_t12(l.end)) + (l.room ? ' (القاعة ' + l.room + ')' : '') + '.' + q_src('sch', now);
+      }
+      return 'لا توجد محاضرات قادمة في جدولك خلال الأيام الثمانية القادمة.';
+    }},
+    s_rooms: {q: 'ما قاعات محاضراتي اليوم؟', rel: ['s_today', 's_next', 's_week'], run: (now) => {
+      if (!q_lecs().length) return q_noSch;
+      const ls = q_lecs().filter((l) => l.day === q_days[now.getDay()]).sort((a, b) => a.start - b.start); if (!ls.length) return 'اليوم لا توجد عندك محاضرات.' + q_src('sch', now);
+      return 'قاعات اليوم:\n' + ls.map((l) => '- ' + l.course + ': ' + (l.room ? 'القاعة ' + l.room : 'لم تُسجَّل القاعة في جدولك')).join('\n') + q_src('sch', now);
+    }},
+    s_day: {q: 'جدول يوم معين', days: true},
+    s_week: {q: 'جدولي الأسبوعي كامل', rel: ['s_count', 's_today', 's_day'], run: (now) => { const t = getStudentContext().scheduleText; return t ? 'جدولك الأسبوعي:\n' + t.split('\n').map((x) => '- ' + x).join('\n') + q_src('sch', now) : q_noSch; }},
+    s_count: {q: 'كم عدد محاضراتي الأسبوعية؟', rel: ['s_week', 's_today', 's_tmr'], run: (now) => {
+      const ls = q_lecs(); if (!ls.length) return q_noSch;
+      const per = q_days.map((k, i) => [q_daysAr[i], ls.filter((l) => l.day === k).length]).filter((x) => x[1]);
+      return 'عدد محاضراتك الأسبوعية: ' + ls.length + '.\n' + per.map((x) => '- ' + x[0] + ': ' + x[1]).join('\n') + q_src('sch', now);
+    }},
+
+    v_near: {q: 'ما أقرب إجازة؟', rel: ['v_list', 'v_tmr', 'c_week'], run: (now) => {
+      if (!q_hasCal()) return q_noAcal;
+      const t = ymd(now), v = q_hol().find((x) => x.e >= t); if (!v) return 'لا توجد إجازات قادمة في التقويم المرفوع.' + q_src('both', now);
+      return (v.s <= t ? 'أنت الآن في ' + v.n + '، وتنتهي ' + q_fd(v.e) + ' (' + q_rel(dayN(v.e, now)) + ').' : 'أقرب إجازة:\n' + q_holLine(v, now)) + q_src('both', now);
+    }},
+    v_list: {q: 'ما الإجازات القادمة؟', rel: ['v_near', 'v_tmr', 'c_events'], run: (now) => { if (!q_hasCal()) return q_noAcal; const t = ymd(now), l = q_hol().filter((x) => x.e >= t).slice(0, 6); return l.length ? 'الإجازات القادمة:\n' + l.map((v) => q_holLine(v, now)).join('\n') + q_src('both', now) : 'لا توجد إجازات قادمة في التقويم المرفوع.'; }},
+    v_tmr: {q: 'هل غدًا إجازة؟', rel: ['v_near', 's_tmr', 'v_list'], run: (now) => {
+      const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1), k = d.getDay(), iso = ymd(d), nm = q_daysAr[k];
+      if (k === 5 || k === 6) return 'نعم، غدًا ' + nm + ' إجازة أسبوعية.';
+      if (!q_hasCal()) return q_noAcal;
+      const v = q_hol().find((x) => iso >= x.s && iso <= x.e); return v ? 'نعم، غدًا ' + nm + ' ضمن ' + v.n + '.' + q_src('both', now) : 'لا، غدًا ' + nm + ' يوم دراسة بحسب التقويم المرفوع.' + q_src('both', now);
+    }},
+    v_eid: {q: 'متى إجازة العيد؟', rel: ['v_list', 'v_near', 'c_events'], run: (now) => { if (!q_hasCal()) return q_noAcal; const t = ymd(now), l = q_hol().filter((x) => /عيد/.test(x.n) && x.e >= t).slice(0, 3); return l.length ? 'إجازة العيد:\n' + l.map((v) => q_holLine(v, now)).join('\n') + q_src('both', now) : 'لم أجد إجازة عيد قادمة في التقويم المرفوع.' + q_src('both', now); }},
+
+    r_when: {q: 'متى تنزل المكافأة؟', rel: ['r_left', 'r_next', 'a_abs'], run: (now) => { const r = q_rwNext(now, 1)[0]; return r ? 'المكافأة المتوقعة: ' + q_fd(r.iso) + ' (' + q_rel(dayN(r.iso, now)) + ').' + (r.moved ? '\nموعدها الأصلي يوم 25 وافق إجازة أسبوعية فنزلت الأحد.' : '') + q_rwNote + q_src('rw', now) : null; }},
+    r_left: {q: 'كم يومًا باقي على المكافأة؟', rel: ['r_when', 'r_next', 'v_near'], run: (now) => { const r = q_rwNext(now, 1)[0]; if (!r) return null; const n = dayN(r.iso, now); return n === 0 ? 'الموعد المتوقع للمكافأة هو اليوم.' + q_rwNote : 'باقي ' + daysAr(n) + ' على الموعد المتوقع للمكافأة (' + q_fd(r.iso) + ').' + q_rwNote; }},
+    r_next: {q: 'متى المكافآت القادمة؟', rel: ['r_when', 'r_left', 'a_abs'], run: (now) => { const l = q_rwNext(now, 4); return l.length ? 'المواعيد المتوقعة للمكافآت القادمة:\n' + l.map((r) => '- ' + q_fd(r.iso) + ' (' + q_rel(dayN(r.iso, now)) + ')').join('\n') + q_rwNote : null; }},
+    a_abs: {q: 'كم غيابي في المواد؟', rel: ['a_near', 'c_apology', 'r_when'], run: (now) => { const ab = S.abs || []; if (!ab.length) return 'لم تضف مقرراتك في صفحة الغياب بعد.'; return 'غيابك في المواد:\n' + ab.map((a) => '- ' + a.name + ': غبت ' + (a.n || 0) + (a.max ? ' من ' + a.max + '، المتبقي ' + Math.max(0, a.max - (a.n || 0)) : '')).join('\n') + q_src('abs', now); }},
+    a_near: {q: 'أي مادة قريبة من حد الحرمان؟', rel: ['a_abs', 'c_apology', 'e_final'], run: (now) => {
+      const ab = (S.abs || []).filter((a) => a.max); if (!ab.length) return 'لم تضف مقرراتك في صفحة الغياب بعد.';
+      const nr = ab.filter((a) => a.max - (a.n || 0) <= 2).map((a) => '- ' + a.name + ': غبت ' + (a.n || 0) + ' من ' + a.max + (a.max - (a.n || 0) <= 0 ? ' (وصلت حد الحرمان)' : '، المتبقي ' + (a.max - (a.n || 0))));
+      return (nr.length ? 'مواد قريبة من الحد:\n' + nr.join('\n') : 'لا توجد مادة قريبة من حد الحرمان.') + q_src('abs', now);
+    }},
+
+    e_final: {q: 'متى الاختبارات النهائية؟', rel: ['e_left', 'e_mid', 'e_res'], run: (now) => q_evAns(q_exRe, q_exEx, 'موعد الاختبارات', 'مواعيد الاختبارات:', now, 4)},
+    e_left: {q: 'كم يومًا متبقيًا على الاختبارات؟', rel: ['e_final', 'e_mid', 'c_end'], run: (now) => {
+      if (!(S.acal && S.acal.text)) return q_noAcal;
+      const t = ymd(now), l = q_find(q_exRe, q_exEx), e = l.find((x) => x.e >= t); if (!e) return 'لم أجد اختبارات قادمة في التقويم الأكاديمي المرفوع.' + q_src('acal', now);
+      const n = dayN(e.s, now);
+      return (e.s <= t ? 'الاختبارات جارية الآن (' + e.title + ')، وتنتهي ' + q_rel(dayN(e.e, now)) + '.' : 'باقي ' + daysAr(n) + ' على ' + e.title + ' (تبدأ ' + q_dt(e.s, e.hs) + ').') + q_src('acal', now);
+    }},
+    e_mid: {q: 'متى اختبارات منتصف الفصل؟', rel: ['e_final', 'e_left', 'e_task'], run: (now) => q_evAns(/(منتصف|الفترية)/, null, 'موعد اختبارات منتصف الفصل', 'اختبارات منتصف الفصل:', now, 3)},
+    e_res: {q: 'متى تظهر النتائج؟', rel: ['e_final', 'c_events', 'e_left'], run: (now) => q_evAns(/(نتائج|رصد)/, null, 'موعد إعلان النتائج', 'النتائج والدرجات:', now, 4)},
+    e_task: {q: 'اختباراتي في مهامي', rel: ['d_tasks', 'e_left', 'e_final'], run: (now) => { const l = q_tasks().filter((t) => /(اختبار|كويز|امتحان)/.test(t.title || '')); return l.length ? 'اختباراتك في مهامك:\n' + l.map((t) => '- ' + t.title + ' — ' + q_due(t, now)).join('\n') + q_src('task', now) : 'ما عندك مهام فيها اختبار.'; }},
+
+    d_pray: {q: 'متى الصلاة القادمة؟', rel: ['d_prays', 's_next', 'd_tasks'], run: () => {
+      const now = new Date(); if (!ptToday) return null;
+      const keys = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'], seq = [...keys.map((k) => ({k, t: ptToday[k], d: 0})), ...keys.map((k) => ({k, t: ptNext && ptNext[k], d: 1}))].filter((x) => x.t);
+      const nx = seq.find((x) => x.t > now); if (!nx) return null;
+      const mins = Math.max(1, Math.round((nx.t - now) / 60000)), hh = Math.floor(mins / 60), mm = mins % 60;
+      return 'الصلاة القادمة: ' + (PRAYERS.find((p) => p[0] === nx.k) || [, ''])[1] + (nx.d ? ' غدًا' : '') + ' الساعة ' + hm12(nx.t) + '، بعد ' + (hh ? hh + ' ساعة و' : '') + mm + ' دقيقة.' + q_src('pray', qNow());
+    }},
+    d_prays: {q: 'أوقات الصلاة اليوم', rel: ['d_pray', 's_today', 'd_tasks'], run: () => ptToday ? 'أوقات الصلاة اليوم:\n' + PRAYERS.filter((p) => ptToday[p[0]]).map((p) => '- ' + p[1] + ': ' + hm12(ptToday[p[0]])).join('\n') + q_src('pray', qNow()) : null},
+    d_tasks: {q: 'ما مهامي المفتوحة؟', rel: ['d_due', 'e_task', 'a_abs'], run: (now) => { const ts = q_tasks(); if (!ts.length) return 'ما عندك مهام مفتوحة الآن.'; return 'مهامك المفتوحة (' + ts.length + '):\n' + ts.slice(0, 12).map((t) => '- ' + t.title + ' — ' + q_due(t, now)).join('\n') + q_src('task', now); }},
+    d_due: {q: 'ما أقرب موعد تسليم؟', rel: ['d_tasks', 's_today', 'e_task'], run: (now) => { const ts = q_tasks().filter((t) => t.due); if (!ts.length) return 'ما عندك مهام لها موعد.'; return 'أقرب موعد: ' + ts[0].title + ' — ' + q_due(ts[0], now) + '.' + q_src('task', now); }},
+    d_notes: {q: 'ما ملاحظاتي؟', rel: ['d_tasks', 's_today', 'a_abs'], run: () => { const t = String(S.notes || '').replace(/<br\s*\/?>|<\/(?:div|p|li)>/gi, '\n').replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim(); return t ? 'ملاحظاتك:\n' + t.slice(0, 900) : 'ما عندك ملاحظات محفوظة.'; }}
+  };
+  for (let i = 0; i < 7; i++) QA['dy' + i] = {q: q_daysAr[i], rel: ['s_day', 's_week', 's_today'], run: () => q_lecDay(i)};
+  const QCATS = [
+    {id:'cal', t:'التقويم الجامعي والمواعيد', ic:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>', qs:['c_today', 'c_week', 'c_start', 'c_end', 'c_reg', 'c_apology', 'c_events']},
+    {id:'sch', t:'الجدول الدراسي والمحاضرات', ic:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', qs:['s_today', 's_tmr', 's_next', 's_rooms', 's_day', 's_week', 's_count']},
+    {id:'vac', t:'الإجازات والعطلات', ic:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>', qs:['v_near', 'v_list', 'v_tmr', 'v_eid']},
+    {id:'rw', t:'المكافآت والشؤون الطلابية', ic:'<circle cx="12" cy="12" r="9"/><path d="M14.5 9a2.5 2.5 0 0 0-2.5-1.5c-1.4 0-2.5.8-2.5 2s1.1 1.7 2.5 2 2.5.8 2.5 2-1.1 2-2.5 2A2.5 2.5 0 0 1 9.5 15M12 6v1.5M12 16.5V18"/>', qs:['r_when', 'r_left', 'r_next', 'a_abs', 'a_near', 'c_apology']},
+    {id:'ex', t:'الاختبارات والنتائج', ic:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 14l2 2 4-4"/>', qs:['e_final', 'e_left', 'e_mid', 'e_res', 'e_task']},
+    {id:'day', t:'الأسئلة اليومية السريعة', ic:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>', qs:['d_pray', 'd_prays', 'd_tasks', 'd_due', 'd_notes', 'c_today']}
+  ];
+  let qv = {m: 'cats'}, qOpen = true;
+  const qaPanel = h('div', {class: 'qa notranslate', translate: 'no'});
+  const qaIcon = (d) => { const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('viewBox', '0 0 24 24'); s.innerHTML = d; return s; };
+  const qaGo = (v) => { qv = v; qaRender(); };
+  const qaAsk = (id) => {
+    const it = QA[id]; if (!it || pending) return;
+    if (it.days) { qaGo({m: 'days'}); return; }
+    let ans = null; try { ans = it.run(qNow()); } catch (e) { ans = null; }
+    if (!ans) ans = 'لا تتوفر لدي بيانات كافية في التطبيق للإجابة عن هذا السؤال الآن.';
+    chatHistory.push({role: 'user', content: it.q, time: timeNow(), quick: true}, {role: 'assistant', content: ans, time: timeNow(), citations: [], quick: true});
+    try { localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chatHistory.filter((m) => !m.ephemeral).slice(-50))); } catch (e) {}
+    renderMessages('bottom');
+    qv = {m: 'rel', ids: it.rel || [], q: it.q}; qaRender();
+  };
+  const qaRender = () => {
+    const back = (txt, to) => h('button', {type: 'button', class: 'qa-back', onclick: () => qaGo(to)}, txt);
+    const title = qv.m === 'cats' ? 'اسأل سريعًا — إجابة فورية' : qv.m === 'cat' ? QCATS.find((c) => c.id === qv.id).t : qv.m === 'days' ? 'اختر اليوم' : 'أسئلة مرتبطة';
+    const head = h('div', {class: 'qa-h'}, h('span', {}, title), h('span', {class: 'qa-hb'}, qv.m !== 'cats' ? back('التصنيفات', {m: 'cats'}) : '', h('button', {type: 'button', class: 'qa-tg', 'aria-label': qOpen ? 'إخفاء' : 'إظهار', onclick: () => { qOpen = !qOpen; qaRender(); }}, qOpen ? '▾' : '▴')));
+    const kids = [head];
+    if (qOpen) {
+      let body;
+      const qbtn = (id) => h('button', {type: 'button', class: 'qa-q', onclick: () => qaAsk(id)}, QA[id].q);
+      if (qv.m === 'cats') body = h('div', {class: 'qa-cats'}, QCATS.map((c) => h('button', {type: 'button', class: 'qa-cat', onclick: () => qaGo({m: 'cat', id: c.id})}, qaIcon(c.ic), h('span', {}, c.t))));
+      else if (qv.m === 'cat') body = h('div', {class: 'qa-list'}, QCATS.find((c) => c.id === qv.id).qs.map(qbtn));
+      else if (qv.m === 'days') body = h('div', {class: 'qa-list qa-days'}, [0, 1, 2, 3, 4, 5, 6].map((i) => qbtn('dy' + i)));
+      else body = h('div', {class: 'qa-list'}, (qv.ids || []).filter((id) => QA[id]).map(qbtn));
+      kids.push(h('div', {class: 'qa-b'}, body));
+    }
+    qaPanel.replaceChildren(...kids);
+  };
+  try { const inp = btnSend.closest('.sp-input'); if (inp && inp.parentNode) { inp.parentNode.insertBefore(qaPanel, inp); qaRender(); } } catch (e) { console.error(e); }
 
   btnSend.onclick = () => sendMessage();
   chatInput.onkeydown = (e) => {
