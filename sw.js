@@ -1,4 +1,4 @@
-const CACHE = 'khadamati-v106';
+const CACHE = 'khadamati-v107';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './logo-shield.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', (e) => {
