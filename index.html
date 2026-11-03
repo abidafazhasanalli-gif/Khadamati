@@ -2650,7 +2650,7 @@ prGrid.replaceChildren(...PRAYERS.map(([k, n]) => h('div', {class:'pr-c', 'data-
 const prTick = () => {
   const now = new Date(); ptLoad(now);
   helloTick(now); wkTick(now);
-  setTxt($('#prG'), fmtG.format(now).replace(/^[^،]*،\s*/, '').replace(/\s*م$/, '')); setTxt($('#prGl'), fmtG.format(now).split('،')[0] + ' · التقويم الميلادي'); setTxt($('#prH'), fmtH ? fmtH.format(now).replace(/\s*هـ$/, '') : '');
+  setTxt($('#prG'), fmtG.format(now).replace(/^[^،]*،\s*/, '').replace(/\s*م$/, '')); setTxt($('#prGl'), fmtG.format(now).split('،')[0] + ' ·ميلادي'); setTxt($('#prH'), fmtH ? fmtH.format(now).replace(/\s*هـ$/, '') : '');
   const keys = ['fajr','dhuhr','asr','maghrib','isha'];
   const seq = [...keys.map(k => ({k, t:ptPrev[k], d:-1})), ...keys.map(k => ({k, t:ptToday[k], d:0})), ...keys.map(k => ({k, t:ptNext[k], d:1}))].filter(x => x.t);
   const nx = seq.find(x => x.t > now), pv = [...seq].reverse().find(x => x.t <= now);
