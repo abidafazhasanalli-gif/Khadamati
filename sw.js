@@ -1,4 +1,4 @@
-const CACHE = 'khadamati-v107';
+const CACHE = 'khadamati-v108';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './logo-shield.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', (e) => {
@@ -89,5 +89,17 @@ self.addEventListener('notificationclick', (e) => {
     } else {
       await self.clients.openWindow('./?lec=' + r + '&gk=' + encodeURIComponent(d.gk || '') + '&course=' + encodeURIComponent(d.course || '') + '&n=' + (d.n || ''));
     }
+  })());
+});
+
+// تجديد اشتراك الإشعارات تلقائيًا إن انتهى أو تغيّر (حتى يستمر وصول التنبيهات والتطبيق مغلق)
+self.addEventListener('pushsubscriptionchange', (e) => {
+  e.waitUntil((async () => {
+    try {
+      const key = e.oldSubscription && e.oldSubscription.options && e.oldSubscription.options.applicationServerKey;
+      if (key) await self.registration.pushManager.subscribe({userVisibleOnly: true, applicationServerKey: key});
+      const wins = await self.clients.matchAll({type: 'window', includeUncontrolled: true});
+      wins.forEach((c) => c.postMessage({type: 'push-refresh'}));
+    } catch (err) {}
   })());
 });
