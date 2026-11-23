@@ -700,7 +700,6 @@ body{top:0!important}.goog-text-highlight{background:none!important;box-shadow:n
 /* إخفاء شريط جوجل العلوي */
 iframe.skiptranslate,body>.skiptranslate,.skiptranslate>iframe,.VIpgJd-ZVi9od-ORHb-OEVmcd,.VIpgJd-ZVi9od-aZ2wEe-wOHMyf,.VIpgJd-ZVi9od-l4eHX-hSRGPd{display:none!important;visibility:hidden!important;height:0!important}
 html{margin-top:0!important}
-.svc-text .trl.awn-h,.trl.awn-h{display:block!important;direction:rtl;text-align:start;font-size:12px;line-height:1.5;color:var(--gold-ink);font-weight:600}
 .trl{display:none}:root[data-tl] .trl{display:block;font-size:12px;color:var(--muted);direction:ltr;text-align:start;line-height:1.3;font-weight:400}
 /* نصوص مترجمة: اتجاه كل فقرة من لغتها حتى لا تنكسر الأقواس */
 :root[data-tl] p,:root[data-tl] .muted,:root[data-tl] small,:root[data-tl] .empty,:root[data-tl] .svc-text span,:root[data-tl] .h2row h2,:root[data-tl] .sheet h3,:root[data-tl] .sheet label,:root[data-tl] .toast,:root[data-tl] .cw-h span,:root[data-tl] .cal-hol-r span,:root[data-tl] .cal-sum-r span{unicode-bidi:plaintext}
@@ -1592,7 +1591,7 @@ const ADH = {en:'Time left until Adhan', bn:'আযানের বাকি আ
 const TRL = {'البلاك بورد':'Al-Blackboard','الخدمات الطلابية':'Al-Khadamat At-Tullabiyya','الإرشاد الأكاديمي':'Al-Irshad Al-Akadimi','السجل المهاري':'As-Sijill Al-Mahari','نظام التدريب الميداني':'Nizam At-Tadrib Al-Maydani','نظام تواصل عام':'Nizam Tawasul (Aam)','نظام تواصل للطلبة الدوليين':'Nizam Tawasul lit-Tullab Ad-Dawliyyin','نظام حقوقي':'Nizam Huquqi','بوابة الخريجين':'Bawwabat Al-Khirrijin','عون':'Awn',
 'تحديثات الإمام':'Tahdithat Al-Imam','القروب العام':'Al-Group Al-Aam','الإدارة العامة للطلبة الدوليين':'Al-Idara Al-Amma lit-Tullab Ad-Dawliyyin','سكن الطلاب':'Sakan At-Tullab','أندية جامعة الإمام':'Andiyat Jamiat Al-Imam','استفسارات الأندية الطلابية':'Istifsarat Al-Andiya At-Tullabiyya',
 'الحاسوب':'Al-Hasoub','الأعمال':'Al-A\'mal','الهندسة':'Al-Handasa','العلوم':'Al-Ulum','الشريعة':'Ash-Shari\'a','اللُغات والترجمة':'Al-Lughat wa At-Tarjama','اللغة العربية':'Al-Lugha Al-Arabiyya','الإعلام':'Al-I\'lam','أصول الدين':'Usul Ad-Din','العلوم الاجتماعية':'Al-Ulum Al-Ijtima\'iyya','الطب والتمريض':'At-Tibb wat-Tamrid','التطبيقية':'At-Tatbiqiyya'};
-const trlEl = (n) => n === 'عون' ? h('small', {class:'trl awn-h'}, 'إذا لم يفتح عون داخل التطبيق فانسخ الرابط وافتحه من المتصفح') : TRL[n] ? h('small', {class:'trl notranslate', translate:'no'}, TRL[n]) : null;
+const trlEl = (n) => TRL[n] ? h('small', {class:'trl notranslate', translate:'no'}, TRL[n]) : null;
 const dcode = (c) => ({iw:'he', jw:'jv', tl:'fil', 'zh-CN':'zh-Hans', 'zh-TW':'zh-Hant'})[c] || c;
 const dnf = (loc, type) => { try { return new Intl.DisplayNames([loc], {type}); } catch (e) { return null; } };
 const dnm = (d, c) => { try { const r = d && d.of(c); return r && r !== c ? r : ''; } catch (e) { return ''; } };
@@ -2088,7 +2087,7 @@ const calState = (now) => {
   const av = acalVacs(), inA = av.find((v) => today >= v.s && today <= v.e);
   let cw = [...w].reverse().find(x => x[1] <= today); const left = dayN(last, now), ex = exOf(S.cal), exd = ex ? dayN(ex, now) : null;
   if (inA) return {st:'vac', label:inA.n, total, left, exd, back:dayN(inA.e, now) + 1};
-  if (cw && !cw[0] && av.length) { const wk = [...w].reverse().find(x => x[0] && x[1] <= today); if (wk) cw = wk; }   // الأسبوعي يقول إجازة والسنوي لا يقول
+  if (cw && !cw[0] && av.some((v) => sameVac({s:cw[1], e:cw[2], n:cw[3]}, v))) { const wk = [...w].reverse().find(x => x[0] && x[1] <= today); if (wk) cw = wk; }   // الأسبوعي يقول إجازة والسنوي لا يقول
   return cw[0] ? {st:'on', n:cw[0], total, left, exd} : {st:'vac', label:cw[3] || 'إجازة', total, left, exd, back:dayN(cw[2], now) + 1};
 };
 const goCal = () => {
@@ -2127,7 +2126,7 @@ const calEvents = (c) => {
 /* الإجازات والعطل الرسمية فقط (من الجدول الأسبوعي + اليوم الوطني)، دون الجمعة والسبت */
 const calHolidays = (c) => {
   const w = c && c.w; if (!Array.isArray(w) || !w.length) return [];
-  const av = acalVacs(), out = []; if (!av.length) w.forEach(x => { if (!x[0]) { const v = {s:x[1], e:x[2], n:x[3] || 'إجازة'}; if (!av.some((a) => sameVac(v, a))) out.push(v); } });
+  const av = acalVacs(), out = []; w.forEach(x => { if (!x[0]) { const v = {s:x[1], e:x[2], n:x[3] || 'إجازة'}; if (!av.some((a) => sameVac(v, a))) out.push(v); } });
   av.forEach((a) => out.push({s:a.s, e:a.e, n:a.n, ann:true}));
   const vac = out.slice();
   for (const iso of (calEvents(c) || {nat:[]}).nat) {
@@ -2940,7 +2939,7 @@ $('#v-home .stats').before(tdCard);
 const tdGet = (id) => { try { const qa = window.__qa; const r = qa && qa.QA[id].run(qa.qNow()); return r ? String(r).split('\n\n')[0].replace(/\n- /g, ' — ').replace(/\n/g, ' ') : ''; } catch (e) { return ''; } };
 const achRow = () => { const E = S.ach || {}, l = achList(), n = l.filter((a) => E[a.id] || a.ok).length, nx = l.find((a) => !(E[a.id] || a.ok));
   return {lbl: 'إنجازاتي', v: n + ' من ' + l.length, sub: nx ? 'التالي: ' + nx.t + ' — ' + nx.d + ' (' + nx.v + '/' + nx.g + ')' : 'أكملت كل الإنجازات', fn: openAch, ach: true}; };
-const holList = () => (S.cal && S.cal.w && S.cal.w.length) ? calHolidays(S.cal) : acalVacs();
+const holList = () => ((S.cal && S.cal.w && S.cal.w.length) ? calHolidays(S.cal) : acalVacs()).slice().sort((a, b) => a.s < b.s ? -1 : a.s > b.s ? 1 : 0);
 const holNow = (now) => { try { const t = ymd(now || new Date()); return holList().find((v) => t >= v.s && t <= v.e) || null; } catch (e) { return null; } };
 /* إن كان اليوم إجازة، أو كان موعد أقرب محاضرة يوافق يوم إجازة، تُعرض الإجازة بدل المحاضرة */
 const lecHol = (now) => {
@@ -2961,7 +2960,7 @@ const tdRows = () => {
   return [
     (() => { const hv = lecHol(); return hv ? {lbl: 'الإجازة', v: holTxt(hv), big: true} : row('محاضرتك القادمة', 's_next', /^محاضرتك القادمة:\s*/, 'ارفع جدولك من أدواتي', 'tools'); })(),
     row('المكافأة', 'r_left', /^/, '', null),
-    row('أقرب إجازة', 'v_near', /^أقرب إجازة:\s*-?\s*/, 'ارفع التقويم من أدواتي', 'tools')
+    (() => { const cur = holNow(); return cur ? {lbl: 'أقرب إجازة', v: 'حاليًا ' + holTxt(cur)} : row('أقرب إجازة', 'v_near', /^أقرب إجازة:\s*[—-]?\s*/, 'ارفع التقويم من أدواتي', 'tools'); })()
   ];
 };
 let tdKey = '';
@@ -4476,7 +4475,7 @@ const SCHED_READER_URL = 'https://khadamati-reader.abid-afaz-hasan-alli.workers.
   };
   const q_tasks = () => (S.tasks || []).filter((t) => !t.done).sort((a, b) => String(a.due || '9999').localeCompare(String(b.due || '9999')));
   const q_due = (t, now) => { if (!t.due) return 'بلا موعد'; const iso = String(t.due).slice(0, 10), n = dayN(iso, now); return q_rel(n) + ' (' + q_fd(iso) + (String(t.due).length > 10 ? '، ' + String(t.due).slice(11, 16) : '') + ')'; };
-  const q_hol = () => (S.cal && S.cal.w && S.cal.w.length) ? calHolidays(S.cal) : acalVacs();
+  const q_hol = () => holList();
   const q_holLine = (v, now) => { const t = ymd(now); return '- ' + v.n + ': من ' + q_fd(v.s) + (v.e !== v.s ? ' إلى ' + q_fd(v.e) : '') + ' (' + (v.e < t ? 'انتهت' : v.s <= t ? 'جارية الآن، تنتهي ' + q_rel(dayN(v.e, now)) : q_rel(dayN(v.s, now))) + ')'; };
   const q_rwNext = (now, k) => { const t = ymd(now), out = []; for (let i = 0; i < 8 && out.length < k; i++) { const r = rwOf(now.getFullYear(), now.getMonth() + i); if (r.iso >= t) out.push(r); } return out; };
   const q_rwNote = '\n\nتنبيه: هذا موعد متوقع بحسب القاعدة المعتمدة في دليل الطالب (25 من كل شهر ميلادي، وتُرحَّل إلى الأحد إن وافقت الجمعة أو السبت)، وليس إعلانًا رسميًا بالصرف؛ تأكد من الجهة الرسمية.';
